@@ -22,7 +22,7 @@ namespace kondra
         DynamicInteger(const double &);
         DynamicInteger(const DynamicInteger &);
         ~DynamicInteger();
-        char *strGetNumber() const;
+        char *strGetNumber(const size_t& = 10) const;
         double doubleGetNumber() const;
         long long longLongGetNumber() const;
         unsigned long long uLongLongGetNumber() const;

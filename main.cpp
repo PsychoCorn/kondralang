@@ -6,8 +6,9 @@ using namespace kondra;
 
 int main()
 {
-    dynamic_int n = "435345534";
-    string str = to_string(435345534);
-    print(std::format("Num is {}", str));
+    dynamic_int n = 25;
+    char nn = 25;
+    //println(std::stoll("54xrthtrhrt}"));
+    print(std::format("Num is {:?^5}", n));
     return 0;
 }
