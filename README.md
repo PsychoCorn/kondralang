@@ -74,17 +74,17 @@ f"String value: {stringVar}. Integer value: {intVar:0^5}. Float value {floatVar:
 
 Список коллекций:
 
-1) array, объявляется type[] или array<list>. В скобках начальный размер. (std::vector)
+1) array, объявляется type[] или array <type>. В скобках начальный размер. (std::vector)
 
-2) list<type>
+2) list <type>
 
-3) tree_set<type>
+3) tree_set <type>
 
-4) tree_multiset<type>
+4) tree_multiset <type>
 
-5) hash_set<type>
+5) hash_set <type>
 
-6) hash_multiset<type>
+6) hash_multiset <type>
 
 7) tree_map<type1, type2>
 
