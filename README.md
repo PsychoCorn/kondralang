@@ -72,3 +72,25 @@ f"String value: {stringVar}. Integer value: {intVar:0^5}. Float value {floatVar:
 
 Прямая работа со встроенными C++ массивами невозможна. При объявлении переменной type[] создаётся объект класса std::vector<type>. 
 
+Список коллекций:
+
+1) array, объявляется type[] или array<list>. В скобках начальный размер. (std::vector)
+
+2) list<type>
+
+3) tree_set<type>
+
+4) tree_multiset<type>
+
+5) hash_set<type>
+
+6) hash_multiset<type>
+
+7) tree_map<type1, type2>
+
+8) tree_multimap<type1, type2>
+
+9) hash_map<type1, type2>
+
+10) hash_multimap<type1, type2>
+
