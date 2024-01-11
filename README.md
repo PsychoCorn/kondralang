@@ -50,3 +50,7 @@ f-строки:
 
 Синтаксис:
 f"String value: {stringVar}. Integer value: {intVar:*^5}. Float value {floatVar:.5f}" Скомпилируется в std::format("String value: {}. Integer value: {:*^5}. Float value {:.5f}", stringVar, intVar, floatVar) 
+
+Точка с запятой:
+Может ставится автоматически, при переходе на новую строку, там где это необходимо. Если программист спм поставил ";", то допускается написание кода в строку. 
+
