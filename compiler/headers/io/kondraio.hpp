@@ -14,8 +14,9 @@ struct std::formatter<kondra::dynamic_int>
 {
     std::formatter<kondra::string> formatter;
     char fillChar = ' ';
-    char allignSide = '\0';
     bool convertToHex = false;
+    bool convertToOct = false;
+    bool convertToBin = false;
     bool allignLeft = false;
     bool allignRight = false;
     bool allignCenter = false;
@@ -24,7 +25,7 @@ struct std::formatter<kondra::dynamic_int>
     constexpr auto parse(std::format_parse_context& ctx)
     {
         auto pos = ctx.begin();
-        if (*(pos + 1) == '<' || *(pos + 1) == '>' || *(pos + 1) == '^')
+        if ((*(pos + 1) == '<' || *(pos + 1) == '>' || *(pos + 1) == '^') && pos != ctx.end())
         {
             if (*(pos + 1) == '<')
             {
@@ -38,19 +39,18 @@ struct std::formatter<kondra::dynamic_int>
             {
                 allignCenter = true;
             }
-            allignSide = *(pos + 1);
             fillChar = *pos;
             numOfAllignment = std::string(pos + 2, ctx.end());
             pos += 2;
         }
-        else if (*pos >= '0' && *pos <= '9')
+        else if ((*pos >= '0' && *pos <= '9') && pos != ctx.end())
         {
             allignLeft = true;
             fillChar = (*pos == '0') ? '0' : ' ';
             numOfAllignment = std::string(pos, ctx.end());
             ++pos;
         }
-        else if (*pos == '<' || *pos == '>' || *pos == '^')
+        else if ((*pos == '<' || *pos == '>' || *pos == '^') && pos != ctx.end())
         {
             allignLeft = true;
             numOfAllignment = std::string(pos + 1, ctx.end());
@@ -58,7 +58,29 @@ struct std::formatter<kondra::dynamic_int>
         while (pos != ctx.end() && *pos != '}') 
         {
             if (*pos == 'x' || *pos == 'X')
+            {
                 convertToHex = true;
+                convertToOct = false;
+                convertToBin = false;
+            }
+            else if (*pos == 'o' || *pos == 'O')
+            {
+                convertToHex = false;
+                convertToOct = true;
+                convertToBin = false;
+            }
+            else if (*pos == 'b' || *pos == 'B')
+            {
+                convertToHex = false;
+                convertToOct = false;
+                convertToBin = true;
+            }
+            else if (*pos == 'd' || *pos == 'D')
+            {
+                convertToHex = false;
+                convertToOct = false;
+                convertToBin = false;
+            }
             ++pos;
         }
         return pos;
@@ -66,7 +88,15 @@ struct std::formatter<kondra::dynamic_int>
 
     auto format(const kondra::dynamic_int& diNum, std::format_context& ctx) const
     {
-        kondra::string sNum = (convertToHex) ? diNum.strGetNumber(16) : diNum.strGetNumber();
+        kondra::string sNum;
+        if (convertToHex)
+            sNum = diNum.strGetNumber(16);
+        else if (convertToOct)
+            sNum = diNum.strGetNumber(8);
+        else if (convertToBin)
+            sNum = diNum.strGetNumber(2);
+        else
+            sNum = diNum.strGetNumber();
         if (allignLeft)
         {
             sNum.allignString(std::stoull(numOfAllignment), fillChar);
@@ -89,7 +119,7 @@ struct std::formatter<kondra::var> : std::formatter<kondra::string>
     auto format(const kondra::var& v, std::format_context& ctx) const
     {
         return formatter<kondra::string>::format(
-            std::format("{}", *(kondra::toString(v).getData().stringData)), ctx);
+            std::format("{}", *(kondra::var::toString(v).getData().stringData)), ctx);
     }
 };
 
@@ -135,12 +165,6 @@ namespace kondra
         std::printf(fstring, args...);
     }
 
-    template <typename T>
-    inline string to_string(const T& arg)
-    {
-        return string(std::to_string(arg));
-    }
-
     inline string to_string(const dynamic_int& arg)
     {
         return string(arg.strGetNumber());
@@ -148,7 +172,18 @@ namespace kondra
 
     inline string to_string(const var& arg)
     {
-        return string(*(toString(arg).getData().stringData));
+        return string(*(var::toString(arg).getData().stringData));
+    }
+
+    inline string to_string(const string& arg)
+    {
+        return arg;
+    }
+
+    template <typename T>
+    inline string to_string(const T& arg)
+    {
+        return string(std::to_string(arg));
     }
 
 }

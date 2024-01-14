@@ -48,12 +48,6 @@ namespace kondra
         VarType getType() const;
         VarData getData() const;
         Variable &operator=(const Variable &);
-        Variable &toInt();
-        Variable &toFloat();
-        Variable &toString();
-        Variable &toBool();
-        char &at(const Variable &);
-        char &operator[](const Variable &);
         friend std::ostream &operator<<(std::ostream &, const Variable &);
         friend std::istream &operator>>(std::istream &, Variable &);
         Variable operator-() const;
@@ -80,18 +74,95 @@ namespace kondra
         friend bool operator>=(const Variable &, const Variable &);
         friend bool operator==(const Variable &, const Variable &);
         friend bool operator!=(const Variable &, const Variable &);
-        explicit operator long long() const;
-        explicit operator unsigned long long() const;
-        explicit operator string() const;
-        explicit operator bool() const;
-        explicit operator double() const;
-        explicit operator dynamic_int() const;
+        inline explicit operator signed char() const;
+        inline explicit operator unsigned char() const;
+        inline explicit operator short() const;
+        inline explicit operator unsigned short() const;
+        inline explicit operator int() const;
+        inline explicit operator unsigned int() const;
+        inline explicit operator long long() const;
+        inline explicit operator unsigned long long() const;
+        inline explicit operator string() const;
+        inline explicit operator bool() const;
+        inline explicit operator double() const;
+        inline explicit operator float() const;
+        inline explicit operator long double() const;
+        inline explicit operator dynamic_int() const;
+        static Variable toInt(const Variable & = 0);
+        static Variable toFloat(const Variable & = .0f);
+        static Variable toString(const Variable & = "");
+        static Variable toBool(const Variable & = false);
     };
 
-    Variable toInt(const Variable & = 0);
-    Variable toFloat(const Variable & = .0f);
-    Variable toString(const Variable & = "");
-    Variable toBool(const Variable & = false);
+    inline Variable::operator signed char() const
+    {
+        return Variable::toInt(*this).data.intData->longLongGetNumber();
+    }
+
+    inline Variable::operator unsigned char() const
+    {
+        return Variable::toInt(*this).data.intData->uLongLongGetNumber();
+    }
+
+    inline Variable::operator short() const
+    {
+        return Variable::toInt(*this).data.intData->longLongGetNumber();
+    }
+
+    inline Variable::operator unsigned short() const
+    {
+        return Variable::toInt(*this).data.intData->uLongLongGetNumber();
+    }
+
+    inline Variable::operator int() const
+    {
+        return Variable::toInt(*this).data.intData->longLongGetNumber();
+    }
+
+    inline Variable::operator unsigned int() const
+    {
+        return Variable::toInt(*this).data.intData->uLongLongGetNumber();
+    }
+
+    inline Variable::operator long long() const
+    {
+        return Variable::toInt(*this).data.intData->longLongGetNumber();
+    }
+
+    inline Variable::operator unsigned long long() const
+    {
+        return Variable::toInt(*this).data.intData->uLongLongGetNumber();
+    }
+
+    inline Variable::operator bool() const
+    {
+        return *(Variable::toBool(*this).data.boolData);
+    }
+
+    inline Variable::operator string() const
+    {
+        return *(Variable::toString(*this).data.stringData);
+    }
+
+    inline Variable::operator double() const
+    {
+        return *(Variable::toFloat(*this).data.floatData);
+    }
+
+    inline Variable::operator float() const
+    {
+        return *(Variable::toFloat(*this).data.floatData);
+    }
+
+    inline Variable::operator long double() const
+    {
+        return *(Variable::toFloat(*this).data.floatData);
+    }
+
+    inline Variable::operator dynamic_int() const
+    {
+        return *(Variable::toInt(*this).data.intData);
+    }
 
     typedef Variable var;
 

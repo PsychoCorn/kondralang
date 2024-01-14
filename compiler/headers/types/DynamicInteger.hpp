@@ -64,82 +64,82 @@ namespace kondra
         friend DynamicInteger operator<<(const DynamicInteger &, const DynamicInteger &);
         friend DynamicInteger operator>>(const DynamicInteger &, const DynamicInteger &);
         friend std::istream &operator>>(std::istream &, DynamicInteger &);
-        inline explicit operator signed char();
-        inline explicit operator unsigned char();
-        inline explicit operator short();
-        inline explicit operator unsigned short();
-        inline explicit operator int();
-        inline explicit operator unsigned int();
-        inline explicit operator long long();
-        inline explicit operator unsigned long long();
-        inline explicit operator string();
-        inline explicit operator float();
-        inline explicit operator double();
-        inline explicit operator long double();
-        inline explicit operator bool();
+        inline explicit operator signed char() const;
+        inline explicit operator unsigned char() const;
+        inline explicit operator short() const;
+        inline explicit operator unsigned short() const;
+        inline explicit operator int() const;
+        inline explicit operator unsigned int() const;
+        inline explicit operator long long() const;
+        inline explicit operator unsigned long long() const;
+        inline explicit operator string() const;
+        inline explicit operator float() const;
+        inline explicit operator double() const;
+        inline explicit operator long double() const;
+        inline explicit operator bool() const;
     };
 
-    inline DynamicInteger::operator signed char()
+    inline DynamicInteger::operator signed char() const
     {
         return longLongGetNumber();
     }
 
-    inline DynamicInteger::operator unsigned char()
+    inline DynamicInteger::operator unsigned char() const
     {
         return uLongLongGetNumber();
     }
 
-    inline DynamicInteger::operator short()
+    inline DynamicInteger::operator short() const
     {
         return longLongGetNumber();
     }
 
-    inline DynamicInteger::operator unsigned short()
+    inline DynamicInteger::operator unsigned short() const
     {
         return uLongLongGetNumber();
     }
 
-    inline DynamicInteger::operator int()
+    inline DynamicInteger::operator int() const
     {
         return longLongGetNumber();
     }
 
-    inline DynamicInteger::operator unsigned int()
+    inline DynamicInteger::operator unsigned int() const
     {
         return uLongLongGetNumber();
     }
 
-    inline DynamicInteger::operator long long()
+    inline DynamicInteger::operator long long() const
     {
         return longLongGetNumber();
     }
 
-    inline DynamicInteger::operator unsigned long long()
+    inline DynamicInteger::operator unsigned long long() const
     {
         return uLongLongGetNumber();
     }
 
-    inline DynamicInteger::operator string()
+    inline DynamicInteger::operator string() const
     {
         return strGetNumber();
     }
 
-    inline DynamicInteger::operator float()
+    inline DynamicInteger::operator float() const
     {
         return doubleGetNumber();
     }
 
-    inline DynamicInteger::operator double()
+    inline DynamicInteger::operator double() const
     {
         return doubleGetNumber();
     }
 
-    inline DynamicInteger::operator long double()
+    inline DynamicInteger::operator long double() const
     {
         return doubleGetNumber();
     }
 
-    inline DynamicInteger::operator bool()
+    inline DynamicInteger::operator bool() const
     {
         return boolGetNumber();
     }

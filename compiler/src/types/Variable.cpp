@@ -3,9 +3,6 @@
 #define ERR_MSG_INVALID_OPERANDS "Invalid operands!"
 #define ERR_MSG_INVALID_OPERAND "Invalid operand!"
 #define ERR_MSG_DIVISION_BY_ZERO "Division by zero!"
-#define ERR_MSG_NOT_STRING "Variable is not string!"
-#define ERR_MSG_INDEX_NOT_INT "Index must be integer!"
-#define ERR_MSG_NEGATIVE_INDEX "Index can't be negative"
 
 namespace kondra
 {
@@ -207,33 +204,7 @@ namespace kondra
         return is;
     }
 
-    Variable &Variable::toInt()
-    {
-        switch (type)
-        {
-        case VarType::Float:
-            *this = Variable(dynamic_int(*(data.floatData)));
-            break;
-
-        case VarType::String:
-            *this = Variable(dynamic_int(data.stringData->c_str()));
-            break;
-
-        case VarType::Bool:
-            *this = Variable(int(*(data.boolData)));
-            break;
-
-        case VarType::None:
-            *this = Variable(0);
-            break;
-
-        default:
-            break;
-        }
-        return *this;
-    }
-
-    Variable toInt(const Variable &obj)
+    Variable Variable::toInt(const Variable &obj)
     {
         switch (obj.getType())
         {
@@ -254,38 +225,12 @@ namespace kondra
             break;
 
         default:
+            return obj;
             break;
         }
-        return obj;
     }
 
-    Variable &Variable::toFloat()
-    {
-        switch (type)
-        {
-        case VarType::Int:
-            *this = Variable(data.intData->doubleGetNumber());
-            break;
-
-        case VarType::String:
-            *this = Variable(std::stod(data.stringData->c_str()));
-            break;
-
-        case VarType::Bool:
-            *this = Variable(float(*(data.boolData)));
-            break;
-
-        case VarType::None:
-            *this = Variable(0.0f);
-            break;
-
-        default:
-            break;
-        }
-        return *this;
-    }
-
-    Variable toFloat(const Variable &obj)
+    Variable Variable::toFloat(const Variable &obj)
     {
         switch (obj.getType())
         {
@@ -306,38 +251,12 @@ namespace kondra
             break;
 
         default:
+            return obj;
             break;
         }
-        return obj;
     }
 
-    Variable &Variable::toString()
-    {
-        switch (type)
-        {
-        case VarType::Int:
-            *this = Variable(data.intData->strGetNumber());
-            break;
-
-        case VarType::Float:
-            *this = Variable(std::to_string(*(data.floatData)).c_str());
-            break;
-
-        case VarType::Bool:
-            *this = Variable(std::to_string(*(data.boolData)).c_str());
-            break;
-
-        case VarType::None:
-            *this = Variable("");
-            break;
-
-        default:
-            break;
-        }
-        return *this;
-    }
-
-    Variable toString(const Variable &obj)
+    Variable Variable::toString(const Variable &obj)
     {
         switch (obj.getType())
         {
@@ -358,38 +277,12 @@ namespace kondra
             break;
 
         default:
+            return obj;
             break;
         }
-        return obj;
     }
 
-    Variable &Variable::toBool()
-    {
-        switch (type)
-        {
-        case VarType::Int:
-            *this = Variable(bool(data.intData->longLongGetNumber()));
-            break;
-
-        case VarType::Float:
-            *this = Variable(bool(*(data.floatData)));
-            break;
-
-        case VarType::String:
-            *this = Variable((*(data.stringData)) == "" ? false : true);
-            break;
-
-        case VarType::None:
-            *this = Variable(false);
-            break;
-
-        default:
-            break;
-        }
-        return *this;
-    }
-
-    Variable toBool(const Variable &obj)
+    Variable Variable::toBool(const Variable &obj)
     {
         switch (obj.getType())
         {
@@ -410,9 +303,9 @@ namespace kondra
             break;
 
         default:
+            return obj;
             break;
         }
-        return obj;
     }
 
     Variable operator+(const Variable &var1, const Variable &var2)
@@ -1253,6 +1146,19 @@ namespace kondra
             }
             break;
 
+        case VarType::String:
+            switch (var2.type)
+            {
+            case VarType::Int:
+                return Variable(*(var1.data.stringData) * var2.data.intData->uLongLongGetNumber());
+                break;
+
+            default:
+                throw std::runtime_error(ERR_MSG_INVALID_OPERANDS);
+                break;
+            }
+            break;
+
         case VarType::Bool:
             switch (var2.type)
             {
@@ -1288,7 +1194,7 @@ namespace kondra
 
     bool Variable::operator!() const
     {
-        return !(*(kondra::toBool(*this).data.boolData));
+        return !(*(Variable::toBool(*this).data.boolData));
     }
 
     Variable operator%(const Variable &var1, const Variable &var2)
@@ -1371,66 +1277,14 @@ namespace kondra
         return temp;
     }
 
-    char &Variable::at(const Variable &index)
-    {
-        if (type != VarType::String)
-        {
-            throw std::invalid_argument(ERR_MSG_NOT_STRING);
-        }
-        else if (index.getType() != VarType::Int)
-        {
-            throw std::invalid_argument(ERR_MSG_INDEX_NOT_INT);
-        }
-        else if (index < Variable(0))
-        {
-            throw std::invalid_argument(ERR_MSG_NEGATIVE_INDEX);
-        }
-        return data.stringData->at(index.getData().intData->uLongLongGetNumber());
-    }
-
-    char &Variable::operator[](const Variable &index)
-    {
-        return at(index);
-    }
-
-    Variable::operator long long() const
-    {
-        return kondra::toInt(*this).data.intData->longLongGetNumber();
-    }
-
-    Variable::operator unsigned long long() const
-    {
-        return kondra::toInt(*this).data.intData->uLongLongGetNumber();
-    }
-
-    Variable::operator bool() const
-    {
-        return *(kondra::toBool(*this).data.boolData);
-    }
-
-    Variable::operator string() const
-    {
-        return *(kondra::toString(*this).data.stringData);
-    }
-
-    Variable::operator double() const
-    {
-        return *(kondra::toFloat(*this).data.floatData);
-    }
-
-    Variable::operator dynamic_int() const
-    {
-        return *(kondra::toInt(*this).data.intData);
-    }
-
     bool operator&&(const Variable &var1, const Variable &var2)
     {
-        return *(toBool(var1).data.boolData) && *(toBool(var2).data.boolData);
+        return *(Variable::toBool(var1).data.boolData) && *(Variable::toBool(var2).data.boolData);
     }
 
     bool operator||(const Variable &var1, const Variable &var2)
     {
-        return *(toBool(var1).data.boolData) || *(toBool(var2).data.boolData);
+        return *(Variable::toBool(var1).data.boolData) || *(Variable::toBool(var2).data.boolData);
     }
 
 }
