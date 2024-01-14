@@ -1,1 +1,0 @@
-add_library(ast BinaryExpression.cpp NumberExpression.cpp UnaryExpression.cpp)
