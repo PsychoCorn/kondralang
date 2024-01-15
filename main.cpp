@@ -7,8 +7,12 @@
 
 int main()
 {
-    Lexer lexer("(3 + 2) * 6 / 2");
+    Lexer lexer("(0XA + 1) * 0xf + -012");
     auto tokens = lexer.tokenize();
+    std::for_each(tokens.begin(), tokens.end(), [](Token t) { 
+        std::cout << std::format("({}: {}) ", (int)(t.getType()), t.getText());
+    });
+    std::cout << std::endl;
     Parser parser(tokens);
     auto expressions = parser.parse();
     std::for_each(expressions.begin(), expressions.end(), [](Expression* p) { 
@@ -16,8 +20,5 @@ int main()
     });
     std::for_each(expressions.begin(), expressions.end(), [](Expression* p) { delete p; });
     expressions.clear();
-    kondra::var n = "24";
-    n = kondra::var::toFloat(n) + .5f;
-    kondra::println(std::format("n = {:.3f}", (float)n));
     return 0;
 }

@@ -94,6 +94,10 @@ Expression *Parser::primary()
     Token current = get();
     if (match(TokenType::Number))
         return new NumberExpression(std::stod(current.getText()));
+    if (match(TokenType::HexNumber))
+        return new NumberExpression(std::stoull(current.getText(), nullptr, 16));
+    if (match(TokenType::OctNumber))
+        return new NumberExpression(std::stoull(current.getText(), nullptr, 8));
     if (match(TokenType::Lparen))
     {
         Expression *result = expression();

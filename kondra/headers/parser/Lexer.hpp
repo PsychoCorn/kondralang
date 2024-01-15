@@ -25,7 +25,9 @@ private:
     char peek(int = 0);
     char next();
     void tokenizeNumber();
+    void tokenizeHexNumber();
     void tokenizeOperator();
+    bool isHexDigit(char);
 
 public:
     Lexer(std::string);

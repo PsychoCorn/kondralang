@@ -27,12 +27,41 @@ void Lexer::tokenizeNumber()
 {
     std::string buffer = "";
     char current = peek();
+    if (current == '0' && tolower(peek(1)) == 'x')
+    {
+        next();
+        tokenizeHexNumber();
+        return;
+    }
     while (isdigit(current))
     {
         buffer += current;
         current = next();
     }
+    if (buffer[0] == '0' && buffer.size() > 1)
+    {
+        addToken(TokenType::OctNumber, buffer);
+        return;
+    }
     addToken(TokenType::Number, buffer);
+}
+
+void Lexer::tokenizeHexNumber()
+{
+    std::string buffer = "";
+    char current = next();
+    while (isHexDigit(current))
+    {
+        buffer += current;
+        current = next();
+    }
+    addToken(TokenType::HexNumber, buffer);
+}
+
+bool Lexer::isHexDigit(char c)
+{
+    std::string hexNumers = "abcdef";
+    return (isdigit(c) || std::find(hexNumers.begin(), hexNumers.end(), tolower(c)) != hexNumers.end());
 }
 
 void Lexer::tokenizeOperator()

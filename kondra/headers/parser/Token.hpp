@@ -8,6 +8,8 @@
 enum TokenType
 {
     Number,
+    HexNumber,
+    OctNumber,
 
     Star,
     Plus,
