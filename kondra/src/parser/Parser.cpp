@@ -98,6 +98,8 @@ Expression *Parser::primary()
         return new NumberExpression(std::stoull(current.getText(), nullptr, 16));
     if (match(TokenType::OctNumber))
         return new NumberExpression(std::stoull(current.getText(), nullptr, 8));
+    if (match(TokenType::Word))
+        return new ConstantExpression(current.getText());
     if (match(TokenType::Lparen))
     {
         Expression *result = expression();

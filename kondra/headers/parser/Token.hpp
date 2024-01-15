@@ -7,18 +7,21 @@
 
 enum TokenType
 {
+    // numbers
     Number,
     HexNumber,
     OctNumber,
-
+    // identifiers
+    Word,
+    // operators
     Star,
     Plus,
     Minus,
     Slash,
-
+    // brasckets
     Lparen, // (
     Rparen, // )
-
+    // end of file
     Eof
 };
 

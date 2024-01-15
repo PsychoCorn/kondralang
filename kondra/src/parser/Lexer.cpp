@@ -1,5 +1,7 @@
 #include "../../headers/parser/Lexer.hpp"
+
 #include <algorithm>
+#include <stdexcept>
 
 Lexer::Lexer(std::string input)
 {
@@ -15,9 +17,11 @@ std::vector<Token> Lexer::tokenize()
         current = peek();
     if (isdigit(current))
         tokenizeNumber();
+    else if (isalpha(current) || current == '_')
+        tokenizeWord();
     else if (std::find(OPERATOR_CHARS, OPERATOR_CHARS_END, current) != OPERATOR_CHARS_END)
         tokenizeOperator();
-    else
+    else //skip whitespaces
         next();
     }
     return tokens;
@@ -33,15 +37,22 @@ void Lexer::tokenizeNumber()
         tokenizeHexNumber();
         return;
     }
-    while (isdigit(current))
+    else if (current == '0' && isdigit(peek(1)))
     {
+        tokenizeOctNumber();
+        return;
+    }
+    while (true)
+    {
+        if (current == '.')
+        {
+            if (buffer.find('.') != std::string::npos)
+                throw std::runtime_error("Invalid float number!");
+        }
+        else if (!isdigit(current))
+            break;
         buffer += current;
         current = next();
-    }
-    if (buffer[0] == '0' && buffer.size() > 1)
-    {
-        addToken(TokenType::OctNumber, buffer);
-        return;
     }
     addToken(TokenType::Number, buffer);
 }
@@ -56,6 +67,32 @@ void Lexer::tokenizeHexNumber()
         current = next();
     }
     addToken(TokenType::HexNumber, buffer);
+}
+
+void Lexer::tokenizeOctNumber()
+{
+    std::string buffer = "";
+    char current = next();
+    while (isdigit(current))
+    {
+        buffer += current;
+        current = next();
+    }
+    addToken(TokenType::OctNumber, buffer);
+}
+
+void Lexer::tokenizeWord()
+{
+    std::string buffer = "";
+    char current = peek();
+    while (true)
+    {
+        if (!isdigit(current) && !isalpha(current) && current != '_')
+            break;
+        buffer += current;
+        current = next();
+    }
+    addToken(TokenType::Word, buffer);
 }
 
 bool Lexer::isHexDigit(char c)
@@ -95,6 +132,14 @@ void Lexer::addToken(TokenType type)
     
     case TokenType::Slash:
         tokens.push_back(Token(type, "/"));
+        break;
+    
+    case TokenType::Lparen:
+        tokens.push_back(Token(type, "("));
+        break;
+
+    case TokenType::Rparen:
+        tokens.push_back(Token(type, ")"));
         break;
 
     default:

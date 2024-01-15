@@ -7,11 +7,11 @@
 
 int main()
 {
-    Lexer lexer("(0XA + 1) * 0xf + -012");
+    Lexer lexer("(012 - 0.5) * 0xa / _PI_");
     auto tokens = lexer.tokenize();
     std::for_each(tokens.begin(), tokens.end(), [](Token t) { 
-        std::cout << std::format("({}: {}) ", (int)(t.getType()), t.getText());
-    });
+        std::cout << std::format("({}: \"{}\") ", (int)(t.getType()), t.getText());
+    }); 
     std::cout << std::endl;
     Parser parser(tokens);
     auto expressions = parser.parse();

@@ -16,6 +16,4 @@ public:
     double eval() override;
 };
 
-
-
 #endif

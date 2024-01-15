@@ -5,6 +5,7 @@
 #include "../ast/NumberExpression.hpp"
 #include "../ast/BinaryExpression.hpp"
 #include "../ast/UnaryExpression.hpp"
+#include "../ast/ConstantExpression.hpp"
 
 class Parser final
 {

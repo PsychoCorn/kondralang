@@ -26,6 +26,8 @@ private:
     char next();
     void tokenizeNumber();
     void tokenizeHexNumber();
+    void tokenizeOctNumber();
+    void tokenizeWord();
     void tokenizeOperator();
     bool isHexDigit(char);
 
