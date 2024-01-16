@@ -7,7 +7,7 @@
 
 int main()
 {
-    Lexer lexer("(012 - 0.5) * 0xa / _PI_");
+    Lexer lexer("newVar = (2.4 + 5) / 2 \nnewVar1 = newVar + 0xf * 012");
     auto tokens = lexer.tokenize();
     std::for_each(tokens.begin(), tokens.end(), [](Token t) { 
         std::cout << std::format("({}: \"{}\") ", (int)(t.getType()), t.getText());
@@ -15,10 +15,12 @@ int main()
     std::cout << std::endl;
     Parser parser(tokens);
     auto expressions = parser.parse();
-    std::for_each(expressions.begin(), expressions.end(), [](Expression* p) { 
-        std::cout << p->eval() << std::endl; 
-    });
-    std::for_each(expressions.begin(), expressions.end(), [](Expression* p) { delete p; });
+    std::for_each(expressions.begin(), expressions.end(), [](Statement* p) { p->execute(); });
+    std::for_each(expressions.begin(), expressions.end(), [](Statement* p) { delete p; });
     expressions.clear();
+    std::cout << std::format("{} = {}\n", "newVar", Variables::get("newVar"));
+    std::cout << std::format("{} = {}\n", "newVar1", Variables::get("newVar1"));
+    std::cout << std::format("{} = {}\n", "_PI_", Variables::get("_PI_"));
+    std::cout << std::format("{} = {}\n", "_E_", Variables::get("_E_"));
     return 0;
 }

@@ -25,17 +25,43 @@ bool Parser::match(TokenType type)
     return true;
 }
 
-std::vector<Expression *> Parser::parse()
+Token Parser::consume(TokenType type)
 {
-    std::vector<Expression *> result;
+    Token current = get();
+    if (type != current.getType())
+        throw std::runtime_error("Wrong token type!");
+    ++pos;
+    return current;
+}
+
+std::vector<Statement *> Parser::parse()
+{
+    std::vector<Statement *> result;
     while (!match(TokenType::Eof))
     {
-        result.push_back(expression());
+        result.push_back(statement());
     }
     return result;
 }
 
-Expression *Parser::expression()
+Statement *Parser::statement()
+{
+    return assignmentStatement();
+}
+
+Statement* Parser::assignmentStatement()
+{
+    Token current = get();
+    if (match(TokenType::Word) && get().getType() == TokenType::Equal)
+    {
+        std::string variable = current.getText();
+        consume(TokenType::Equal);
+        return new AssignmentStatement(variable, expression());
+    }
+    throw std::runtime_error("Unknown operator!");
+}
+
+Expression* Parser::expression()
 {
     return additive();
 }
@@ -99,7 +125,7 @@ Expression *Parser::primary()
     if (match(TokenType::OctNumber))
         return new NumberExpression(std::stoull(current.getText(), nullptr, 8));
     if (match(TokenType::Word))
-        return new ConstantExpression(current.getText());
+        return new VariablesExpression(current.getText());
     if (match(TokenType::Lparen))
     {
         Expression *result = expression();

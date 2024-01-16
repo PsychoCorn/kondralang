@@ -3,8 +3,6 @@
 
 class Expression //interface
 {
-private:
-    /* data */
 public:
     virtual double eval() = 0;
 };

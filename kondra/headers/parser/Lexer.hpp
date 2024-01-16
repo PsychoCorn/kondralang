@@ -8,12 +8,13 @@
 class Lexer final
 {
 private:
-    static const unsigned char OPERATOR_CHARS_SIZE = 6;
-    static constexpr const char *OPERATOR_CHARS = "+-*/()";
+    static const unsigned char OPERATOR_CHARS_SIZE = 7;
+    static constexpr const char *OPERATOR_CHARS = "+-*/()=";
     static constexpr const char *OPERATOR_CHARS_END = OPERATOR_CHARS + OPERATOR_CHARS_SIZE;
     static constexpr const TokenType OPERATOR_TOKENS[] = {
         TokenType::Plus, TokenType::Minus, TokenType::Star, 
-        TokenType::Slash, TokenType::Lparen, TokenType::Rparen
+        TokenType::Slash, TokenType::Lparen, TokenType::Rparen,
+        TokenType::Equal
     };
     std::string input;
     std::vector<Token> tokens;

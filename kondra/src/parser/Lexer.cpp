@@ -142,6 +142,11 @@ void Lexer::addToken(TokenType type)
         tokens.push_back(Token(type, ")"));
         break;
 
+    case TokenType::Equal:
+        tokens.push_back(Token(type, "="));
+        break;
+
+
     default:
         tokens.push_back(Token(type, "\0"));
         break;

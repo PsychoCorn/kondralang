@@ -5,7 +5,8 @@
 #include "../ast/NumberExpression.hpp"
 #include "../ast/BinaryExpression.hpp"
 #include "../ast/UnaryExpression.hpp"
-#include "../ast/ConstantExpression.hpp"
+#include "../ast/VariablesExpression.hpp"
+#include "../ast/AssignmentStatement.hpp"
 
 class Parser final
 {
@@ -16,14 +17,17 @@ private:
 
     Token get(int = 0);
     bool match(TokenType);
+    Token consume(TokenType);
     Expression* primary();
     Expression* unary();
     Expression* multiplicative();
-    Expression* expression();
+    Statement* statement();
     Expression* additive();
+    Statement* assignmentStatement();
+    Expression* expression();
 public:
     Parser(std::vector<Token>);
-    std::vector<Expression*> parse();
+    std::vector<Statement*> parse();
 };
 
 #endif

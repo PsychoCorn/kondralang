@@ -18,6 +18,7 @@ enum TokenType
     Plus,
     Minus,
     Slash,
+    Equal,
     // brasckets
     Lparen, // (
     Rparen, // )
