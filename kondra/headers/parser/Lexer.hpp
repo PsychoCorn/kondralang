@@ -8,13 +8,16 @@
 class Lexer final
 {
 private:
-    static const unsigned char OPERATOR_CHARS_SIZE = 7;
-    static constexpr const char *OPERATOR_CHARS = "+-*/()=";
-    static constexpr const char *OPERATOR_CHARS_END = OPERATOR_CHARS + OPERATOR_CHARS_SIZE;
-    static constexpr const TokenType OPERATOR_TOKENS[] = {
-        TokenType::Plus, TokenType::Minus, TokenType::Star, 
-        TokenType::Slash, TokenType::Lparen, TokenType::Rparen,
-        TokenType::Equal
+    class OperatorChars
+    {
+    public:
+        static constexpr const char *begin = "+-*/()=";
+        static const unsigned char size = sizeof(begin) / sizeof(char) - 1;
+        static constexpr const char *end = begin + size;
+        static constexpr const TokenType tokens[] = {
+            TokenType::Plus, TokenType::Minus, TokenType::Star,
+            TokenType::Slash, TokenType::Lparen, TokenType::Rparen,
+            TokenType::Equal};
     };
     std::string input;
     std::vector<Token> tokens;
@@ -33,7 +36,8 @@ private:
     bool isHexDigit(char);
 
 public:
-    Lexer(std::string);
+    Lexer(std::string = "");
+    void setInput(std::string);
     std::vector<Token> tokenize();
 };
 

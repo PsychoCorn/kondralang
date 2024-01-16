@@ -4,4 +4,5 @@ add_library( ast
     UnaryExpression.cpp 
     VariablesExpression.cpp
     AssignmentStatement.cpp
+    VariableDeclarationStatement.cpp
 )

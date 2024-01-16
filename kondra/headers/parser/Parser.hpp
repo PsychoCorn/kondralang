@@ -7,6 +7,7 @@
 #include "../ast/UnaryExpression.hpp"
 #include "../ast/VariablesExpression.hpp"
 #include "../ast/AssignmentStatement.hpp"
+#include "../ast/VariableDeclarationStatement.hpp"
 
 class Parser final
 {
@@ -24,10 +25,12 @@ private:
     Statement* statement();
     Expression* additive();
     Statement* assignmentStatement();
+    Statement* variableDeclarationStatement();
     Expression* expression();
 public:
-    Parser(std::vector<Token>);
+    Parser(std::vector<Token> = std::vector<Token>());
     std::vector<Statement*> parse();
+    void setTokens(std::vector<Token>);
 };
 
 #endif

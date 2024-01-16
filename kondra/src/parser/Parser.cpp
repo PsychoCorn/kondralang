@@ -46,7 +46,21 @@ std::vector<Statement *> Parser::parse()
 
 Statement *Parser::statement()
 {
+    if (get().getText() == "var")
+        return variableDeclarationStatement();
     return assignmentStatement();
+}
+
+Statement* Parser::variableDeclarationStatement()
+{
+    Token current = get(1);
+    if (match(TokenType::Word) && match(TokenType::Word) && get().getType() == TokenType::Equal)
+    {
+        std::string variable = current.getText();
+        consume(TokenType::Equal);
+        return new VariableDeclarationStatement(variable, expression());
+    }
+    throw std::runtime_error("Unknown operator!");
 }
 
 Statement* Parser::assignmentStatement()
@@ -134,4 +148,11 @@ Expression *Parser::primary()
         return result;
     }
     throw std::runtime_error("Unknown expression!");
+}
+
+void Parser::setTokens(std::vector<Token> tokens)
+{
+    this->tokens = tokens;
+    size = tokens.size();
+    pos = 0;   
 }

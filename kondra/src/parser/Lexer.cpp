@@ -19,7 +19,7 @@ std::vector<Token> Lexer::tokenize()
         tokenizeNumber();
     else if (isalpha(current) || current == '_')
         tokenizeWord();
-    else if (std::find(OPERATOR_CHARS, OPERATOR_CHARS_END, current) != OPERATOR_CHARS_END)
+    else if (std::find(OperatorChars::begin, OperatorChars::end, current) != OperatorChars::end)
         tokenizeOperator();
     else //skip whitespaces
         next();
@@ -103,9 +103,9 @@ bool Lexer::isHexDigit(char c)
 
 void Lexer::tokenizeOperator()
 {
-    unsigned char position = std::distance(OPERATOR_CHARS, 
-        std::find(OPERATOR_CHARS, OPERATOR_CHARS_END, peek()));
-    addToken(OPERATOR_TOKENS[position]);
+    unsigned char position = std::distance(OperatorChars::begin, 
+        std::find(OperatorChars::begin, OperatorChars::end, peek()));
+    addToken(OperatorChars::tokens[position]);
     next();
 }
 
@@ -165,4 +165,12 @@ char Lexer::next()
 {
     ++pos;
     return peek();
+}
+
+void Lexer::setInput(std::string input)
+{
+    this->input = input;
+    length = input.length();
+    tokens.clear();
+    pos = 0;
 }

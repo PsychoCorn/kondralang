@@ -13,6 +13,7 @@ public:
     static bool isExist(std::string);
     static double get(std::string);
     static void set(std::string, double);
+    static void create(std::string, double);
 };
 
 #endif

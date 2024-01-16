@@ -22,5 +22,12 @@ double Variables::get(std::string key)
 
 void Variables::set(std::string key, double value)
 {
+    if (!isExist(key))
+        throw std::runtime_error("Unknown identifier");
+    variables[key] = value;
+}
+
+void Variables::create(std::string key, double value)
+{
     variables[key] = value;
 }
