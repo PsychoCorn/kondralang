@@ -1,0 +1,4 @@
+int64 five = 5;
+float64 halfOfFive;
+halfOfFive = five / 2;
+uint64 eight = (2 + 2) * 2;
