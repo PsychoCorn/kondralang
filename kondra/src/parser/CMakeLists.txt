@@ -1,1 +1,0 @@
-add_library(parser Parser.cpp Lexer.cpp Token.cpp)
