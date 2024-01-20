@@ -9,32 +9,34 @@ std::vector<Statement *> chosingParser(const std::vector<Token>&, const Type&);
 
 std::vector<Statement *> parsing(const std::vector<Token>& tokens)
 {
+    std::string textOfkeyWord;
     switch (tokens[0].getType())
     {
     case TokenType::KeyWord:
-        if (tokens[0].getText() == "int64")
+        textOfkeyWord = tokens[0].getText();
+        if (textOfkeyWord == "int64")
             return Parser<long long>(tokens).parse();
-        else if (tokens[0].getText() == "uint64")
+        else if (textOfkeyWord == "uint64")
             return Parser<unsigned long long>(tokens).parse();
-        else if (tokens[0].getText() == "int32")
+        else if (textOfkeyWord == "int32")
             return Parser<int>(tokens).parse();
-        else if (tokens[0].getText() == "uint32")
+        else if (textOfkeyWord == "uint32")
             return Parser<unsigned int>(tokens).parse();
-        else if (tokens[0].getText() == "int16")
+        else if (textOfkeyWord == "int16")
             return Parser<short int>(tokens).parse();
-        else if (tokens[0].getText() == "uint16")
+        else if (textOfkeyWord == "uint16")
             return Parser<unsigned short int>(tokens).parse();
-        else if (tokens[0].getText() == "int8")
+        else if (textOfkeyWord == "int8")
             return Parser<signed char>(tokens).parse();
-        else if (tokens[0].getText() == "uint8")
+        else if (textOfkeyWord == "uint8")
             return Parser<unsigned char>(tokens).parse();
-        else if (tokens[0].getText() == "float64")
+        else if (textOfkeyWord == "float64")
             return Parser<double>(tokens).parse();
-        else if (tokens[0].getText() == "boolean")
+        else if (textOfkeyWord == "boolean")
             return Parser<bool>(tokens).parse();
-        else if (tokens[0].getText() == "string")
+        else if (textOfkeyWord == "string")
             return Parser<std::string>(tokens).parse();
-        else if (tokens[0].getText() == "print")
+        else if (textOfkeyWord == "console_out")
         {
             switch (tokens[1].getType())
             {
