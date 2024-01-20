@@ -51,4 +51,12 @@ T BinaryExpression<T>::eval()
     throw std::runtime_error("Wrong operator!");
 }
 
+template<>
+std::string BinaryExpression<std::string>::eval()
+{
+    if (operation == "+")
+        return expr1->eval() + expr2->eval();
+    throw std::runtime_error("Wrong operator!");
+}
+
 #endif

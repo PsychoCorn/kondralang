@@ -12,6 +12,7 @@ enum TokenType
     HexNumber,
     OctNumber,
     FloatNumber,
+    StringValue, // string
     // word
     KeyWord,
     Identifier,
@@ -24,7 +25,6 @@ enum TokenType
     // brasckets
     Lparen, // (
     Rparen, // )
-    Eos, // end of statement
     Eof // end of file
 };
 

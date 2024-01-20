@@ -72,7 +72,7 @@ template <class T>
 std::vector<Statement *> Parser<T>::parse()
 {
     std::vector<Statement *> result;
-    while (!match(TokenType::Eos) && !match(TokenType::Eof))
+    while (!match(TokenType::Eof))
     {
         result.push_back(statement());
     }
@@ -82,11 +82,27 @@ std::vector<Statement *> Parser<T>::parse()
 template <class T>
 Statement *Parser<T>::statement()
 {
-    if (get().getType() == TokenType::KeyWord)
-        return variableDeclarationStatement();
-    if (get().getType() == TokenType::Identifier)
+    Token current = get(); 
+    switch (current.getType())
+    {
+    case KeyWord:
+        if (current.getText() == "print")
+        {
+            consume(KeyWord);
+            return new PrintStatement<T>(expression());
+        }
+        else
+            return variableDeclarationStatement();
+        break;
+
+    case Identifier:
         return assignmentStatement();
-    throw std::runtime_error("Unknown statement");
+        break;
+    
+    default:
+        throw std::runtime_error("Unknown statement");
+        break;
+    }
 }
 
 template <class T>
@@ -99,6 +115,20 @@ Statement *Parser<T>::variableDeclarationStatement()
         if (match(TokenType::Equal))
             return new VariableDeclarationStatement<T>(identifierOfVariable, expression());
         return new VariableDeclarationStatement<T>(identifierOfVariable, new NumberExpression<T>(0));
+    }
+    throw std::runtime_error("Unknown operator!");
+}
+
+template <>
+Statement *Parser<std::string>::variableDeclarationStatement()
+{
+    std::string type = get().getText();
+    std::string identifierOfVariable = get(1).getText();
+    if (match(TokenType::KeyWord) && match(TokenType::Identifier))
+    {
+        if (match(TokenType::Equal))
+            return new VariableDeclarationStatement<std::string>(identifierOfVariable, expression());
+        return new VariableDeclarationStatement<std::string>(identifierOfVariable, new NumberExpression<std::string>(""));
     }
     throw std::runtime_error("Unknown operator!");
 }
@@ -192,6 +222,30 @@ Expression<T> *Parser<T>::primary()
     if (match(TokenType::Lparen))
     {
         Expression<T> *result = expression();
+        if (!match(TokenType::Rparen))
+            throw std::runtime_error("Unknown expression!");
+        return result;
+    }
+    throw std::runtime_error("Unknown expression!");
+}
+
+template <>
+Expression<std::string> *Parser<std::string>::primary()
+{
+    Token current = get();
+    if (match(TokenType::IntNumber))
+        return new NumberExpression<std::string>(current.getText());
+    if (match(TokenType::FloatNumber))
+        return new NumberExpression<std::string>(current.getText());
+    if (match(TokenType::HexNumber))
+        return new NumberExpression<std::string>(current.getText());
+    if (match(TokenType::OctNumber))
+        return new NumberExpression<std::string>(current.getText());
+    if (match(TokenType::Identifier))
+        return new VariablesExpression<std::string>(current.getText());
+    if (match(TokenType::Lparen))
+    {
+        Expression<std::string> *result = expression();
         if (!match(TokenType::Rparen))
             throw std::runtime_error("Unknown expression!");
         return result;

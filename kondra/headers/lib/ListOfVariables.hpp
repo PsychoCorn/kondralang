@@ -18,6 +18,7 @@ enum Type
     Float64,
     Float80,
     Bool,
+    String,
     None //doesn't exist
 };
 

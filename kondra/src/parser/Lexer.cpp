@@ -20,10 +20,6 @@ Lexer::Lexer(std::string input)
 std::vector<Token> Lexer::tokenize()
 {
     tokens.clear();
-    if (pos >= length)
-    {
-        return tokens;
-    }
     char current;
     while (pos < length)
     {
@@ -34,22 +30,10 @@ std::vector<Token> Lexer::tokenize()
             tokenizeWord();
         else if (isOperatorChar(current))
             tokenizeOperator();
-        else if (current == ';')
-        {
-            tokenizeEndOfstatement();
-            return tokens;
-        }
         else // skip whitespaces
             next();
     }
-    //return tokens;
-    throw std::runtime_error("\";\" wasn't found");
-}
-
-void Lexer::tokenizeEndOfstatement()
-{
-    addToken(TokenType::Eos);
-    next();
+    return tokens;
 }
 
 bool Lexer::isOperatorChar(char c)
@@ -183,10 +167,6 @@ void Lexer::addToken(TokenType type)
 
     case TokenType::Equal:
         tokens.push_back(Token(type, "="));
-        break;
-
-    case TokenType::Eos:
-        tokens.push_back(Token(type, ";"));
         break;
 
     default:

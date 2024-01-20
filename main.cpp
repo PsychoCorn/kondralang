@@ -1,72 +1,121 @@
 #include "kondra/headers/parser/Lexer.hpp"
 #include "kondra/headers/parser/Parser.hpp"
-#include "kondra/headers/io/kondraio.hpp"
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <format>
 
-void interprinting(std::string sourceCode)
+std::vector<Statement *> chosingParser(const std::vector<Token>&, const Type&);
+
+std::vector<Statement *> parsing(const std::vector<Token>& tokens)
 {
-    Lexer lexer(sourceCode);
-    Parser<long long> i64Parser;
-    Parser<unsigned long long> ui64Parser;
-    Parser<double> f64Parser;
-    std::vector<Token> tokens = lexer.tokenize();
-    std::vector<Statement *> statements;
-    while (tokens.size() > 0)
+    switch (tokens[0].getType())
     {
-        std::for_each(tokens.begin(), tokens.end(), [](Token p) { 
-            std::cout << std::format("({} : \"{}\")", (int)p.getType(), p.getText()); 
-        });
-        std::cout << std::endl;
-        switch (tokens[0].getType())
+    case TokenType::KeyWord:
+        if (tokens[0].getText() == "int64")
+            return Parser<long long>(tokens).parse();
+        else if (tokens[0].getText() == "uint64")
+            return Parser<unsigned long long>(tokens).parse();
+        else if (tokens[0].getText() == "int32")
+            return Parser<int>(tokens).parse();
+        else if (tokens[0].getText() == "uint32")
+            return Parser<unsigned int>(tokens).parse();
+        else if (tokens[0].getText() == "int16")
+            return Parser<short int>(tokens).parse();
+        else if (tokens[0].getText() == "uint16")
+            return Parser<unsigned short int>(tokens).parse();
+        else if (tokens[0].getText() == "int8")
+            return Parser<signed char>(tokens).parse();
+        else if (tokens[0].getText() == "uint8")
+            return Parser<unsigned char>(tokens).parse();
+        else if (tokens[0].getText() == "float64")
+            return Parser<double>(tokens).parse();
+        else if (tokens[0].getText() == "boolean")
+            return Parser<bool>(tokens).parse();
+        else if (tokens[0].getText() == "string")
+            return Parser<std::string>(tokens).parse();
+        else if (tokens[0].getText() == "print")
         {
-        case TokenType::KeyWord:
-            if (tokens[0].getText() == "int64")
+            switch (tokens[1].getType())
             {
-                i64Parser.setTokens(tokens);
-                statements = i64Parser.parse();
-            }
-            else if (tokens[0].getText() == "uint64")
-            {
-                ui64Parser.setTokens(tokens);
-                statements = ui64Parser.parse();
-            }
-            else if (tokens[0].getText() == "float64")
-            {
-                f64Parser.setTokens(tokens);
-                statements = f64Parser.parse();
-            }
-            break;
-
-        case TokenType::Identifier:
-            switch (ListOfVariables::getType(tokens[0].getText()))
-            {
-            case Type::Int64:
-                i64Parser.setTokens(tokens);
-                statements = i64Parser.parse();
+            case Identifier:
+                return chosingParser(tokens, ListOfVariables::getType(tokens[1].getText()));
                 break;
 
-            case Type::UInt64:
-                ui64Parser.setTokens(tokens);
-                statements = ui64Parser.parse();
+            case StringValue:
+                return Parser<std::string>(tokens).parse();
                 break;
             
-            case Type::Float64:
-                f64Parser.setTokens(tokens);
-                statements = f64Parser.parse();
+            default:
+                return Parser<double>(tokens).parse();
                 break;
             }
         }
-        std::for_each(statements.begin(), statements.end(), [](Statement *p) { 
-            p->execute();
-        });
-        std::for_each(statements.begin(), statements.end(), [](Statement *p) { 
-            delete p;
-        });
-        statements.clear();
-        tokens = lexer.tokenize();
+        break;
+
+    case TokenType::Identifier:
+        return chosingParser(tokens, ListOfVariables::getType(tokens[0].getText()));
     }
+    throw std::runtime_error("Error!");
+}
+
+std::vector<Statement *> chosingParser(const std::vector<Token>& tokens, const Type& element)
+{
+    switch (element)
+    {
+    case Type::Int64:
+        return Parser<long long>(tokens).parse();
+        break;
+
+    case Type::UInt64:
+        return Parser<unsigned long long>(tokens).parse();
+        break;
+
+    case Type::Int32:
+        return Parser<int>(tokens).parse();
+        break;
+
+    case Type::UInt32:
+        return Parser<unsigned int>(tokens).parse();
+        break;
+
+    case Type::Int16:
+        return Parser<short int>(tokens).parse();
+        break;
+
+    case Type::UInt16:
+        return Parser<unsigned short int>(tokens).parse();
+        break;
+
+    case Type::Int8:
+        return Parser<signed char>(tokens).parse();
+        break;
+
+    case Type::UInt8:
+        return Parser<unsigned char>(tokens).parse();
+        break;
+    
+    case Type::Float80:
+        return Parser<long double>(tokens).parse();
+        break;
+
+    case Type::Float64:
+        return Parser<double>(tokens).parse();
+        break;
+
+    case Type::Float32:
+        return Parser<float>(tokens).parse();
+        break;
+
+    case Type::Bool:
+        return Parser<bool>(tokens).parse();
+        break;
+
+    case Type::String:
+        return Parser<std::string>(tokens).parse();
+        break;
+    }
+    throw std::runtime_error("Error!");
 }
 
 int main(int argc, char** argv)
@@ -74,15 +123,26 @@ int main(int argc, char** argv)
     if (argc > 1)
     {
         std::string pathToSourceFile = argv[1];
-        //pathToSourceFile = "build/main.kondra";
         std::ifstream sourceFile(pathToSourceFile);
         if (!sourceFile.is_open())
             throw std::runtime_error("File doesn't exist!");
-        interprinting(std::string((std::istreambuf_iterator<char>(sourceFile)), 
-                                    (std::istreambuf_iterator<char>())));
-        std::cout << std::format("({} : {})\n", "five", Variables<long long>::get("five")) <<
-                     std::format("({} : {})\n", "halfOfFive", Variables<double>::get("halfOfFive")) <<
-                     std::format("({} : {})\n", "eight", Variables<unsigned long long>::get("eight"));
+        Lexer lexer;
+        std::vector<Token> tokens;
+        std::vector<Statement *> statements;
+        std::string line;
+        while (std::getline(sourceFile, line))
+        {
+            lexer.setInput(line);
+            tokens = lexer.tokenize();
+            statements = parsing(tokens);
+            std::for_each(statements.begin(), statements.end(), [](Statement *p) { 
+                p->execute();
+            });
+            std::for_each(statements.begin(), statements.end(), [](Statement *p) { 
+                delete p;
+            });
+            statements.clear();
+        }
     }
     else
     {

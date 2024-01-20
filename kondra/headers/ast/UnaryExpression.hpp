@@ -42,4 +42,10 @@ T UnaryExpression<T>::eval()
     throw std::runtime_error(ERR_MSG_WRNG_OP);
 }
 
+template <>
+std::string UnaryExpression<std::string>::eval()
+{
+    throw std::runtime_error(ERR_MSG_WRNG_OP);
+}
+
 #endif
