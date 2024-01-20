@@ -4,6 +4,9 @@
 #include <algorithm>
 #include <string>
 
+#define ERR_MSG_INVLD_F_NUM "Invalid float number"
+#define ERR_MSG_UNKNWN_ESC_CHAR "Unknown escape-character"
+
 std::string Lexer::operatorChars = "+-*/()=";
 
 std::unordered_map<std::string, TokenType> Lexer::operators = {
@@ -64,7 +67,7 @@ void Lexer::tokenizeNumber()
         if (current == '.')
         {
             if (buffer.find('.') != std::string::npos)
-                throw std::runtime_error("Invalid float number!");
+                throw std::runtime_error(ERR_MSG_INVLD_F_NUM);
             type = TokenType::FloatNumber;
         }
         else if (!isdigit(current))
@@ -191,7 +194,7 @@ void Lexer::tokenizeStringValue()
                 continue;
             
             default:
-                throw std::runtime_error("Unknown escape-character!");
+                throw std::runtime_error(ERR_MSG_UNKNWN_ESC_CHAR);
                 break;
             }
         }

@@ -6,6 +6,12 @@
 #include "../../headers/lib/KeyWords.hpp"
 #include <stdexcept>
 
+#define ERR_MSG_UNKNWN_OP "Unknown operator"
+#define ERR_MSG_UNKNWN_EXPR "Unknown expression"
+#define ERR_MSG_STR_IN_NOT_STR_STMNT "Using string in not string statement"
+#define ERR_MSG_WRNG_TOKEN_TYPE "Wrong token type"
+#define ERR_MSG_UNKNWN_STMNT "Unknown statement"
+
 template <class T>
 class Parser final
 {
@@ -63,7 +69,7 @@ Token Parser<T>::consume(TokenType type)
 {
     Token current = get();
     if (type != current.getType())
-        throw std::runtime_error("Wrong token type!");
+        throw std::runtime_error(ERR_MSG_WRNG_TOKEN_TYPE);
     ++pos;
     return current;
 }
@@ -100,7 +106,7 @@ Statement *Parser<T>::statement()
         break;
     
     default:
-        throw std::runtime_error("Unknown statement");
+        throw std::runtime_error(ERR_MSG_UNKNWN_STMNT);
         break;
     }
 }
@@ -116,21 +122,21 @@ Statement *Parser<T>::variableDeclarationStatement()
             return new VariableDeclarationStatement<T>(identifierOfVariable, expression());
         return new VariableDeclarationStatement<T>(identifierOfVariable, new ValueExpression<T>(0));
     }
-    throw std::runtime_error("Unknown operator!");
+    throw std::runtime_error(ERR_MSG_UNKNWN_OP);
 }
 
 template <>
-Statement *Parser<std::string>::variableDeclarationStatement()
+Statement *Parser<kondra::string>::variableDeclarationStatement()
 {
     std::string type = get().getText();
     std::string identifierOfVariable = get(1).getText();
     if (match(TokenType::KeyWord) && match(TokenType::Identifier))
     {
         if (match(TokenType::Equal))
-            return new VariableDeclarationStatement<std::string>(identifierOfVariable, expression());
-        return new VariableDeclarationStatement<std::string>(identifierOfVariable, new ValueExpression<std::string>(""));
+            return new VariableDeclarationStatement<kondra::string>(identifierOfVariable, expression());
+        return new VariableDeclarationStatement<kondra::string>(identifierOfVariable, new ValueExpression<kondra::string>(""));
     }
-    throw std::runtime_error("Unknown operator!");
+    throw std::runtime_error(ERR_MSG_UNKNWN_OP);
 }
 
 template <class T>
@@ -144,7 +150,7 @@ Statement *Parser<T>::assignmentStatement()
         consume(TokenType::Equal);
         return new AssignmentStatement<T>(identifierOfVariable, expression());
     }
-    throw std::runtime_error("Unknown operator!");
+    throw std::runtime_error(ERR_MSG_UNKNWN_OP);
 }
 
 template <class T>
@@ -218,43 +224,43 @@ Expression<T> *Parser<T>::primary()
     if (match(TokenType::OctNumber))
         return new ValueExpression<T>(std::stoull(current.getText(), nullptr, 8));
     if (match(TokenType::StringValue))
-        throw std::runtime_error("Using string! in not string statement!");
+        throw std::runtime_error(ERR_MSG_STR_IN_NOT_STR_STMNT);
     if (match(TokenType::Identifier))
         return new VariablesExpression<T>(current.getText());
     if (match(TokenType::Lparen))
     {
         Expression<T> *result = expression();
         if (!match(TokenType::Rparen))
-            throw std::runtime_error("Unknown expression!");
+            throw std::runtime_error(ERR_MSG_UNKNWN_EXPR);
         return result;
     }
-    throw std::runtime_error("Unknown expression!");
+    throw std::runtime_error(ERR_MSG_UNKNWN_EXPR);
 }
 
 template <>
-Expression<std::string> *Parser<std::string>::primary()
+Expression<kondra::string> *Parser<kondra::string>::primary()
 {
     Token current = get();
     if (match(TokenType::IntNumber))
-        return new ValueExpression<std::string>(current.getText());
+        return new ValueExpression<kondra::string>(current.getText());
     if (match(TokenType::FloatNumber))
-        return new ValueExpression<std::string>(current.getText());
+        return new ValueExpression<kondra::string>(current.getText());
     if (match(TokenType::HexNumber))
-        return new ValueExpression<std::string>(current.getText());
+        return new ValueExpression<kondra::string>(current.getText());
     if (match(TokenType::OctNumber))
-        return new ValueExpression<std::string>(current.getText());
+        return new ValueExpression<kondra::string>(current.getText());
     if (match(TokenType::StringValue))
-        return new ValueExpression<std::string>(current.getText());
+        return new ValueExpression<kondra::string>(current.getText());
     if (match(TokenType::Identifier))
-        return new VariablesExpression<std::string>(current.getText());
+        return new VariablesExpression<kondra::string>(current.getText());
     if (match(TokenType::Lparen))
     {
-        Expression<std::string> *result = expression();
+        Expression<kondra::string> *result = expression();
         if (!match(TokenType::Rparen))
-            throw std::runtime_error("Unknown expression!");
+            throw std::runtime_error(ERR_MSG_UNKNWN_EXPR);
         return result;
     }
-    throw std::runtime_error("Unknown expression!");
+    throw std::runtime_error(ERR_MSG_UNKNWN_EXPR);
 }
 
 template <class T>

@@ -2,11 +2,16 @@
 #define Variables_HPP
 
 #include "ListOfVariables.hpp"
+#include "../types/kondratypes.hpp"
+#include "../io/kondraio.hpp"
 #include "KeyWords.hpp"
 #include <stdexcept>
 #include <limits>
 #include <cmath>
 #include <numbers>
+
+#define ERR_MSG_UNKN_ID "Unknown identifier"
+#define ERR_MSG_ID_CANT_BE_REDEF "Identifier can't be redefined"
 
 template <class T>
 class Variables
@@ -20,8 +25,6 @@ public:
     static void set(std::string, T);
     static void create(std::string, T);
 };
-
-#define ERR_MSG_UNKN_ID "Unknown identifier"
 
 template<>
 std::unordered_map<std::string, bool> Variables<bool>::variables = {
@@ -125,12 +128,12 @@ template<>
 Type Variables<unsigned char>::type = Type::UInt8;
 
 template<>
-std::unordered_map<std::string, std::string> Variables<std::string>::variables = {
+std::unordered_map<std::string, kondra::string> Variables<kondra::string>::variables = {
     {"_ENDL_", "\n"},
 };
 
 template<>
-Type Variables<std::string>::type = Type::String;
+Type Variables<kondra::string>::type = Type::String;
 
 template<class T>
 T Variables<T>::get(std::string key)
@@ -220,7 +223,7 @@ T Variables<T>::get(std::string key)
 }
 
 template<>
-std::string Variables<std::string>::get(std::string key)
+kondra::string Variables<kondra::string>::get(std::string key)
 {
     switch (ListOfVariables::getType(key))
     {
@@ -229,51 +232,51 @@ std::string Variables<std::string>::get(std::string key)
         break;
     
     case Type::Int64:
-        return std::to_string(Variables<long long>::get(key));
+        return kondra::to_string(Variables<long long>::get(key));
         break;
 
     case Type::Int32:
-        return std::to_string(Variables<int>::get(key));
+        return kondra::to_string(Variables<int>::get(key));
         break;
 
     case Type::Int16:
-        return std::to_string(Variables<short int>::get(key));
+        return kondra::to_string(Variables<short int>::get(key));
         break;
 
     case Type::Int8:
-        return std::to_string(Variables<signed char>::get(key));
+        return kondra::to_string(Variables<signed char>::get(key));
         break;
 
     case Type::Float32:
-        return std::to_string(Variables<float>::get(key));
+        return kondra::to_string(Variables<float>::get(key));
         break;
 
     case Type::Float64:
-        return std::to_string(Variables<double>::get(key));
+        return kondra::to_string(Variables<double>::get(key));
         break;
 
     case Type::Float80:
-        return std::to_string(Variables<long double>::get(key));
+        return kondra::to_string(Variables<long double>::get(key));
         break;
 
     case Type::UInt64:
-        return std::to_string(Variables<unsigned long long>::get(key));
+        return kondra::to_string(Variables<unsigned long long>::get(key));
         break;
 
     case Type::UInt32:
-        return std::to_string(Variables<unsigned int>::get(key));
+        return kondra::to_string(Variables<unsigned int>::get(key));
         break;
 
     case Type::UInt16:
-        return std::to_string(Variables<unsigned short int>::get(key));
+        return kondra::to_string(Variables<unsigned short int>::get(key));
         break;
 
     case Type::UInt8:
-        return std::to_string(Variables<unsigned char>::get(key));
+        return kondra::to_string(Variables<unsigned char>::get(key));
         break;
 
     case Type::Bool:
-        return std::to_string(Variables<bool>::get(key));
+        return kondra::to_string(Variables<bool>::get(key));
         break;
     
     case Type::String:
@@ -299,7 +302,7 @@ void Variables<T>::create(std::string key, T value)
 {
     Type typeOfVar = ListOfVariables::getType(key);
     if (typeOfVar != Variables<T>::type && typeOfVar != Type::None)
-        throw std::runtime_error("Identifier can't be redefined!");
+        throw std::runtime_error(ERR_MSG_ID_CANT_BE_REDEF);
     variables[key] = value;
     ListOfVariables::setType(key, Variables<T>::type);
 }

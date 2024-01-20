@@ -5,6 +5,9 @@
 #include <stdexcept>
 #include <string>
 
+#define ERR_MSG_DIV_BY_ZERO "Division by zero"
+#define ERR_MSG_WRNG_BIN_OP "Wrong binary operator"
+
 template <class T>
 class BinaryExpression : public Expression<T>
 {
@@ -45,18 +48,18 @@ T BinaryExpression<T>::eval()
     else if (operation == "/")
     {
         if (expr2->eval() == 0)
-            throw std::runtime_error("Division by zero!");
+            throw std::runtime_error(ERR_MSG_DIV_BY_ZERO);
         return expr1->eval() / expr2->eval();
     }
-    throw std::runtime_error("Wrong operator!");
+    throw std::runtime_error(ERR_MSG_WRNG_BIN_OP);
 }
 
 template<>
-std::string BinaryExpression<std::string>::eval()
+kondra::string BinaryExpression<kondra::string>::eval()
 {
     if (operation == "+")
         return expr1->eval() + expr2->eval();
-    throw std::runtime_error("Wrong operator!");
+    throw std::runtime_error(ERR_MSG_WRNG_BIN_OP);
 }
 
 #endif

@@ -22,25 +22,25 @@ namespace kondra
         mpz_init_set_si(value, intValue);
     }
 
-    DynamicInteger::DynamicInteger(const char *strValue)
+    DynamicInteger::DynamicInteger(const char *strValue, const size_t& radix)
     {
-        if (mpz_init_set_str(value, strValue, 10) == -1)
+        if (mpz_init_set_str(value, strValue, radix) == -1)
         {
             throw std::invalid_argument(ERR_MSG_INVALID_STRING_ARG);
         }
     }
 
-    DynamicInteger::DynamicInteger(const string &strValue)
+    DynamicInteger::DynamicInteger(const string &strValue, const size_t& radix)
     {
-        if (mpz_init_set_str(value, strValue.c_str(), 10) == -1)
+        if (mpz_init_set_str(value, strValue.c_str(), radix) == -1)
         {
             throw std::invalid_argument(ERR_MSG_INVALID_STRING_ARG);
         }
     }
 
-    DynamicInteger::DynamicInteger(const std::string &strValue)
+    DynamicInteger::DynamicInteger(const std::string &strValue, const size_t& radix)
     {
-        if (mpz_init_set_str(value, strValue.c_str(), 10) == -1)
+        if (mpz_init_set_str(value, strValue.c_str(), radix) == -1)
         {
             throw std::invalid_argument(ERR_MSG_INVALID_STRING_ARG);
         }

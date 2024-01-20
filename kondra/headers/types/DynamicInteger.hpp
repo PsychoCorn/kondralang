@@ -16,9 +16,9 @@ namespace kondra
         DynamicInteger();
         DynamicInteger(const int &);
         DynamicInteger(const long long &);
-        DynamicInteger(const char *);
-        DynamicInteger(const string &);
-        DynamicInteger(const std::string &);
+        DynamicInteger(const char *, const size_t& = 10);
+        DynamicInteger(const string &, const size_t& = 10);
+        DynamicInteger(const std::string &, const size_t& = 10);
         DynamicInteger(const double &);
         DynamicInteger(const DynamicInteger &);
         ~DynamicInteger();

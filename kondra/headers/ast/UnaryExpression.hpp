@@ -5,6 +5,8 @@
 #include <string>
 #include <stdexcept>
 
+#define ERR_MSG_WRNG_UN_OP "Wrong unary operator"
+
 template <class T>
 class UnaryExpression : public Expression<T>
 {
@@ -16,8 +18,6 @@ public:
     ~UnaryExpression();
     T eval() override;
 };
-
-#define ERR_MSG_WRNG_OP "Wrong operator!"
 
 template <class T>
 UnaryExpression<T>::UnaryExpression(std::string operation, Expression<T>* expr)
@@ -39,13 +39,13 @@ T UnaryExpression<T>::eval()
         return expr->eval();
     else if(operation == "-")
         return -expr->eval();
-    throw std::runtime_error(ERR_MSG_WRNG_OP);
+    throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
 }
 
 template <>
-std::string UnaryExpression<std::string>::eval()
+kondra::string UnaryExpression<kondra::string>::eval()
 {
-    throw std::runtime_error(ERR_MSG_WRNG_OP);
+    throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
 }
 
 #endif

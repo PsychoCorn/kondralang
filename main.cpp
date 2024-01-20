@@ -35,7 +35,7 @@ std::vector<Statement *> parsing(const std::vector<Token>& tokens)
         else if (textOfkeyWord == "boolean")
             return Parser<bool>(tokens).parse();
         else if (textOfkeyWord == "string")
-            return Parser<std::string>(tokens).parse();
+            return Parser<kondra::string>(tokens).parse();
         else if (textOfkeyWord == "console_out")
         {
             switch (tokens[1].getType())
@@ -45,7 +45,7 @@ std::vector<Statement *> parsing(const std::vector<Token>& tokens)
                 break;
 
             case StringValue:
-                return Parser<std::string>(tokens).parse();
+                return Parser<kondra::string>(tokens).parse();
                 break;
             
             default:
@@ -114,7 +114,7 @@ std::vector<Statement *> chosingParser(const std::vector<Token>& tokens, const T
         break;
 
     case Type::String:
-        return Parser<std::string>(tokens).parse();
+        return Parser<kondra::string>(tokens).parse();
         break;
     }
     throw std::runtime_error("Error!");
@@ -132,14 +132,24 @@ int main(int argc, char** argv)
         std::vector<Token> tokens;
         std::vector<Statement *> statements;
         std::string line;
+        size_t lineCounter = 0;
         while (std::getline(sourceFile, line))
         {
-            lexer.setInput(line);
-            tokens = lexer.tokenize();
-            statements = parsing(tokens);
-            std::for_each(statements.begin(), statements.end(), [](Statement *p) { 
-                p->execute();
-            });
+            lineCounter++;
+            try
+            {
+                lexer.setInput(line);
+                tokens = lexer.tokenize();
+                statements = parsing(tokens);
+                std::for_each(statements.begin(), statements.end(), [](Statement *p) { 
+                    p->execute();
+                });
+            }
+            catch (std::runtime_error& e)
+            {
+                std::cerr << e.what() << " at line " << lineCounter;
+                return 1;
+            }
             std::for_each(statements.begin(), statements.end(), [](Statement *p) { 
                 delete p;
             });
