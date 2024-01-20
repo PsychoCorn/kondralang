@@ -4,7 +4,7 @@
 
 Типы:
 
-Целые числа: int8, uint8, int16, uint16, int32, uint32, int64, uint64
+Целые числа: int8, uint8, int16, uint16, int32, uint32, int64, uint64, int(DynamicInteger)
 
 Действительные числа:
 
@@ -15,6 +15,8 @@
 Логический тип данных: boolean
 
 Символьные типы данных: string(String)
+
+var(DynamicInt, может содержать int, float64, boolean, string)
 
 Вывод в консоль:
 
