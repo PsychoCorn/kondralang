@@ -4,7 +4,7 @@
 
 Типы:
 
-Целые числа: int8, uint8, int16, uint16, int32, uint32, int64, uint64, int(DynamicInteger) (пока под вопросом)
+Целые числа: int8, uint8, int16, uint16, int32, uint32, int64, uint64
 
 Действительные числа:
 
@@ -16,4 +16,6 @@
 
 Символьные типы данных: string(String)
 
-Динамический тип: var(Variable - может хранить int, float64, string, bool, None(тип не инициализированной переменной)) (пока под вопросом)
+Вывод в консоль:
+
+ключевое слово console_out
