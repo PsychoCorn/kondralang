@@ -20,6 +20,8 @@ var(DynamicInt, может содержать int, float64, boolean, string)
 
 Вывод в консоль:
 
-ключевое слово console_out
+операция console_out
 
 Пример console_out myVariable
+
+!!!console_out принимает строковый операнд, поэтому строка "console_out 3 + 5" выведет "35"
