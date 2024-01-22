@@ -7,7 +7,7 @@ add_subdirectory(kondra/src)
 add_executable(kondra main.cpp)
 
 target_link_libraries(kondra
-    parser
+    interpreter
     lib
     types
 )
