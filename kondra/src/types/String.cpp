@@ -15,7 +15,7 @@ String String::operator*(const size_t& times) const
     result.reserve(length() * times);
     for (size_t i = 0; i < times; i++)
     {
-        result += *this;
+        result.append(*this);
     }
     return result;
 }

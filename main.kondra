@@ -1,4 +1,5 @@
 var n = "test"
-n += "!"
+int8 a = 0xa
+n += "!" * a
 console_out n
 

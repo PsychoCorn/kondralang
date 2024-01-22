@@ -59,6 +59,8 @@ kondra::string BinaryExpression<kondra::string>::eval()
 {
     if (operation == "+")
         return expr1->eval() + expr2->eval();
+    else if (operation == "*")
+        return expr1->eval() * std::stoull(expr2->eval());
     throw std::runtime_error(ERR_MSG_WRNG_BIN_OP);
 }
 
