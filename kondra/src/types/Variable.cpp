@@ -3,6 +3,7 @@
 #define ERR_MSG_INVALID_OPERANDS "Invalid operands!"
 #define ERR_MSG_INVALID_OPERAND "Invalid operand!"
 #define ERR_MSG_DIVISION_BY_ZERO "Division by zero!"
+#define ERR_MSG_NEGATIVE_SHIFT_VALUE "Negative shift value!"
 
 namespace kondra
 {
@@ -1333,6 +1334,82 @@ namespace kondra
     bool operator||(const Variable &var1, const Variable &var2)
     {
         return *(Variable::toBool(var1).data.boolData) || *(Variable::toBool(var2).data.boolData);
+    }
+
+    Variable operator&(const Variable &var1, const Variable &var2)
+    {
+        if (var1.type == VarType::Int && var2.type == VarType::Int)
+            return Variable(*(var1.data.intData) & *(var2.data.intData));
+        throw std::runtime_error(ERR_MSG_INVALID_OPERANDS);
+    }
+
+    Variable &Variable::operator&=(const Variable &other)
+    {
+        *this = *this & other;
+        return *this;
+    }
+
+    Variable operator|(const Variable &var1, const Variable &var2)
+    {
+        if (var1.type == VarType::Int && var2.type == VarType::Int)
+            return Variable(*(var1.data.intData) | *(var2.data.intData));
+        throw std::runtime_error(ERR_MSG_INVALID_OPERANDS);
+    }
+
+    Variable &Variable::operator|=(const Variable &other)
+    {
+        *this = *this | other;
+        return *this;
+    }
+
+    Variable operator^(const Variable &var1, const Variable &var2)
+    {
+        if (var1.type == VarType::Int && var2.type == VarType::Int)
+            return Variable(*(var1.data.intData) ^ *(var2.data.intData));
+        throw std::runtime_error(ERR_MSG_INVALID_OPERANDS);
+    }
+
+    Variable &Variable::operator^=(const Variable &other)
+    {
+        *this = *this ^ other;
+        return *this;
+    }
+
+    Variable operator>>(const Variable &var1, const Variable &var2)
+    {
+        if (var2 < Variable(0))
+            throw std::runtime_error(ERR_MSG_NEGATIVE_SHIFT_VALUE);
+        if (var1.type == VarType::Int && var2.type == VarType::Int)
+            return Variable(*(var1.data.intData) >> *(var2.data.intData));
+        throw std::runtime_error(ERR_MSG_INVALID_OPERANDS);
+    }
+
+    Variable &Variable::operator>>=(const Variable &other)
+    {
+        *this = *this >> other;
+        return *this;
+    }
+
+    Variable operator<<(const Variable &var1, const Variable &var2)
+    {
+        if (var2 < Variable(0))
+            throw std::runtime_error(ERR_MSG_NEGATIVE_SHIFT_VALUE);
+        if (var1.type == VarType::Int && var2.type == VarType::Int)
+            return Variable(*(var1.data.intData) << *(var2.data.intData));
+        throw std::runtime_error(ERR_MSG_INVALID_OPERANDS);
+    }
+
+    Variable &Variable::operator<<=(const Variable &other)
+    {
+        *this = *this << other;
+        return *this;
+    }
+
+    Variable Variable::operator~() const
+    {
+        if (type != VarType::Int)
+            return ~(*(data.intData));
+        throw std::runtime_error(ERR_MSG_INVALID_OPERANDS);
     }
 
 }

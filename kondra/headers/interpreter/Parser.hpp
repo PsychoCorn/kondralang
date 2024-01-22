@@ -170,7 +170,37 @@ Statement *Parser<T>::assignmentStatement()
 template <class T>
 Expression<T> *Parser<T>::expression()
 {
-    return additive();
+    Expression<T> *result = additive();
+    while (true)
+    {
+        if (match(TokenType::Lshift))
+        {
+            result = new BinaryExpression<T>("<<", result, multiplicative());
+            continue;
+        }
+        if (match(TokenType::Rshift))
+        {
+            result = new BinaryExpression<T>(">>", result, multiplicative());
+            continue;
+        }
+        if (match(TokenType::Ampersand))
+        {
+            result = new BinaryExpression<T>("&", result, multiplicative());
+            continue;
+        }
+        if (match(TokenType::Caret))
+        {
+            result = new BinaryExpression<T>("^", result, multiplicative());
+            continue;
+        }
+        if (match(TokenType::Pipe))
+        {
+            result = new BinaryExpression<T>("|", result, multiplicative());
+            continue;
+        }
+        break;
+    }
+    return result;
 }
 
 template <class T>
@@ -187,6 +217,11 @@ Expression<T> *Parser<T>::additive()
         if (match(TokenType::Minus))
         {
             result = new BinaryExpression<T>("-", result, multiplicative());
+            continue;
+        }
+        if (match(TokenType::Percentage))
+        {
+            result = new BinaryExpression<T>("%", result, multiplicative());
             continue;
         }
         break;
@@ -222,6 +257,8 @@ Expression<T> *Parser<T>::unary()
         return new UnaryExpression<T>("-", primary());
     if (match(TokenType::Plus))
         return primary();
+    if (match(TokenType::Tilde))
+        return new UnaryExpression<T>("~", primary());
     return primary();
 }
 

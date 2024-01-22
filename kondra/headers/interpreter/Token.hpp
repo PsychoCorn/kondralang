@@ -22,6 +22,15 @@ enum TokenType
     Minus,
     Slash,
     Equal,
+    Percentage,
+    Ampersand,
+    Caret,
+    Pipe,
+    Less,
+    More,
+    Lshift,
+    Rshift,
+    Tilde,
     PlusAndEqual,
     // brasckets
     Lparen, // (

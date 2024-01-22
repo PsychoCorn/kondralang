@@ -73,6 +73,17 @@ namespace kondra
         Variable &operator/=(const Variable &);
         friend Variable operator%(const Variable &, const Variable &);
         Variable &operator%=(const Variable &);
+        friend Variable operator&(const Variable &, const Variable &);
+        Variable &operator&=(const Variable &);
+        friend Variable operator|(const Variable &, const Variable &);
+        Variable &operator|=(const Variable &);
+        friend Variable operator^(const Variable &, const Variable &);
+        Variable &operator^=(const Variable &);
+        friend Variable operator<<(const Variable &, const Variable &);
+        Variable &operator<<=(const Variable &);
+        friend Variable operator>>(const Variable &, const Variable &);
+        Variable &operator>>=(const Variable &);
+        Variable operator~() const;
         bool operator!() const;
         friend bool operator&&(const Variable &, const Variable &);
         friend bool operator||(const Variable &, const Variable &);

@@ -6,13 +6,16 @@
 
 #define ERR_MSG_INVLD_F_NUM "Invalid float number"
 #define ERR_MSG_UNKNWN_ESC_CHAR "Unknown escape-character"
+#define ERR_MSG_UNKNWN_OP "Unknown operator"
 
-std::string Lexer::operatorChars = "+-*/()=";
+std::string Lexer::operatorChars = "+-*/()=%&^|~<>";
 
 std::unordered_map<std::string, TokenType> Lexer::operators = {
     {"+", TokenType::Plus}, {"-", TokenType::Minus}, {"*", TokenType::Star},
     {"/", TokenType::Slash}, {"(", TokenType::Lparen}, {")", TokenType::Rparen},
-    {"=", TokenType::Equal}, {"+=", TokenType::PlusAndEqual} };
+    {"=", TokenType::Equal}, {"+=", TokenType::PlusAndEqual}, {"%", TokenType::Percentage},
+    {"&", TokenType::Ampersand}, {"|", TokenType::Pipe}, {"^", TokenType::Caret},
+    {"~", TokenType::Tilde}, {"<<", TokenType::Lshift}, {">>", TokenType::Rshift}, };
 
 Lexer::Lexer(std::string input)
 {
@@ -264,12 +267,40 @@ void Lexer::addToken(TokenType type)
         tokens.push_back(Token(type, "="));
         break;
 
+    case TokenType::Percentage:
+        tokens.push_back(Token(type, "%"));
+        break;
+
+    case TokenType::Ampersand:
+        tokens.push_back(Token(type, "&"));
+        break;
+
+    case TokenType::Pipe:
+        tokens.push_back(Token(type, "|"));
+        break;
+
+    case TokenType::Caret:
+        tokens.push_back(Token(type, "^"));
+        break;
+
+    case TokenType::Tilde:
+        tokens.push_back(Token(type, "~"));
+        break;
+
+    case TokenType::Lshift:
+        tokens.push_back(Token(type, "<<"));
+        break;
+
+    case TokenType::Rshift:
+        tokens.push_back(Token(type, ">>"));
+        break;
+
     case TokenType::PlusAndEqual:
         tokens.push_back(Token(type, "+="));
         break;
 
     default:
-        tokens.push_back(Token(type, "\0"));
+        throw std::runtime_error(ERR_MSG_UNKNWN_OP);
         break;
     }
 }
