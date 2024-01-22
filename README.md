@@ -25,3 +25,15 @@ var(DynamicInt, может содержать int, float64, boolean, string)
 Пример console_out myVariable
 
 !!!console_out принимает строковый операнд, поэтому строка "console_out 3 + 5" выведет "35"
+
+Операции:
+
+Унарные:
+
++, -
+
+Бинарные:
+
++, -, *, /, =, +=
+
+
