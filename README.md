@@ -21,3 +21,5 @@ var(DynamicInt, может содержать int, float64, boolean, string)
 Вывод в консоль:
 
 ключевое слово console_out
+
+Пример console_out myVariable
