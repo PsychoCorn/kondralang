@@ -61,8 +61,8 @@ Type Variables<long double>::type = Type::Float80;
 template<>
 std::unordered_map<std::string, long long> Variables<long long>::variables = {
     {"_NULL_", 0},
-    {"_I64_MAX_", _I64_MAX},
-    {"_I64_MIN_", _I64_MIN}
+    {"_I64_MAX_", std::numeric_limits<long long>::max()},
+    {"_I64_MIN_", std::numeric_limits<long long>::min()}
 };
 
 template<>
@@ -70,7 +70,7 @@ Type Variables<long long>::type = Type::Int64;
 
 template<>
 std::unordered_map<std::string, unsigned long long> Variables<unsigned long long>::variables = {
-    {"_UI64_MAX_", _UI64_MAX},
+    {"_UI64_MAX_", std::numeric_limits<unsigned long long>::max()},
 };
 
 template<>
@@ -78,8 +78,8 @@ Type Variables<unsigned long long>::type = Type::UInt64;
 
 template<>
 std::unordered_map<std::string, int> Variables<int>::variables = {
-    {"_I32_MAX_", _I32_MAX},
-    {"_I32_MIN_", _I32_MIN},
+    {"_I32_MAX_", std::numeric_limits<int>::max()},
+    {"_I32_MIN_", std::numeric_limits<int>::min()},
 };
 
 template<>
@@ -87,33 +87,33 @@ Type Variables<int>::type = Type::Int32;
 
 template<>
 std::unordered_map<std::string, unsigned int> Variables<unsigned int>::variables = {
-    {"_UI32_MAX_", _UI32_MAX},
+    {"_UI32_MAX_", std::numeric_limits<unsigned int>::max()},
 };
 
 template<>
 Type Variables<unsigned int>::type = Type::UInt32;
 
 template<>
-std::unordered_map<std::string, short int> Variables<short int>::variables = {
-    {"_I16_MAX_", _I16_MAX},
-    {"_I16_MIN_", _I16_MIN},
+std::unordered_map<std::string, short> Variables<short>::variables = {
+    {"_I16_MAX_", std::numeric_limits<short>::max()},
+    {"_I16_MIN_", std::numeric_limits<short>::min()},
 };
 
 template<>
-Type Variables<short int>::type = Type::Int16;
+Type Variables<short>::type = Type::Int16;
 
 template<>
-std::unordered_map<std::string, unsigned short int> Variables<unsigned short int>::variables = {
-    {"_UI16_MAX_", _UI16_MAX},
+std::unordered_map<std::string, unsigned short> Variables<unsigned short>::variables = {
+    {"_UI16_MAX_", std::numeric_limits<unsigned short>::max()},
 };
 
 template<>
-Type Variables<unsigned short int>::type = Type::UInt16;
+Type Variables<unsigned short>::type = Type::UInt16;
 
 template<>
 std::unordered_map<std::string, signed char> Variables<signed char>::variables = {
-    {"_I8_MAX_", _I8_MAX},
-    {"_I8_MIN_", _I8_MIN},
+    {"_I8_MAX_", std::numeric_limits<signed char>::max()},
+    {"_I8_MIN_", std::numeric_limits<signed char>::min()},
 };
 
 template<>
@@ -121,11 +121,17 @@ Type Variables<signed char>::type = Type::Int8;
 
 template<>
 std::unordered_map<std::string, unsigned char> Variables<unsigned char>::variables = {
-    {"_UI8_MAX_", _UI8_MAX},
+    {"_UI8_MAX_", std::numeric_limits<unsigned char>::max()},
 };
 
 template<>
 Type Variables<unsigned char>::type = Type::UInt8;
+
+template<>
+std::unordered_map<std::string, kondra::dynamic_int> Variables<kondra::dynamic_int>::variables = {};
+
+template<>
+Type Variables<kondra::dynamic_int>::type = Type::Int;
 
 template<>
 std::unordered_map<std::string, kondra::string> Variables<kondra::string>::variables = {
@@ -135,6 +141,12 @@ std::unordered_map<std::string, kondra::string> Variables<kondra::string>::varia
 template<>
 Type Variables<kondra::string>::type = Type::String;
 
+template<>
+std::unordered_map<std::string, kondra::var> Variables<kondra::var>::variables = {};
+
+template<>
+Type Variables<kondra::var>::type = Type::Var;
+
 template<class T>
 T Variables<T>::get(std::string key)
 {
@@ -142,83 +154,79 @@ T Variables<T>::get(std::string key)
     {
     case Type::None:
         throw std::runtime_error(ERR_MSG_UNKN_ID);
-        break;
     
     case Type::Int64:
         if (type == Int64)
             return variables[key];
-        return Variables<long long>::get(key);
-        break;
+        return static_cast<T>(Variables<long long>::get(key));
 
     case Type::Int32:
         if (type == Int32)
             return variables[key];
-        return Variables<int>::get(key);
-        break;
+        return static_cast<T>(Variables<int>::get(key));
 
     case Type::Int16:
         if (type == Int16)
             return variables[key];
-        return Variables<short int>::get(key);
-        break;
+        return static_cast<T>(Variables<short>::get(key));
 
     case Type::Int8:
         if (type == Int8)
             return variables[key];
-        return Variables<signed char>::get(key);
-        break;
+        return static_cast<T>(Variables<signed char>::get(key));
 
     case Type::Float32:
         if (type == Float32)
             return variables[key];
-        return Variables<float>::get(key);
-        break;
+        return static_cast<T>(Variables<float>::get(key));
 
     case Type::Float64:
         if (type == Float64)
             return variables[key];
-        return Variables<double>::get(key);
-        break;
+        return static_cast<T>(Variables<double>::get(key));
 
     case Type::Float80:
         if (type == Float80)
             return variables[key];
-        return Variables<long double>::get(key);
-        break;
+        return static_cast<T>(Variables<long double>::get(key));
 
     case Type::UInt64:
         if (type == UInt64)
             return variables[key];
-        return Variables<unsigned long long>::get(key);
-        break;
+        return static_cast<T>(Variables<unsigned long long>::get(key));
 
     case Type::UInt32:
         if (type == UInt32)
             return variables[key];
-        return Variables<unsigned int>::get(key);
-        break;
+        return static_cast<T>(Variables<unsigned int>::get(key));
 
     case Type::UInt16:
         if (type == UInt16)
             return variables[key];
-        return Variables<unsigned short int>::get(key);
-        break;
+        return static_cast<T>(Variables<unsigned short>::get(key));
 
     case Type::UInt8:
         if (type == UInt8)
             return variables[key];
-        return Variables<unsigned char>::get(key);
-        break;
+        return static_cast<T>(Variables<unsigned char>::get(key));
+
+    case Type::Int:
+        if (type == Int)
+            return variables[key];
+        return static_cast<T>(Variables<kondra::dynamic_int>::get(key));
 
     case Type::Bool:
         if (type == Bool)
             return variables[key];
-        return Variables<bool>::get(key);
-        break;
+        return static_cast<T>(Variables<bool>::get(key));
+
+    case Type::Var:
+        if (type == Var)
+            return variables[key];
+        return static_cast<T>(Variables<kondra::var>::get(key));
     
     default:
-        return 0;
-        break;
+        return static_cast<T>(0);
     }
 }
 
@@ -229,63 +237,54 @@ kondra::string Variables<kondra::string>::get(std::string key)
     {
     case Type::None:
         throw std::runtime_error(ERR_MSG_UNKN_ID);
-        break;
     
     case Type::Int64:
         return kondra::to_string(Variables<long long>::get(key));
-        break;
 
     case Type::Int32:
         return kondra::to_string(Variables<int>::get(key));
-        break;
 
     case Type::Int16:
-        return kondra::to_string(Variables<short int>::get(key));
-        break;
+        return kondra::to_string(Variables<short>::get(key));
 
     case Type::Int8:
         return kondra::to_string(Variables<signed char>::get(key));
-        break;
 
     case Type::Float32:
         return kondra::to_string(Variables<float>::get(key));
-        break;
 
     case Type::Float64:
         return kondra::to_string(Variables<double>::get(key));
-        break;
 
     case Type::Float80:
         return kondra::to_string(Variables<long double>::get(key));
-        break;
 
     case Type::UInt64:
         return kondra::to_string(Variables<unsigned long long>::get(key));
-        break;
 
     case Type::UInt32:
         return kondra::to_string(Variables<unsigned int>::get(key));
-        break;
 
     case Type::UInt16:
-        return kondra::to_string(Variables<unsigned short int>::get(key));
-        break;
+        return kondra::to_string(Variables<unsigned short>::get(key));
 
     case Type::UInt8:
         return kondra::to_string(Variables<unsigned char>::get(key));
-        break;
+
+    case Type::Int:
+        return kondra::to_string(Variables<kondra::dynamic_int>::get(key));
 
     case Type::Bool:
         return kondra::to_string(Variables<bool>::get(key));
-        break;
+
+    case Type::Var:
+        return kondra::to_string(Variables<kondra::var>::get(key));
     
     case Type::String:
         return variables[key];
-        break;
     
     default:
         return "";
-        break;
     }
 }
 

@@ -263,6 +263,32 @@ Expression<kondra::string> *Parser<kondra::string>::primary()
     throw std::runtime_error(ERR_MSG_UNKNWN_EXPR);
 }
 
+template <>
+Expression<kondra::var> *Parser<kondra::var>::primary()
+{
+    Token current = get();
+    if (match(TokenType::IntNumber))
+        return new ValueExpression<kondra::var>(kondra::dynamic_int(current.getText()));
+    if (match(TokenType::FloatNumber))
+        return new ValueExpression<kondra::var>(std::stod(current.getText()));
+    if (match(TokenType::HexNumber))
+        return new ValueExpression<kondra::var>(kondra::dynamic_int(current.getText(), 16));
+    if (match(TokenType::OctNumber))
+        return new ValueExpression<kondra::var>(kondra::dynamic_int(current.getText(), 8));
+    if (match(TokenType::StringValue))
+        return new ValueExpression<kondra::var>(current.getText());
+    if (match(TokenType::Identifier))
+        return new VariablesExpression<kondra::var>(current.getText());
+    if (match(TokenType::Lparen))
+    {
+        Expression<kondra::var> *result = expression();
+        if (!match(TokenType::Rparen))
+            throw std::runtime_error(ERR_MSG_UNKNWN_EXPR);
+        return result;
+    }
+    throw std::runtime_error(ERR_MSG_UNKNWN_EXPR);
+}
+
 template <class T>
 void Parser<T>::setTokens(std::vector<Token> tokens)
 {

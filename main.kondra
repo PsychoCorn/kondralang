@@ -1,5 +1,10 @@
-string a = "\"Hello\""
-console_out a + "\n"
-console_out "" + 5 + _ENDL_
-boolean b = false
-console_out b
+var n = false
+int8 m = n
+var n1 = true
+int8 m1 = n1
+var stringVar = "SomeText"
+string copyOfStringVar = stringVar
+console_out n + " = " + m + _ENDL_
+console_out n1 + " = " + m1 + _ENDL_
+console_out stringVar + " = " + copyOfStringVar + _ENDL_
+

@@ -14,12 +14,20 @@ namespace kondra
 
     public:
         DynamicInteger();
+        DynamicInteger(const signed char &);
+        DynamicInteger(const unsigned char &);
+        DynamicInteger(const short &);
+        DynamicInteger(const unsigned short &);
         DynamicInteger(const int &);
+        DynamicInteger(const unsigned int &);
         DynamicInteger(const long long &);
+        DynamicInteger(const unsigned long long &);
         DynamicInteger(const char *, const size_t& = 10);
         DynamicInteger(const string &, const size_t& = 10);
         DynamicInteger(const std::string &, const size_t& = 10);
+        DynamicInteger(const float &);
         DynamicInteger(const double &);
+        DynamicInteger(const long double &);
         DynamicInteger(const DynamicInteger &);
         ~DynamicInteger();
         char *strGetNumber(const size_t& = 10) const;

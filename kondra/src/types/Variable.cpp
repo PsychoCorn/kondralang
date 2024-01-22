@@ -18,7 +18,37 @@ namespace kondra
         type = VarType::Int;
     }
 
+    Variable::Variable(const signed char &intValue)
+    {
+        data.intData = new dynamic_int(intValue);
+        type = VarType::Int;
+    }
+    
+    Variable::Variable(const unsigned char &intValue)
+    {
+        data.intData = new dynamic_int(intValue);
+        type = VarType::Int;
+    }
+
+    Variable::Variable(const short &intValue)
+    {
+        data.intData = new dynamic_int(intValue);
+        type = VarType::Int;
+    }
+    
+    Variable::Variable(const unsigned short &intValue)
+    {
+        data.intData = new dynamic_int(intValue);
+        type = VarType::Int;
+    }
+
     Variable::Variable(const int &intValue)
+    {
+        data.intData = new dynamic_int(intValue);
+        type = VarType::Int;
+    }
+
+    Variable::Variable(const unsigned int &intValue)
     {
         data.intData = new dynamic_int(intValue);
         type = VarType::Int;
@@ -30,7 +60,25 @@ namespace kondra
         type = VarType::Int;
     }
 
+    Variable::Variable(const unsigned long long &intValue)
+    {
+        data.intData = new dynamic_int(intValue);
+        type = VarType::Int;
+    }
+
+    Variable::Variable(const float &floatValue)
+    {
+        data.floatData = new double(floatValue);
+        type = VarType::Float;
+    }
+
     Variable::Variable(const double &floatValue)
+    {
+        data.floatData = new double(floatValue);
+        type = VarType::Float;
+    }
+
+    Variable::Variable(const long double &floatValue)
     {
         data.floatData = new double(floatValue);
         type = VarType::Float;
@@ -183,7 +231,7 @@ namespace kondra
             break;
 
         case VarType::Bool:
-            os << *(obj.data.boolData);
+            os << std::boolalpha << *(obj.data.boolData);
             break;
 
         case VarType::None:
@@ -269,7 +317,7 @@ namespace kondra
             break;
 
         case VarType::Bool:
-            return Variable(std::to_string(*(obj.getData().boolData)).c_str());
+            return Variable(*(obj.getData().boolData) ? "true" : "false");
             break;
 
         case VarType::None:

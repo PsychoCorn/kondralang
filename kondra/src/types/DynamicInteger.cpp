@@ -12,14 +12,44 @@ namespace kondra
         mpz_init(value);
     }
 
+    DynamicInteger::DynamicInteger(const signed char &intValue)
+    {
+        mpz_init_set_si(value, intValue);
+    }
+
+    DynamicInteger::DynamicInteger(const unsigned char &intValue)
+    {
+        mpz_init_set_ui(value, intValue);
+    }
+
+    DynamicInteger::DynamicInteger(const short &intValue)
+    {
+        mpz_init_set_si(value, intValue);
+    }
+
+    DynamicInteger::DynamicInteger(const unsigned short &intValue)
+    {
+        mpz_init_set_ui(value, intValue);
+    }
+
     DynamicInteger::DynamicInteger(const int &intValue)
     {
         mpz_init_set_si(value, intValue);
     }
 
+    DynamicInteger::DynamicInteger(const unsigned int &intValue)
+    {
+        mpz_init_set_ui(value, intValue);
+    }
+
     DynamicInteger::DynamicInteger(const long long &intValue)
     {
         mpz_init_set_si(value, intValue);
+    }
+
+    DynamicInteger::DynamicInteger(const unsigned long long &intValue)
+    {
+        mpz_init_set_ui(value, intValue);
     }
 
     DynamicInteger::DynamicInteger(const char *strValue, const size_t& radix)
@@ -46,7 +76,17 @@ namespace kondra
         }
     }
 
+    DynamicInteger::DynamicInteger(const float &floatValue)
+    {
+        mpz_init_set_si(value, floatValue);
+    }
+
     DynamicInteger::DynamicInteger(const double &floatValue)
+    {
+        mpz_init_set_si(value, floatValue);
+    }
+
+    DynamicInteger::DynamicInteger(const long double &floatValue)
     {
         mpz_init_set_si(value, floatValue);
     }

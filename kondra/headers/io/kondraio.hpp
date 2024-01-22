@@ -180,6 +180,11 @@ namespace kondra
         return arg;
     }
 
+    inline string to_string(const bool& arg)
+    {
+        return arg ? "true" : "false";
+    }
+
     template <typename T>
     inline string to_string(const T& arg)
     {

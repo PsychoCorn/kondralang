@@ -14,11 +14,13 @@ enum Type
     UInt16,
     UInt32,
     UInt64,
+    Int,
     Float32,
     Float64,
     Float80,
     Bool,
     String,
+    Var,
     None //doesn't exist
 };
 

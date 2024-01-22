@@ -9,6 +9,10 @@ std::vector<Statement *> chosingParser(const std::vector<Token>&, const Type&);
 
 std::vector<Statement *> parsing(const std::vector<Token>& tokens)
 {
+    if (tokens.empty())
+    {
+        return std::vector<Statement *>();
+    }
     std::string textOfkeyWord;
     switch (tokens[0].getType())
     {
@@ -23,37 +27,25 @@ std::vector<Statement *> parsing(const std::vector<Token>& tokens)
         else if (textOfkeyWord == "uint32")
             return Parser<unsigned int>(tokens).parse();
         else if (textOfkeyWord == "int16")
-            return Parser<short int>(tokens).parse();
+            return Parser<short>(tokens).parse();
         else if (textOfkeyWord == "uint16")
-            return Parser<unsigned short int>(tokens).parse();
+            return Parser<unsigned short>(tokens).parse();
         else if (textOfkeyWord == "int8")
             return Parser<signed char>(tokens).parse();
         else if (textOfkeyWord == "uint8")
             return Parser<unsigned char>(tokens).parse();
+        else if (textOfkeyWord == "int")
+            return Parser<kondra::dynamic_int>(tokens).parse();
         else if (textOfkeyWord == "float64")
             return Parser<double>(tokens).parse();
         else if (textOfkeyWord == "boolean")
             return Parser<bool>(tokens).parse();
         else if (textOfkeyWord == "string")
             return Parser<kondra::string>(tokens).parse();
+        else if (textOfkeyWord == "var")
+            return Parser<kondra::var>(tokens).parse();
         else if (textOfkeyWord == "console_out")
-        {
-            switch (tokens[1].getType())
-            {
-            case Identifier:
-                return chosingParser(tokens, ListOfVariables::getType(tokens[1].getText()));
-                break;
-
-            case StringValue:
-                return Parser<kondra::string>(tokens).parse();
-                break;
-            
-            default:
-                return Parser<double>(tokens).parse();
-                break;
-            }
-        }
-        break;
+            return Parser<kondra::string>(tokens).parse();
 
     case TokenType::Identifier:
         return chosingParser(tokens, ListOfVariables::getType(tokens[0].getText()));
@@ -67,55 +59,51 @@ std::vector<Statement *> chosingParser(const std::vector<Token>& tokens, const T
     {
     case Type::Int64:
         return Parser<long long>(tokens).parse();
-        break;
 
     case Type::UInt64:
         return Parser<unsigned long long>(tokens).parse();
-        break;
 
     case Type::Int32:
         return Parser<int>(tokens).parse();
-        break;
 
     case Type::UInt32:
         return Parser<unsigned int>(tokens).parse();
-        break;
 
     case Type::Int16:
-        return Parser<short int>(tokens).parse();
-        break;
+        return Parser<short>(tokens).parse();
 
     case Type::UInt16:
-        return Parser<unsigned short int>(tokens).parse();
-        break;
+        return Parser<unsigned short>(tokens).parse();
 
     case Type::Int8:
         return Parser<signed char>(tokens).parse();
-        break;
 
     case Type::UInt8:
         return Parser<unsigned char>(tokens).parse();
-        break;
+
+    case Type::Int:
+        return Parser<kondra::dynamic_int>(tokens).parse();
     
     case Type::Float80:
         return Parser<long double>(tokens).parse();
-        break;
 
     case Type::Float64:
         return Parser<double>(tokens).parse();
-        break;
 
     case Type::Float32:
         return Parser<float>(tokens).parse();
-        break;
 
     case Type::Bool:
         return Parser<bool>(tokens).parse();
-        break;
 
     case Type::String:
         return Parser<kondra::string>(tokens).parse();
-        break;
+
+    case Type::Var:
+        return Parser<kondra::var>(tokens).parse();
+
+    case Type::None:
+        throw std::runtime_error("Unknown identifier");
     }
     throw std::runtime_error("Error!");
 }
@@ -145,7 +133,7 @@ int main(int argc, char** argv)
                     p->execute();
                 });
             }
-            catch (std::runtime_error& e)
+            catch (std::exception& e)
             {
                 std::cerr << e.what() << " at line " << lineCounter;
                 return 1;
@@ -158,7 +146,7 @@ int main(int argc, char** argv)
     }
     else
     {
-        std::cout << "kondra works!" << std::endl;
+        std::cout << "kondra has been built" << std::endl;
     }
     return 0;
 }

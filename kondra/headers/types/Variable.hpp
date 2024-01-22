@@ -36,9 +36,17 @@ namespace kondra
     public:
         Variable();
         Variable(const dynamic_int &);
+        Variable(const signed char &);
+        Variable(const unsigned char &);
+        Variable(const short &);
+        Variable(const unsigned short &);
         Variable(const int &);
-        Variable(const double &);
+        Variable(const unsigned int &);
         Variable(const long long &);
+        Variable(const unsigned long long &);
+        Variable(const float &);
+        Variable(const double &);
+        Variable(const long double &);
         Variable(const char *);
         Variable(const std::string &);
         Variable(const string &);
