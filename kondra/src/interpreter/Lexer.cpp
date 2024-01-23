@@ -15,7 +15,10 @@ std::unordered_map<std::string, TokenType> Lexer::operators = {
     {"/", TokenType::Slash}, {"(", TokenType::Lparen}, {")", TokenType::Rparen},
     {"=", TokenType::Equal}, {"+=", TokenType::PlusAndEqual}, {"%", TokenType::Percentage},
     {"&", TokenType::Ampersand}, {"|", TokenType::Pipe}, {"^", TokenType::Caret},
-    {"~", TokenType::Tilde}, {"<<", TokenType::Lshift}, {">>", TokenType::Rshift}, };
+    {"~", TokenType::Tilde}, {"<<", TokenType::Lshift}, {">>", TokenType::Rshift},
+    {"*=", TokenType::StarAndEqual}, {"/=", TokenType::SlashAndEqual}, {"-=", TokenType::MinusAndEqual},
+    {"%=", TokenType::PercentageAndEqual}, {"&=", TokenType::AmpersandAndEqual}, {"^=", TokenType::CaretAndEqual},
+    {"|=", TokenType::PipeAndEqual}, {"<<=", TokenType::LshiftAndEqual}, {">>=", TokenType::RshiftAndEqual}};
 
 Lexer::Lexer(std::string input)
 {
@@ -297,6 +300,42 @@ void Lexer::addToken(TokenType type)
 
     case TokenType::PlusAndEqual:
         tokens.push_back(Token(type, "+="));
+        break;
+
+    case TokenType::MinusAndEqual:
+        tokens.push_back(Token(type, "-="));
+        break;
+
+    case TokenType::StarAndEqual:
+        tokens.push_back(Token(type, "*="));
+        break;
+
+    case TokenType::SlashAndEqual:
+        tokens.push_back(Token(type, "/="));
+        break;
+
+    case TokenType::PercentageAndEqual:
+        tokens.push_back(Token(type, "%="));
+        break;
+
+    case TokenType::AmpersandAndEqual:
+        tokens.push_back(Token(type, "&="));
+        break;
+
+    case TokenType::CaretAndEqual:
+        tokens.push_back(Token(type, "^="));
+        break;
+
+    case TokenType::PipeAndEqual:
+        tokens.push_back(Token(type, "|="));
+        break;
+
+    case TokenType::LshiftAndEqual:
+        tokens.push_back(Token(type, "<<="));
+        break;
+
+    case TokenType::RshiftAndEqual:
+        tokens.push_back(Token(type, ">>="));
         break;
 
     default:

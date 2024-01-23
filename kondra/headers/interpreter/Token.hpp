@@ -17,21 +17,30 @@ enum TokenType
     KeyWord,
     Identifier,
     // operators
-    Star,
-    Plus,
-    Minus,
-    Slash,
-    Equal,
-    Percentage,
-    Ampersand,
-    Caret,
-    Pipe,
-    Less,
-    More,
-    Lshift,
-    Rshift,
-    Tilde,
-    PlusAndEqual,
+    Star, // *
+    Plus, // +
+    Minus, // -
+    Slash, // /
+    Equal, // =
+    Percentage, // %
+    Ampersand, // &
+    Caret, // ^
+    Pipe, // |
+    Less, // <
+    More, // >
+    Lshift, // <<
+    Rshift, // >>
+    Tilde, // ~
+    PlusAndEqual, // +=
+    StarAndEqual, // *=
+    MinusAndEqual, // -=
+    SlashAndEqual, // /=
+    PercentageAndEqual, // %=
+    AmpersandAndEqual, // &=
+    CaretAndEqual, // ^=
+    PipeAndEqual, // |=
+    LshiftAndEqual, // <<=
+    RshiftAndEqual, // >>=
     // brasckets
     Lparen, // (
     Rparen, // )

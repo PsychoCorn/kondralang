@@ -127,7 +127,7 @@ std::vector<Statement *> Interpreter::parsing()
     case TokenType::Identifier:
         return chosingParser(ListOfVariables::getType(tokens[0].getText()));
     }
-    throw std::runtime_error("Error!");
+    throw std::runtime_error("Error");
 }
 
 void Interpreter::interpretation()

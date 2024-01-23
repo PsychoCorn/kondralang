@@ -1,9 +1,9 @@
 #include "../../headers/types/Variable.hpp"
 
-#define ERR_MSG_INVALID_OPERANDS "Invalid operands!"
-#define ERR_MSG_INVALID_OPERAND "Invalid operand!"
-#define ERR_MSG_DIVISION_BY_ZERO "Division by zero!"
-#define ERR_MSG_NEGATIVE_SHIFT_VALUE "Negative shift value!"
+#define ERR_MSG_INVALID_OPERANDS "Invalid operands"
+#define ERR_MSG_INVALID_OPERAND "Invalid operand"
+#define ERR_MSG_DIVISION_BY_ZERO "Division by zero"
+#define ERR_MSG_NEGATIVE_SHIFT_VALUE "Negative shift value"
 
 namespace kondra
 {
@@ -1407,7 +1407,7 @@ namespace kondra
 
     Variable Variable::operator~() const
     {
-        if (type != VarType::Int)
+        if (type == VarType::Int)
             return ~(*(data.intData));
         throw std::runtime_error(ERR_MSG_INVALID_OPERANDS);
     }

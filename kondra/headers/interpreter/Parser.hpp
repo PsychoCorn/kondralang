@@ -87,6 +87,7 @@ std::vector<Statement *> Parser<T>::parse()
 template <class T>
 Statement *Parser<T>::statement()
 {
+    std::string identifierOfVariable;
     Token current = get(); 
     switch (current.getType())
     {
@@ -98,15 +99,12 @@ Statement *Parser<T>::statement()
         }
         else
             return variableDeclarationStatement();
-        break;
 
     case Identifier:
         return assignmentStatement();
-        break;
     
     default:
         throw std::runtime_error(ERR_MSG_UNKNWN_STMNT);
-        break;
     }
 }
 
@@ -142,27 +140,52 @@ template <class T>
 Statement *Parser<T>::assignmentStatement()
 {
     Token current = get();
+    std::string identifierOfVariable;
     if (match(TokenType::Identifier))
     {
-        std::string identifierOfVariable = current.getText();
-        Type typeOfVariable = ListOfVariables::getType(identifierOfVariable);
+        identifierOfVariable = current.getText();
         if (match(TokenType::Equal))
             return new AssignmentStatement<T>(identifierOfVariable, expression());
         else if (match(TokenType::PlusAndEqual))
             return new AssignmentStatement<T>(identifierOfVariable, 
                 new BinaryExpression<T>("+", new VariablesExpression<T>(identifierOfVariable), 
                 expression()));
-    }
-    if (match(TokenType::Identifier) && get().getType() == TokenType::Equal)
-    {
-        std::string identifierOfVariable = current.getText();
-        Type typeOfVariable = ListOfVariables::getType(identifierOfVariable);
-        consume(TokenType::Equal);
-        return new AssignmentStatement<T>(identifierOfVariable, expression());
-    }
-    else if (get().getType() == TokenType::PlusAndEqual)
-    {
-
+        else if (match(TokenType::MinusAndEqual))
+            return new AssignmentStatement<T>(identifierOfVariable, 
+                new BinaryExpression<T>("-", new VariablesExpression<T>(identifierOfVariable), 
+                expression()));
+         else if (match(TokenType::StarAndEqual))
+            return new AssignmentStatement<T>(identifierOfVariable, 
+                new BinaryExpression<T>("*", new VariablesExpression<T>(identifierOfVariable), 
+                expression()));
+        else if (match(TokenType::SlashAndEqual))
+            return new AssignmentStatement<T>(identifierOfVariable, 
+                new BinaryExpression<T>("/", new VariablesExpression<T>(identifierOfVariable), 
+                expression()));
+        else if (match(TokenType::PercentageAndEqual))
+            return new AssignmentStatement<T>(identifierOfVariable, 
+                new BinaryExpression<T>("%", new VariablesExpression<T>(identifierOfVariable), 
+                expression()));
+        else if (match(TokenType::AmpersandAndEqual))
+            return new AssignmentStatement<T>(identifierOfVariable, 
+                new BinaryExpression<T>("&", new VariablesExpression<T>(identifierOfVariable), 
+                expression()));
+        else if (match(TokenType::CaretAndEqual))
+            return new AssignmentStatement<T>(identifierOfVariable, 
+                new BinaryExpression<T>("^", new VariablesExpression<T>(identifierOfVariable), 
+                expression()));
+        else if (match(TokenType::PipeAndEqual))
+            return new AssignmentStatement<T>(identifierOfVariable, 
+                new BinaryExpression<T>("|", new VariablesExpression<T>(identifierOfVariable), 
+                expression()));
+        else if (match(TokenType::LshiftAndEqual))
+            return new AssignmentStatement<T>(identifierOfVariable, 
+                new BinaryExpression<T>("<<", new VariablesExpression<T>(identifierOfVariable), 
+                expression()));
+        else if (match(TokenType::RshiftAndEqual))
+            return new AssignmentStatement<T>(identifierOfVariable, 
+                new BinaryExpression<T>(">>", new VariablesExpression<T>(identifierOfVariable), 
+                expression()));
     }
     throw std::runtime_error(ERR_MSG_UNKNWN_OP);
 }

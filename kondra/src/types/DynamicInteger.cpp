@@ -1,8 +1,8 @@
 #include "../../headers/types/DynamicInteger.hpp"
 
-#define ERR_MSG_DIVISION_BY_ZERO "Division by zero!"
-#define ERR_MSG_NEGATIVE_SHIFT_VALUE "Negative shift value!"
-#define ERR_MSG_INVALID_STRING_ARG "Invalid string argument!"
+#define ERR_MSG_DIVISION_BY_ZERO "Division by zero"
+#define ERR_MSG_NEGATIVE_SHIFT_VALUE "Negative shift value"
+#define ERR_MSG_INVALID_STRING_ARG "Invalid string argument"
 
 namespace kondra
 {
