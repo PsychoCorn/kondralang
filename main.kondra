@@ -1,3 +1,5 @@
-var a = 40
-a += 1
-console_out a
+var a = 64
+var b = "\"hello\""
+var c = false
+var d = 64.32
+console_out a + " " + b + " " + c + " " + d

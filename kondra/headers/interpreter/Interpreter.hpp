@@ -113,8 +113,12 @@ std::vector<Statement *> Interpreter::parsing()
             return Parser<unsigned char>(tokens).parse();
         else if (textOfkeyWord == "int")
             return Parser<kondra::dynamic_int>(tokens).parse();
+        else if (textOfkeyWord == "float32")
+            return Parser<float>(tokens).parse();
         else if (textOfkeyWord == "float64")
             return Parser<double>(tokens).parse();
+        else if (textOfkeyWord == "float80")
+            return Parser<long double>(tokens).parse();
         else if (textOfkeyWord == "boolean")
             return Parser<bool>(tokens).parse();
         else if (textOfkeyWord == "string")

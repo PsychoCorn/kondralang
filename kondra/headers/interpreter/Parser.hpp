@@ -87,7 +87,6 @@ std::vector<Statement *> Parser<T>::parse()
 template <class T>
 Statement *Parser<T>::statement()
 {
-    std::string identifierOfVariable;
     Token current = get(); 
     switch (current.getType())
     {
