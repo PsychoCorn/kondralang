@@ -1,5 +1,5 @@
-var a = 64
-var b = "\"hello\""
-var c = false
-var d = 64.32
-console_out a + " " + b + " " + c + " " + d
+int32 a = 5
+a += 5
+a >>= 1
+a *= 3
+console_out a + 35

@@ -131,11 +131,68 @@ namespace kondra
         std::cout << std::endl;
     }
 
+    template <typename... Args>
+    inline void println(bool first, Args... args)
+    {
+        std::cout << std::boolalpha << first << " ";
+        println(args...);
+    }
+
+    template <typename... Args>
+    inline void println(signed char first, Args... args)
+    {
+        std::cout << static_cast<int>(first) << " ";
+        println(args...);
+    }
+
+    template <typename... Args>
+    inline void println(unsigned char first, Args... args)
+    {
+        std::cout << static_cast<int>(first) << " ";
+        println(args...);
+    }
+
     template <typename T, typename... Args>
     inline void println(T first, Args... args)
     {
         std::cout << first << " ";
         println(args...);
+    }
+
+    inline void print(bool arg)
+    {
+        std::cout << std::boolalpha << arg;
+    }
+
+    inline void print(signed char arg)
+    {
+        std::cout << static_cast<int>(arg);
+    }
+
+    inline void print(unsigned char arg)
+    {
+        std::cout << static_cast<int>(arg);
+    }
+
+    template <typename... Args>
+    inline void print(bool first, Args... args)
+    {
+        std::cout << std::boolalpha << first << " ";
+        print(args...);
+    }
+
+    template <typename... Args>
+    inline void print(signed char first, Args... args)
+    {
+        std::cout << static_cast<int>(first) << " ";
+        print(args...);
+    }
+
+    template <typename... Args>
+    inline void print(unsigned char first, Args... args)
+    {
+        std::cout << static_cast<int>(first) << " ";
+        print(args...);
     }
 
     template <typename T>

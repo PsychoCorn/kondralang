@@ -9,8 +9,6 @@ int main(int argc, char** argv)
         interpreter.interpretation();
     }
     else
-    {
         std::cout << "kondra has been built" << std::endl;
-    }
     return 0;
 }
