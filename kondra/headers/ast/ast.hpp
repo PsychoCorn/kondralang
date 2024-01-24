@@ -8,5 +8,6 @@
 #include "VariableDeclarationStatement.hpp"
 #include "VariablesExpression.hpp"
 #include "PrintStatement.hpp"
+#include "TernaryExpression.hpp"
 
 #endif

@@ -41,6 +41,8 @@ enum TokenType
     PipeAndEqual, // |=
     LshiftAndEqual, // <<=
     RshiftAndEqual, // >>=
+    Question, // ?
+    Colon, // :
     // brasckets
     Lparen, // (
     Rparen, // )

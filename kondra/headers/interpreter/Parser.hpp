@@ -30,6 +30,7 @@ private:
     Statement *assignmentStatement();
     Statement *variableDeclarationStatement();
     Expression<T> *expression();
+    Expression<T> *bitwise();
 
 public:
     Parser(std::vector<Token> = std::vector<Token>());
@@ -192,32 +193,50 @@ Statement *Parser<T>::assignmentStatement()
 template <class T>
 Expression<T> *Parser<T>::expression()
 {
+    Expression<T> *result = bitwise();
+    while (true)
+    {
+        if (match(TokenType::Question))
+        {
+            Expression<T> *exprIfTrue = expression();
+            consume(TokenType::Colon);
+            result = new TernaryExpression<T>(result, exprIfTrue, expression());
+            continue;
+        }
+        break;
+    }
+    return result;
+}
+
+template <class T>
+Expression<T> *Parser<T>::bitwise()
+{
     Expression<T> *result = additive();
     while (true)
     {
         if (match(TokenType::Lshift))
         {
-            result = new BinaryExpression<T>("<<", result, multiplicative());
+            result = new BinaryExpression<T>("<<", result, additive());
             continue;
         }
         if (match(TokenType::Rshift))
         {
-            result = new BinaryExpression<T>(">>", result, multiplicative());
+            result = new BinaryExpression<T>(">>", result, additive());
             continue;
         }
         if (match(TokenType::Ampersand))
         {
-            result = new BinaryExpression<T>("&", result, multiplicative());
+            result = new BinaryExpression<T>("&", result, additive());
             continue;
         }
         if (match(TokenType::Caret))
         {
-            result = new BinaryExpression<T>("^", result, multiplicative());
+            result = new BinaryExpression<T>("^", result, additive());
             continue;
         }
         if (match(TokenType::Pipe))
         {
-            result = new BinaryExpression<T>("|", result, multiplicative());
+            result = new BinaryExpression<T>("|", result, additive());
             continue;
         }
         break;

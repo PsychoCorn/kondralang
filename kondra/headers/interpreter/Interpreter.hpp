@@ -1,4 +1,4 @@
-#ifndef Interpreter_HPP 
+#ifndef Interpreter_HPP
 #define Interpreter_HPP
 
 #include "Parser.hpp"
@@ -10,13 +10,15 @@
 class Interpreter
 {
 private:
-    size_t numberOfLine = 0ull;
+    size_t lineCounter = 0ull;
     std::string pathToSourceFile;
     std::vector<Statement *> statements;
     std::vector<Token> tokens;
     Lexer lexer;
-    std::vector<Statement *> chosingParser(const Type&);
+
+    std::vector<Statement *> chosingParser(const Type &);
     std::vector<Statement *> parsing();
+    std::vector<std::string> split(std::string, std::string);
 
 public:
     Interpreter(std::string);
@@ -28,8 +30,7 @@ Interpreter::Interpreter(std::string pathToSourceFile)
     this->pathToSourceFile = pathToSourceFile;
 }
 
-
-std::vector<Statement *> Interpreter::chosingParser(const Type& element)
+std::vector<Statement *> Interpreter::chosingParser(const Type &element)
 {
     switch (element)
     {
@@ -59,7 +60,7 @@ std::vector<Statement *> Interpreter::chosingParser(const Type& element)
 
     case Type::Int:
         return Parser<kondra::dynamic_int>(tokens).parse();
-    
+
     case Type::Float80:
         return Parser<long double>(tokens).parse();
 
@@ -139,9 +140,10 @@ void Interpreter::interpretation()
     std::ifstream sourceFile(pathToSourceFile);
     if (!sourceFile.is_open())
         throw std::runtime_error("File doesn't exist!");
-    std::string line;
-    size_t lineCounter = 0;
-    while (std::getline(sourceFile, line))
+    std::vector<std::string> sourceCode = split(
+        std::string((std::istreambuf_iterator<char>(sourceFile)), 
+        (std::istreambuf_iterator<char>())), "\n");
+    for (auto line : sourceCode)
     {
         lineCounter++;
         try
@@ -149,19 +151,36 @@ void Interpreter::interpretation()
             lexer.setInput(line);
             tokens = lexer.tokenize();
             statements = parsing();
-            std::for_each(statements.begin(), statements.end(), [](Statement *p) { 
-                p->execute();
-            });
+            std::for_each(statements.begin(), statements.end(), [](Statement *p)
+                          { p->execute(); });
         }
-        catch (std::exception& e)
+        catch (std::exception &e)
         {
             std::cerr << e.what() << " at line " << lineCounter;
             return;
         }
-        std::for_each(statements.begin(), statements.end(), [](Statement *p) { 
-            delete p;
-        });
+        std::for_each(statements.begin(), statements.end(), [](Statement *p)
+                      { delete p; });
         statements.clear();
+    }
+    sourceFile.close();
+}
+
+std::vector<std::string> Interpreter::split(std::string text, std::string delim) // https://stackoverflow.com/questions/5607589/right-way-to-split-an-stdstring-into-a-vectorstring (https://stackoverflow.com/users/13965871/roach)
+{
+    std::vector<std::string> vec;
+    size_t pos = 0, prevPos = 0;
+    while (true)
+    {
+        pos = text.find(delim, prevPos);
+        if (pos == std::string::npos)
+        {
+            vec.push_back(text.substr(prevPos));
+            return vec;
+        }
+
+        vec.push_back(text.substr(prevPos, pos - prevPos));
+        prevPos = pos + delim.length();
     }
 }
 
