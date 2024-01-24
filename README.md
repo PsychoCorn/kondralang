@@ -16,7 +16,7 @@
 
 Символьные типы данных: string(String)
 
-var(DynamicInt, может содержать int, float64, boolean, string)
+var(Variable, может содержать int, float64, boolean, string)
 
 Вывод в консоль:
 
