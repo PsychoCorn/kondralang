@@ -12,7 +12,7 @@ class Interpreter
 private:
     size_t pos = 0ull;
     std::string pathToSourceFile;
-    std::vector<Statement *> statements;
+    Statement *statement;
     std::vector<std::vector<Token>> tokens;
     Lexer lexer;
 
@@ -39,22 +39,19 @@ void Interpreter::interpretation()
     sourceFile.close();
     lexer.setInput(sourceCode);
     tokens = splitToStatements(lexer.tokenize());
-    for (; pos < tokens.size(); ++pos)
+    try
     {
-        try
+        for (; pos < tokens.size(); ++pos)
         {
-            statements = parsing(tokens, pos);
-            std::for_each(statements.begin(), statements.end(), [](Statement *p)
-                          { p->execute(); });
+            statement = parsing(tokens, pos);
+            statement->execute();
+            delete statement;
         }
-        catch (std::exception &e)
-        {
-            std::cerr << e.what() << " at statement " << pos + 1;
-            return;
-        }
-        std::for_each(statements.begin(), statements.end(), [](Statement *p)
-                      { delete p; });
-        statements.clear();
+    }
+    catch (std::exception &e)
+    {
+        std::cerr << e.what() << " at statement " << pos + 1;
+        return;
     }
 }
 

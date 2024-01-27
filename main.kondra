@@ -1,4 +1,7 @@
 int a = 5;
-if (a >= 0) console_out (a + "\n");
-else a = -a;
+string b = "Hello!";
+if b == "Hello!"
+	a += 1;
+else 
+	a -= 1;
 console_out a;
