@@ -143,15 +143,15 @@ std::vector<Statement *> parsing(std::vector<std::vector<Token>> &tokens,
         {
             if (tokens[posOfStatement + 1][posOfToken].getText() == "else")
             {
-                tokens[posOfStatement].insert(tokens[posOfStatement].end(), 
-                    tokens[posOfStatement + 1].begin(), tokens[posOfStatement + 1].end());
+                tokens[posOfStatement].insert(tokens[posOfStatement].end(),
+                                              tokens[posOfStatement + 1].begin(), tokens[posOfStatement + 1].end());
                 tokens.erase(tokens.begin() + posOfStatement + 1);
             }
             return parsing(tokens, posOfStatement, posOfToken + 1);
         }
 
     case TokenType::Identifier:
-        return chosingParser(tokens[posOfStatement], 
+        return chosingParser(tokens[posOfStatement],
                              ListOfVariables::getType(tokens[posOfStatement][posOfToken].getText()));
     case TokenType::Lparen:
         return parsing(tokens, posOfStatement, posOfToken + 1);
@@ -324,15 +324,29 @@ template <class T>
 Statement *Parser<T>::ifElseStatement()
 {
     Expression<T> *condition = expression();
-    Statement *ifStatement = statement();
+    // Statement *ifStatement = statement();
+    auto posOfElse = std::find_if(tokens.begin() + pos, tokens.end(),
+                               [](Token t){
+                                    return t.getType() == KeyWord && t.getText() == "else";
+                                }
+    );
+    std::vector<std::vector<Token>> tokensOfifStatement(
+        1, std::vector<Token>(tokens.begin() + pos, posOfElse)
+    );
+    std::vector<std::vector<Token>> tokensOfElseStatement;
+    Statement *ifStatement = parsing(tokensOfifStatement, 0)[0];
     Statement *elseStatement;
-    if (get().getText() == "else")
+    if (posOfElse != tokens.end())
     {
         consume(TokenType::KeyWord);
-        elseStatement = statement();
+        tokensOfElseStatement = std::vector<std::vector<Token>>(
+            1, std::vector<Token>(posOfElse + 1, tokens.end())
+        );
+        elseStatement = parsing(tokensOfElseStatement, 0)[0];
     }
     else
         elseStatement = nullptr;
+    pos = tokens.size();
     return new IfStatement<T>(condition, ifStatement, elseStatement);
 }
 

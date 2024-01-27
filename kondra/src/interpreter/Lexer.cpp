@@ -233,9 +233,7 @@ void Lexer::tokenizeOperator()
     char current = peek();
     while (true)
     {
-        if (!isOperatorChar(current))
-            break;
-        else if (!isOperator(buffer + current))
+        if (!isOperator(buffer + current))
             break;
         buffer += current;
         current = next();

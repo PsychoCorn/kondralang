@@ -1,2 +1,4 @@
-int8 a=(((~5))+1);
+int a = 5;
+if (a >= 0) console_out (a + "\n");
+else a = -a;
 console_out a;
