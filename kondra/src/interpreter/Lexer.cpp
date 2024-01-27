@@ -8,7 +8,7 @@
 #define ERR_MSG_UNKNWN_ESC_CHAR "Unknown escape-character"
 #define ERR_MSG_UNKNWN_OP "Unknown operator"
 
-std::string Lexer::operatorChars = "+-*/()=%&^|~<>?:";
+std::string Lexer::operatorChars = "+-*/()=%&^|~<>?:!";
 
 std::unordered_map<std::string, TokenType> Lexer::operators = {
     {"+", TokenType::Plus}, {"-", TokenType::Minus}, {"*", TokenType::Star},
@@ -19,7 +19,9 @@ std::unordered_map<std::string, TokenType> Lexer::operators = {
     {"*=", TokenType::StarAndEqual}, {"/=", TokenType::SlashAndEqual}, {"-=", TokenType::MinusAndEqual},
     {"%=", TokenType::PercentageAndEqual}, {"&=", TokenType::AmpersandAndEqual}, {"^=", TokenType::CaretAndEqual},
     {"|=", TokenType::PipeAndEqual}, {"<<=", TokenType::LshiftAndEqual}, {">>=", TokenType::RshiftAndEqual},
-    {"?", TokenType::Question}, {":", TokenType::Colon}};
+    {"?", TokenType::Question}, {":", TokenType::Colon}, {"==", TokenType::DoubleEqual},
+    {"<", TokenType::Less}, {">", TokenType::More}, {"<=", TokenType::LessOrEqual},
+    {">=", TokenType::MoreOrEqual}, {"!=", TokenType::ExclamationAndEqual}, {"!", TokenType::Exclamation}};
 
 Lexer::Lexer(std::string input)
 {
@@ -42,6 +44,11 @@ std::vector<Token> Lexer::tokenize()
             tokenizeStringValue();
         else if (isOperatorChar(current))
             tokenizeOperator();
+        else if (current == ';')
+        {
+            addToken(TokenType::Semicolon, std::string(1, current));
+            next();
+        }
         else // skip whitespaces
             next();
     }
@@ -228,6 +235,8 @@ void Lexer::tokenizeOperator()
     {
         if (!isOperatorChar(current))
             break;
+        else if (!isOperator(buffer + current))
+            break;
         buffer += current;
         current = next();
     }
@@ -347,6 +356,34 @@ void Lexer::addToken(TokenType type)
         tokens.push_back(Token(type, ":"));
         break;
 
+    case TokenType::DoubleEqual:
+        tokens.push_back(Token(type, "=="));
+        break;
+
+    case TokenType::Less:
+        tokens.push_back(Token(type, "<"));
+        break;
+
+    case TokenType::More:
+        tokens.push_back(Token(type, ">"));
+        break;
+
+    case TokenType::LessOrEqual:
+        tokens.push_back(Token(type, "<="));
+        break;
+
+    case TokenType::MoreOrEqual:
+        tokens.push_back(Token(type, ">="));
+        break;
+
+    case TokenType::ExclamationAndEqual:
+        tokens.push_back(Token(type, "!="));
+        break;
+
+    case TokenType::Exclamation:
+        tokens.push_back(Token(type, "!"));
+        break;
+
     default:
         throw std::runtime_error(ERR_MSG_UNKNWN_OP);
         break;
@@ -373,4 +410,9 @@ void Lexer::setInput(std::string input)
     length = input.length();
     tokens.clear();
     pos = 0;
+}
+
+bool Lexer::isOperator(const std::string& op)
+{
+    return operators.find(op) != operators.end();
 }

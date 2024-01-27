@@ -42,6 +42,8 @@ T UnaryExpression<T>::eval()
         return -expr->eval();
     else if(operation == "~")
         throw std::runtime_error(ERR_MSG_OP_FOR_NOT_INT_AND_BOOL);
+    else if(operation == "!")
+        return !expr->eval();
     throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
 }
 
@@ -54,6 +56,8 @@ signed char UnaryExpression<signed char>::eval()
         return -expr->eval();
     else if(operation == "~")
         return ~expr->eval();
+    else if(operation == "!")
+        return !expr->eval();
     throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
 }
 
@@ -66,6 +70,8 @@ unsigned char UnaryExpression<unsigned char>::eval()
         return -expr->eval();
     else if(operation == "~")
         return ~expr->eval();
+    else if(operation == "!")
+        return !expr->eval();
     throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
 }
 
@@ -78,6 +84,8 @@ short UnaryExpression<short>::eval()
         return -expr->eval();
     else if(operation == "~")
         return ~expr->eval();
+    else if(operation == "!")
+        return !expr->eval();
     throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
 }
 
@@ -90,6 +98,8 @@ unsigned short UnaryExpression<unsigned short>::eval()
         return -expr->eval();
     else if(operation == "~")
         return ~expr->eval();
+    else if(operation == "!")
+        return !expr->eval();
     throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
 }
 
@@ -102,6 +112,8 @@ int UnaryExpression<int>::eval()
         return -expr->eval();
     else if(operation == "~")
         return ~expr->eval();
+    else if(operation == "!")
+        return !expr->eval();
     throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
 }
 
@@ -114,6 +126,8 @@ unsigned int UnaryExpression<unsigned int>::eval()
         return -expr->eval();
     else if(operation == "~")
         return ~expr->eval();
+    else if(operation == "!")
+        return !expr->eval();
     throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
 }
 
@@ -126,6 +140,8 @@ long long UnaryExpression<long long>::eval()
         return -expr->eval();
     else if(operation == "~")
         return ~expr->eval();
+    else if(operation == "!")
+        return !expr->eval();
     throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
 }
 
@@ -138,6 +154,8 @@ unsigned long long UnaryExpression<unsigned long long>::eval()
         return -expr->eval();
     else if(operation == "~")
         return ~expr->eval();
+    else if(operation == "!")
+        return !expr->eval();
     throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
 }
 
@@ -150,6 +168,8 @@ kondra::dynamic_int UnaryExpression<kondra::dynamic_int>::eval()
         return -expr->eval();
     else if(operation == "~")
         return ~expr->eval();
+    else if(operation == "!")
+        return !expr->eval();
     throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
 }
 
@@ -162,6 +182,8 @@ kondra::var UnaryExpression<kondra::var>::eval()
         return -expr->eval();
     else if(operation == "~")
         return ~expr->eval();
+    else if(operation == "!")
+        return !expr->eval();
     throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
 }
 

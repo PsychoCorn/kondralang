@@ -28,6 +28,11 @@ enum TokenType
     Pipe, // |
     Less, // <
     More, // >
+    DoubleEqual, // ==
+    LessOrEqual, // <=
+    MoreOrEqual, // >=
+    ExclamationAndEqual, // !=
+    Exclamation, // !
     Lshift, // <<
     Rshift, // >>
     Tilde, // ~
@@ -46,6 +51,7 @@ enum TokenType
     // brasckets
     Lparen, // (
     Rparen, // )
+    Semicolon, // ;
     Eof // end of file
 };
 

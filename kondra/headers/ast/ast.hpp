@@ -9,5 +9,7 @@
 #include "VariablesExpression.hpp"
 #include "PrintStatement.hpp"
 #include "TernaryExpression.hpp"
+#include "ConditionalExpression.hpp"
+#include "IfStatement.hpp"
 
 #endif

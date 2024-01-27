@@ -28,6 +28,7 @@ private:
     void tokenizeStringValue();
     bool isHexDigit(char);
     bool isOperatorChar(char);
+    bool isOperator(const std::string&);
 
 public:
     Lexer(std::string = "");

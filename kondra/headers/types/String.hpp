@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#define ERR_MSG_CONV_TO_BOOL "Unknown conversation to boolean"
+
 namespace kondra
 {
 

@@ -31,12 +31,137 @@ private:
     Statement *variableDeclarationStatement();
     Expression<T> *expression();
     Expression<T> *bitwise();
+    Expression<T> *conditional();
+    Statement *ifElseStatement();
 
 public:
     Parser(std::vector<Token> = std::vector<Token>());
     std::vector<Statement *> parse();
     void setTokens(std::vector<Token>);
 };
+
+std::vector<Statement *> chosingParser(const std::vector<Token> &tokens, const Type &element)
+{
+    switch (element)
+    {
+    case Type::Int64:
+        return Parser<long long>(tokens).parse();
+
+    case Type::UInt64:
+        return Parser<unsigned long long>(tokens).parse();
+
+    case Type::Int32:
+        return Parser<int>(tokens).parse();
+
+    case Type::UInt32:
+        return Parser<unsigned int>(tokens).parse();
+
+    case Type::Int16:
+        return Parser<short>(tokens).parse();
+
+    case Type::UInt16:
+        return Parser<unsigned short>(tokens).parse();
+
+    case Type::Int8:
+        return Parser<signed char>(tokens).parse();
+
+    case Type::UInt8:
+        return Parser<unsigned char>(tokens).parse();
+
+    case Type::Int:
+        return Parser<kondra::dynamic_int>(tokens).parse();
+
+    case Type::Float80:
+        return Parser<long double>(tokens).parse();
+
+    case Type::Float64:
+        return Parser<double>(tokens).parse();
+
+    case Type::Float32:
+        return Parser<float>(tokens).parse();
+
+    case Type::Bool:
+        return Parser<bool>(tokens).parse();
+
+    case Type::String:
+        return Parser<kondra::string>(tokens).parse();
+
+    case Type::Var:
+        return Parser<kondra::var>(tokens).parse();
+
+    case Type::None:
+        throw std::runtime_error("Unknown identifier");
+    }
+    throw std::runtime_error("Error!");
+}
+
+std::vector<Statement *> parsing(std::vector<std::vector<Token>> &tokens,
+                                 const size_t &posOfStatement, size_t posOfToken = 0)
+{
+    if (tokens.empty())
+    {
+        return std::vector<Statement *>();
+    }
+    std::string textOfkeyWord;
+    switch (tokens[posOfStatement][posOfToken].getType())
+    {
+    case TokenType::KeyWord:
+        textOfkeyWord = tokens[posOfStatement][posOfToken].getText();
+        if (textOfkeyWord == "int64")
+            return Parser<long long>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "uint64")
+            return Parser<unsigned long long>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "int32")
+            return Parser<int>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "uint32")
+            return Parser<unsigned int>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "int16")
+            return Parser<short>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "uint16")
+            return Parser<unsigned short>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "int8")
+            return Parser<signed char>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "uint8")
+            return Parser<unsigned char>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "int")
+            return Parser<kondra::dynamic_int>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "float32")
+            return Parser<float>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "float64")
+            return Parser<double>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "float80")
+            return Parser<long double>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "boolean")
+            return Parser<bool>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "string")
+            return Parser<kondra::string>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "var")
+            return Parser<kondra::var>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "console_out")
+            return Parser<kondra::string>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "if")
+        {
+            if (tokens[posOfStatement + 1][posOfToken].getText() == "else")
+            {
+                tokens[posOfStatement].insert(tokens[posOfStatement].end(), 
+                    tokens[posOfStatement + 1].begin(), tokens[posOfStatement + 1].end());
+                tokens.erase(tokens.begin() + posOfStatement + 1);
+            }
+            return parsing(tokens, posOfStatement, posOfToken + 1);
+        }
+
+    case TokenType::Identifier:
+        return chosingParser(tokens[posOfStatement], 
+                             ListOfVariables::getType(tokens[posOfStatement][posOfToken].getText()));
+    case TokenType::Lparen:
+        return parsing(tokens, posOfStatement, posOfToken + 1);
+    case TokenType::StringValue:
+        return Parser<kondra::string>(tokens[posOfStatement]).parse();
+    default:
+        return Parser<double>(tokens[posOfStatement]).parse();
+    }
+    throw std::runtime_error("Error");
+}
 
 template <class T>
 Parser<T>::Parser(std::vector<Token> tokens)
@@ -88,7 +213,7 @@ std::vector<Statement *> Parser<T>::parse()
 template <class T>
 Statement *Parser<T>::statement()
 {
-    Token current = get(); 
+    Token current = get();
     switch (current.getType())
     {
     case KeyWord:
@@ -97,12 +222,17 @@ Statement *Parser<T>::statement()
             consume(KeyWord);
             return new PrintStatement<T>(expression());
         }
+        else if (current.getText() == "if")
+        {
+            consume(KeyWord);
+            return ifElseStatement();
+        }
         else
             return variableDeclarationStatement();
 
     case Identifier:
         return assignmentStatement();
-    
+
     default:
         throw std::runtime_error(ERR_MSG_UNKNWN_STMNT);
     }
@@ -147,53 +277,69 @@ Statement *Parser<T>::assignmentStatement()
         if (match(TokenType::Equal))
             return new AssignmentStatement<T>(identifierOfVariable, expression());
         else if (match(TokenType::PlusAndEqual))
-            return new AssignmentStatement<T>(identifierOfVariable, 
-                new BinaryExpression<T>("+", new VariablesExpression<T>(identifierOfVariable), 
-                expression()));
+            return new AssignmentStatement<T>(identifierOfVariable,
+                                              new BinaryExpression<T>("+", new VariablesExpression<T>(identifierOfVariable),
+                                                                      expression()));
         else if (match(TokenType::MinusAndEqual))
-            return new AssignmentStatement<T>(identifierOfVariable, 
-                new BinaryExpression<T>("-", new VariablesExpression<T>(identifierOfVariable), 
-                expression()));
-         else if (match(TokenType::StarAndEqual))
-            return new AssignmentStatement<T>(identifierOfVariable, 
-                new BinaryExpression<T>("*", new VariablesExpression<T>(identifierOfVariable), 
-                expression()));
+            return new AssignmentStatement<T>(identifierOfVariable,
+                                              new BinaryExpression<T>("-", new VariablesExpression<T>(identifierOfVariable),
+                                                                      expression()));
+        else if (match(TokenType::StarAndEqual))
+            return new AssignmentStatement<T>(identifierOfVariable,
+                                              new BinaryExpression<T>("*", new VariablesExpression<T>(identifierOfVariable),
+                                                                      expression()));
         else if (match(TokenType::SlashAndEqual))
-            return new AssignmentStatement<T>(identifierOfVariable, 
-                new BinaryExpression<T>("/", new VariablesExpression<T>(identifierOfVariable), 
-                expression()));
+            return new AssignmentStatement<T>(identifierOfVariable,
+                                              new BinaryExpression<T>("/", new VariablesExpression<T>(identifierOfVariable),
+                                                                      expression()));
         else if (match(TokenType::PercentageAndEqual))
-            return new AssignmentStatement<T>(identifierOfVariable, 
-                new BinaryExpression<T>("%", new VariablesExpression<T>(identifierOfVariable), 
-                expression()));
+            return new AssignmentStatement<T>(identifierOfVariable,
+                                              new BinaryExpression<T>("%", new VariablesExpression<T>(identifierOfVariable),
+                                                                      expression()));
         else if (match(TokenType::AmpersandAndEqual))
-            return new AssignmentStatement<T>(identifierOfVariable, 
-                new BinaryExpression<T>("&", new VariablesExpression<T>(identifierOfVariable), 
-                expression()));
+            return new AssignmentStatement<T>(identifierOfVariable,
+                                              new BinaryExpression<T>("&", new VariablesExpression<T>(identifierOfVariable),
+                                                                      expression()));
         else if (match(TokenType::CaretAndEqual))
-            return new AssignmentStatement<T>(identifierOfVariable, 
-                new BinaryExpression<T>("^", new VariablesExpression<T>(identifierOfVariable), 
-                expression()));
+            return new AssignmentStatement<T>(identifierOfVariable,
+                                              new BinaryExpression<T>("^", new VariablesExpression<T>(identifierOfVariable),
+                                                                      expression()));
         else if (match(TokenType::PipeAndEqual))
-            return new AssignmentStatement<T>(identifierOfVariable, 
-                new BinaryExpression<T>("|", new VariablesExpression<T>(identifierOfVariable), 
-                expression()));
+            return new AssignmentStatement<T>(identifierOfVariable,
+                                              new BinaryExpression<T>("|", new VariablesExpression<T>(identifierOfVariable),
+                                                                      expression()));
         else if (match(TokenType::LshiftAndEqual))
-            return new AssignmentStatement<T>(identifierOfVariable, 
-                new BinaryExpression<T>("<<", new VariablesExpression<T>(identifierOfVariable), 
-                expression()));
+            return new AssignmentStatement<T>(identifierOfVariable,
+                                              new BinaryExpression<T>("<<", new VariablesExpression<T>(identifierOfVariable),
+                                                                      expression()));
         else if (match(TokenType::RshiftAndEqual))
-            return new AssignmentStatement<T>(identifierOfVariable, 
-                new BinaryExpression<T>(">>", new VariablesExpression<T>(identifierOfVariable), 
-                expression()));
+            return new AssignmentStatement<T>(identifierOfVariable,
+                                              new BinaryExpression<T>(">>", new VariablesExpression<T>(identifierOfVariable),
+                                                                      expression()));
     }
     throw std::runtime_error(ERR_MSG_UNKNWN_OP);
 }
 
 template <class T>
+Statement *Parser<T>::ifElseStatement()
+{
+    Expression<T> *condition = expression();
+    Statement *ifStatement = statement();
+    Statement *elseStatement;
+    if (get().getText() == "else")
+    {
+        consume(TokenType::KeyWord);
+        elseStatement = statement();
+    }
+    else
+        elseStatement = nullptr;
+    return new IfStatement<T>(condition, ifStatement, elseStatement);
+}
+
+template <class T>
 Expression<T> *Parser<T>::expression()
 {
-    Expression<T> *result = bitwise();
+    Expression<T> *result = conditional();
     while (true)
     {
         if (match(TokenType::Question))
@@ -201,6 +347,47 @@ Expression<T> *Parser<T>::expression()
             Expression<T> *exprIfTrue = expression();
             consume(TokenType::Colon);
             result = new TernaryExpression<T>(result, exprIfTrue, expression());
+            continue;
+        }
+        break;
+    }
+    return result;
+}
+
+template <class T>
+Expression<T> *Parser<T>::conditional()
+{
+    Expression<T> *result = bitwise();
+    while (true)
+    {
+        if (match(TokenType::DoubleEqual))
+        {
+            result = new ConditionalExpression<T>("==", result, bitwise());
+            continue;
+        }
+        if (match(TokenType::Less))
+        {
+            result = new ConditionalExpression<T>("<", result, bitwise());
+            continue;
+        }
+        if (match(TokenType::More))
+        {
+            result = new ConditionalExpression<T>(">", result, bitwise());
+            continue;
+        }
+        if (match(TokenType::LessOrEqual))
+        {
+            result = new ConditionalExpression<T>("<=", result, bitwise());
+            continue;
+        }
+        if (match(TokenType::MoreOrEqual))
+        {
+            result = new ConditionalExpression<T>(">=", result, bitwise());
+            continue;
+        }
+        if (match(TokenType::ExclamationAndEqual))
+        {
+            result = new ConditionalExpression<T>("!=", result, bitwise());
             continue;
         }
         break;
@@ -300,6 +487,8 @@ Expression<T> *Parser<T>::unary()
         return primary();
     if (match(TokenType::Tilde))
         return new UnaryExpression<T>("~", primary());
+    if (match(TokenType::Exclamation))
+        return new UnaryExpression<T>("!", primary());
     return primary();
 }
 
