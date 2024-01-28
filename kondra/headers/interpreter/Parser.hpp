@@ -141,7 +141,7 @@ Statement *parsing(std::vector<std::vector<Token>> &tokens,
             return Parser<kondra::string>(tokens[posOfStatement]).parse();
         else if (textOfkeyWord == "if")
         {
-            if (tokens[posOfStatement + 1][posOfToken].getText() == "else")
+            while (posOfStatement + 1 < tokens.size() && tokens[posOfStatement + 1][posOfToken].getText() == "else")
             {
                 tokens[posOfStatement].insert(tokens[posOfStatement].end(),
                                               tokens[posOfStatement + 1].begin(), tokens[posOfStatement + 1].end());
