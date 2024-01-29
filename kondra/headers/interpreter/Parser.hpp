@@ -33,12 +33,49 @@ private:
     Expression<T> *bitwise();
     Expression<T> *conditional();
     Statement *ifElseStatement();
+    Statement *block();
+    Statement *statementOrBlock();
 
 public:
     Parser(std::vector<Token> = std::vector<Token>());
     Statement *parse();
     void setTokens(std::vector<Token>);
 };
+
+std::vector<std::vector<Token>> splitToStatements(std::vector<Token> tokens)
+{
+    std::vector<std::vector<Token>> result;
+    std::vector<Token> statement;
+    bool isBlock = false;
+    for (const auto &token : tokens)
+    {
+        if (isBlock)
+        {
+            if (token.getType() == TokenType::Rbrace)
+            {
+                statement.push_back(token);
+                result.push_back(statement);
+                statement.clear();
+                isBlock = false;
+                continue;
+            }
+            statement.push_back(token);
+        }
+        else
+        {
+            if (token.getType() == TokenType::Semicolon)
+            {
+                result.push_back(statement);
+                statement.clear();
+                continue;
+            }
+            else if (token.getType() == TokenType::Lbrace)
+                isBlock = true;
+            statement.push_back(token);
+        }
+    }
+    return result;
+}
 
 Statement *chosingParser(const std::vector<Token> &tokens, const Type &element)
 {
@@ -155,6 +192,8 @@ Statement *parsing(std::vector<std::vector<Token>> &tokens,
                              ListOfVariables::getType(tokens[posOfStatement][posOfToken].getText()));
     case TokenType::Lparen:
         return parsing(tokens, posOfStatement, posOfToken + 1);
+    case TokenType::Lbrace:
+        return parsing(tokens, posOfStatement, posOfToken + 1);
     case TokenType::StringValue:
         return Parser<kondra::string>(tokens[posOfStatement]).parse();
     default:
@@ -203,7 +242,7 @@ template <class T>
 Statement *Parser<T>::parse()
 {
     if (!match(TokenType::Eof))
-        return statement();
+        return statementOrBlock();
     return nullptr;
 }
 
@@ -585,6 +624,26 @@ void Parser<T>::setTokens(std::vector<Token> tokens)
     this->tokens = tokens;
     size = tokens.size();
     pos = 0;
+}
+
+template <class T>
+Statement *Parser<T>::block()
+{
+    BlockStatement *block = new BlockStatement();
+    // consume(TokenType::Lbrace);
+    std::vector<std::vector<Token>> statementsOfBlockStatement = 
+        splitToStatements(std::vector<Token>(tokens.begin() + 1, tokens.end() - 1));
+    for (size_t posOfStatement = 0; posOfStatement < statementsOfBlockStatement.size(); posOfStatement++)
+        block->add(parsing(statementsOfBlockStatement, posOfStatement));
+    return block;
+}
+
+template <class T>
+Statement *Parser<T>::statementOrBlock()
+{
+    if (get().getType() == TokenType::Lbrace)
+        return block();
+    return statement();
 }
 
 #endif

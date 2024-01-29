@@ -11,5 +11,6 @@
 #include "TernaryExpression.hpp"
 #include "ConditionalExpression.hpp"
 #include "IfStatement.hpp"
+#include "BlockStatement.hpp"
 
 #endif

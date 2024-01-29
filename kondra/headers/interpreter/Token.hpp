@@ -51,6 +51,8 @@ enum TokenType
     // brasckets
     Lparen, // (
     Rparen, // )
+    Lbrace, // {
+    Rbrace, // }
     Semicolon, // ;
     Eof // end of file
 };

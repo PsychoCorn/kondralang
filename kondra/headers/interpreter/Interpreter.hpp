@@ -17,7 +17,6 @@ private:
     Lexer lexer;
 
     std::vector<std::string> split(std::string, std::string);
-    std::vector<std::vector<Token>> splitToStatements(std::vector<Token>);
 
 public:
     Interpreter(std::string);
@@ -71,23 +70,6 @@ std::vector<std::string> Interpreter::split(std::string text, std::string delim)
         vec.push_back(text.substr(prevPos, pos - prevPos));
         prevPos = pos + delim.length();
     }
-}
-
-std::vector<std::vector<Token>> Interpreter::splitToStatements(std::vector<Token> tokens)
-{
-    std::vector<std::vector<Token>> result;
-    std::vector<Token> statement;
-    for (const auto &token : tokens)
-    {
-        if (token.getType() == TokenType::Semicolon)
-        {
-            result.push_back(statement);
-            statement.clear();
-            continue;
-        }
-        statement.push_back(token);
-    }
-    return result;
 }
 
 #endif
