@@ -438,6 +438,16 @@ Expression<T> *Parser<T>::conditional()
             result = new ConditionalExpression<T>("!=", result, bitwise());
             continue;
         }
+        if (match(TokenType::DoubleAmpersand))
+        {
+            result = new ConditionalExpression<T>("&&", result, bitwise());
+            continue;
+        }
+        if (match(TokenType::DoublePipe))
+        {
+            result = new ConditionalExpression<T>("||", result, bitwise());
+            continue;
+        }
         break;
     }
     return result;

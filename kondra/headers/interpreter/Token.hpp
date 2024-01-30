@@ -36,6 +36,8 @@ enum TokenType
     Lshift, // <<
     Rshift, // >>
     Tilde, // ~
+    DoubleAmpersand, // &&
+    DoublePipe, // ||
     PlusAndEqual, // +=
     StarAndEqual, // *=
     MinusAndEqual, // -=

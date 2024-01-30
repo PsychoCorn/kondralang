@@ -22,7 +22,8 @@ std::unordered_map<std::string, TokenType> Lexer::operators = {
     {"?", TokenType::Question}, {":", TokenType::Colon}, {"==", TokenType::DoubleEqual},
     {"<", TokenType::Less}, {">", TokenType::More}, {"<=", TokenType::LessOrEqual},
     {">=", TokenType::MoreOrEqual}, {"!=", TokenType::ExclamationAndEqual}, {"!", TokenType::Exclamation},
-    {"{", TokenType::Lbrace}, {"}", TokenType::Rbrace}};
+    {"{", TokenType::Lbrace}, {"}", TokenType::Rbrace}, {"&&", TokenType::DoubleAmpersand},
+    {"||", TokenType::DoublePipe}};
 
 Lexer::Lexer(std::string input)
 {
@@ -389,6 +390,14 @@ void Lexer::addToken(TokenType type)
 
     case TokenType::Rbrace:
         tokens.push_back(Token(type, "}"));
+        break;
+
+    case TokenType::DoubleAmpersand:
+        tokens.push_back(Token(type, "&&"));
+        break;
+
+    case TokenType::DoublePipe:
+        tokens.push_back(Token(type, "||"));
         break;
 
     default:

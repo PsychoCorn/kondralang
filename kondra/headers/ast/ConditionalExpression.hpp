@@ -49,6 +49,10 @@ T ConditionalExpression<T>::eval()
         return expr1->eval() >= expr2->eval();
     else if (operation == "!=")
         return expr1->eval() != expr2->eval();
+    else if (operation == "&&")
+        return expr1->eval() && expr2->eval();
+    else if (operation == "||")
+        return expr1->eval() || expr2->eval();
     throw std::runtime_error(ERR_MSG_WRNG_COND_OP);
 }
 
@@ -67,6 +71,10 @@ kondra::string ConditionalExpression<kondra::string>::eval()
         return expr1->eval() >= expr2->eval() ? "1" : "0";
     else if (operation == "!=")
         return expr1->eval() != expr2->eval() ? "1" : "0";
+    else if (operation == "&&")
+        return expr1->eval() == "1" && expr2->eval() == "1" ? "1" : "0";
+    else if (operation == "||")
+        return expr1->eval() == "1" || expr2->eval() == "1" ? "1" : "0";
     throw std::runtime_error(ERR_MSG_WRNG_COND_OP);
 }
 
