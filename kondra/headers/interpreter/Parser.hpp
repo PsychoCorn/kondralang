@@ -184,6 +184,8 @@ Statement *parsing(std::vector<std::vector<Token>> &tokens,
             return Parser<kondra::var>(tokens[posOfStatement]).parse();
         else if (textOfkeyWord == "console_out")
             return Parser<kondra::string>(tokens[posOfStatement]).parse();
+        else if (textOfkeyWord == "console_in")
+            return parsing(tokens, posOfStatement, posOfToken + 1);
         else if (textOfkeyWord == "if")
         {
             while (posOfStatement + 1 < tokens.size() && tokens[posOfStatement + 1][posOfToken].getText() == "else")
@@ -322,44 +324,44 @@ Statement *Parser<T>::assignmentStatement()
             return new AssignmentStatement<T>(identifierOfVariable, expression());
         else if (match(TokenType::PlusAndEqual))
             return new AssignmentStatement<T>(identifierOfVariable,
-                                              new BinaryExpression<T>("+", new VariablesExpression<T>(identifierOfVariable),
-                                                                      expression()));
+                new BinaryExpression<T>("+", new VariablesExpression<T>(identifierOfVariable),
+                    expression()));
         else if (match(TokenType::MinusAndEqual))
             return new AssignmentStatement<T>(identifierOfVariable,
-                                              new BinaryExpression<T>("-", new VariablesExpression<T>(identifierOfVariable),
-                                                                      expression()));
+                new BinaryExpression<T>("-", new VariablesExpression<T>(identifierOfVariable),
+                    expression()));
         else if (match(TokenType::StarAndEqual))
             return new AssignmentStatement<T>(identifierOfVariable,
-                                              new BinaryExpression<T>("*", new VariablesExpression<T>(identifierOfVariable),
-                                                                      expression()));
+                new BinaryExpression<T>("*", new VariablesExpression<T>(identifierOfVariable),
+                    expression()));
         else if (match(TokenType::SlashAndEqual))
             return new AssignmentStatement<T>(identifierOfVariable,
-                                              new BinaryExpression<T>("/", new VariablesExpression<T>(identifierOfVariable),
-                                                                      expression()));
+                new BinaryExpression<T>("/", new VariablesExpression<T>(identifierOfVariable),
+                    expression()));
         else if (match(TokenType::PercentageAndEqual))
             return new AssignmentStatement<T>(identifierOfVariable,
-                                              new BinaryExpression<T>("%", new VariablesExpression<T>(identifierOfVariable),
-                                                                      expression()));
+                new BinaryExpression<T>("%", new VariablesExpression<T>(identifierOfVariable),
+                    expression()));
         else if (match(TokenType::AmpersandAndEqual))
             return new AssignmentStatement<T>(identifierOfVariable,
-                                              new BinaryExpression<T>("&", new VariablesExpression<T>(identifierOfVariable),
-                                                                      expression()));
+                new BinaryExpression<T>("&", new VariablesExpression<T>(identifierOfVariable),
+                    expression()));
         else if (match(TokenType::CaretAndEqual))
             return new AssignmentStatement<T>(identifierOfVariable,
-                                              new BinaryExpression<T>("^", new VariablesExpression<T>(identifierOfVariable),
-                                                                      expression()));
+                new BinaryExpression<T>("^", new VariablesExpression<T>(identifierOfVariable),
+                    expression()));
         else if (match(TokenType::PipeAndEqual))
             return new AssignmentStatement<T>(identifierOfVariable,
-                                              new BinaryExpression<T>("|", new VariablesExpression<T>(identifierOfVariable),
-                                                                      expression()));
+                new BinaryExpression<T>("|", new VariablesExpression<T>(identifierOfVariable),
+                    expression()));
         else if (match(TokenType::LshiftAndEqual))
             return new AssignmentStatement<T>(identifierOfVariable,
-                                              new BinaryExpression<T>("<<", new VariablesExpression<T>(identifierOfVariable),
-                                                                      expression()));
+                new BinaryExpression<T>("<<", new VariablesExpression<T>(identifierOfVariable),
+                    expression()));
         else if (match(TokenType::RshiftAndEqual))
             return new AssignmentStatement<T>(identifierOfVariable,
-                                              new BinaryExpression<T>(">>", new VariablesExpression<T>(identifierOfVariable),
-                                                                      expression()));
+                new BinaryExpression<T>(">>", new VariablesExpression<T>(identifierOfVariable),
+                    expression()));
     }
     throw std::runtime_error(ERR_MSG_UNKNWN_OP);
 }
@@ -652,6 +654,11 @@ Expression<T> *Parser<T>::primary()
         throw std::runtime_error(ERR_MSG_STR_IN_NOT_STR_STMNT);
     if (match(TokenType::Identifier))
         return new VariablesExpression<T>(current.getText());
+    if (match(TokenType::KeyWord))
+    {
+        if (current.getText() == "console_in")
+            return new InputExpression<T>();
+    }
     if (match(TokenType::Lparen))
     {
         Expression<T> *result = expression();
@@ -678,6 +685,11 @@ Expression<kondra::string> *Parser<kondra::string>::primary()
         return new ValueExpression<kondra::string>(current.getText());
     if (match(TokenType::Identifier))
         return new VariablesExpression<kondra::string>(current.getText());
+    if (match(TokenType::KeyWord))
+    {
+        if (current.getText() == "console_in")
+            return new InputExpression<kondra::string>();
+    }
     if (match(TokenType::Lparen))
     {
         Expression<kondra::string> *result = expression();
@@ -704,9 +716,45 @@ Expression<kondra::var> *Parser<kondra::var>::primary()
         return new ValueExpression<kondra::var>(current.getText());
     if (match(TokenType::Identifier))
         return new VariablesExpression<kondra::var>(current.getText());
+    if (match(TokenType::KeyWord))
+    {
+        if (current.getText() == "console_in")
+            return new InputExpression<kondra::var>();
+    }
     if (match(TokenType::Lparen))
     {
         Expression<kondra::var> *result = expression();
+        if (!match(TokenType::Rparen))
+            throw std::runtime_error(ERR_MSG_UNKNWN_EXPR);
+        return result;
+    }
+    throw std::runtime_error(ERR_MSG_UNKNWN_EXPR);
+}
+
+template <>
+Expression<kondra::dynamic_int> *Parser<kondra::dynamic_int>::primary()
+{
+    Token current = get();
+    if (match(TokenType::IntNumber))
+        return new ValueExpression<kondra::dynamic_int>(current.getText());
+    if (match(TokenType::FloatNumber))
+        return new ValueExpression<kondra::dynamic_int>(current.getText());
+    if (match(TokenType::HexNumber))
+        return new ValueExpression<kondra::dynamic_int>(kondra::dynamic_int(current.getText(), 16));
+    if (match(TokenType::OctNumber))
+        return new ValueExpression<kondra::dynamic_int>(kondra::dynamic_int(current.getText(), 8));
+    if (match(TokenType::StringValue))
+        throw std::runtime_error(ERR_MSG_STR_IN_NOT_STR_STMNT);
+    if (match(TokenType::Identifier))
+        return new VariablesExpression<kondra::dynamic_int>(current.getText());
+    if (match(TokenType::KeyWord))
+    {
+        if (current.getText() == "console_in")
+            return new InputExpression<kondra::dynamic_int>();
+    }
+    if (match(TokenType::Lparen))
+    {
+        Expression<kondra::dynamic_int> *result = expression();
         if (!match(TokenType::Rparen))
             throw std::runtime_error(ERR_MSG_UNKNWN_EXPR);
         return result;

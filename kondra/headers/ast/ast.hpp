@@ -12,5 +12,6 @@
 #include "ConditionalExpression.hpp"
 #include "IfStatement.hpp"
 #include "BlockStatement.hpp"
+#include "InputExpression.hpp"
 
 #endif

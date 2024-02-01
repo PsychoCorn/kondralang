@@ -5,7 +5,7 @@ std::vector<std::string> KeyWords::keyWords = {
     "uint8", "uint16", "uint32", "uint64",
     "float32", "float64", "float80", "boolean",
     "string", "var", "int", "console_out", 
-    "if", "else"
+    "if", "else", "console_in"
 };
 
 bool KeyWords::isKeyWord(std::string word)

@@ -1,12 +1,12 @@
-int8 a = --(2 * 3);
-boolean b;
-if (a <= 0) {
+console_out "Input a: "; int a = console_in;
+if a < 0 {
 	a = -a;
-	b = true;
-} else {
+	console_out "a is negative" + _ENDL_;
+} else if a == 0 
+	console_out "a is zero" + _ENDL_;
+else {
 	a *= 3;
-	b = false;
+	console_out "a is positive" + _ENDL_;
 }
-console_out a + _ENDL_;
-a += -a > 0 ? a : -a / 2; 
-console_out a;
+
+console_out "Now a is " + a;

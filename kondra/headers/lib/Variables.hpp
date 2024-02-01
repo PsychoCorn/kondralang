@@ -282,6 +282,11 @@ T Variables<T>::get(std::string key)
         if (type == Var)
             return variables[key];
         return static_cast<T>(Variables<kondra::var>::get(key));
+
+    case Type::String:
+        if (type == String)
+            return variables[key];
+        return static_cast<T>(Variables<kondra::string>::get(key));
     
     default:
         return static_cast<T>(0);
