@@ -1,11 +1,7 @@
-int a = 5;
-string b = "Hello";
-if (b == "Hello!") || (b == "Hello") {
-	a += 1;
-	console_out b + _ENDL_;
+int8 a = --(2 * 3);
+if (a <= 0) {
+	a = -a;
+} else {
+	a *= 3;
 }
-else if b == "Hell"
-	a >>= 1;
-else
-	a -= 1;
 console_out a;

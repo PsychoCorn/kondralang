@@ -42,8 +42,8 @@ std::vector<Token> Lexer::tokenize()
             tokenizeNumber();
         else if (isalpha(current) || current == '_')
             tokenizeWord();
-        else if (current == '\"')
-            tokenizeStringValue();
+        else if (current == '\"' || current == '\'')
+            tokenizeStringValue(current);
         else if (isOperatorChar(current))
             tokenizeOperator();
         else if (current == ';')
@@ -133,7 +133,7 @@ void Lexer::tokenizeWord()
                                   addToken(TokenType::Identifier, buffer);
 }
 
-void Lexer::tokenizeStringValue()
+void Lexer::tokenizeStringValue(const char &quotationMark)
 {
     std::string buffer = "";
     char current = next();
@@ -214,7 +214,7 @@ void Lexer::tokenizeStringValue()
                 break;
             }
         }
-        if (current == '"')
+        if (current == quotationMark)
             break;
         buffer += current;
         current = next();

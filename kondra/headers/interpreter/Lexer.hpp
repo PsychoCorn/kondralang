@@ -25,7 +25,7 @@ private:
     void tokenizeOctNumber();
     void tokenizeWord();
     void tokenizeOperator();
-    void tokenizeStringValue();
+    void tokenizeStringValue(const char&);
     bool isHexDigit(char);
     bool isOperatorChar(char);
     bool isOperator(const std::string&);

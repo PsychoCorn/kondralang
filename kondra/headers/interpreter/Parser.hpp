@@ -540,13 +540,13 @@ template <class T>
 Expression<T> *Parser<T>::unary()
 {
     if (match(TokenType::Minus))
-        return new UnaryExpression<T>("-", primary());
+        return new UnaryExpression<T>("-", unary());
     if (match(TokenType::Plus))
         return primary();
     if (match(TokenType::Tilde))
-        return new UnaryExpression<T>("~", primary());
+        return new UnaryExpression<T>("~", unary());
     if (match(TokenType::Exclamation))
-        return new UnaryExpression<T>("!", primary());
+        return new UnaryExpression<T>("!", unary());
     return primary();
 }
 
