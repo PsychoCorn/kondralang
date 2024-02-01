@@ -22,16 +22,24 @@ private:
     Token get(int = 0);
     bool match(TokenType);
     Token consume(TokenType);
-    Expression<T> *primary();
-    Expression<T> *unary();
-    Expression<T> *multiplicative();
+    Expression<T> *expression();
+    Expression<T> *primary(); // #1
+    Expression<T> *postfixUnary(); // #2
+    Expression<T> *prefixUnary(); // #3
+    Expression<T> *multiplicative(); // #4
+    Expression<T> *additive(); // #5
+    Expression<T> *shift(); // #6
+    Expression<T> *relation(); // #7
+    Expression<T> *equality(); // #8
+    Expression<T> *bitwiseAnd(); // #9
+    Expression<T> *bitwiseXor(); // #10
+    Expression<T> *bitwiseOr(); // #11
+    Expression<T> *logicalAnd(); // #12
+    Expression<T> *logicalOr(); // #13
+    Expression<T> *ternary(); // #14
     Statement *statement();
-    Expression<T> *additive();
     Statement *assignmentStatement();
     Statement *variableDeclarationStatement();
-    Expression<T> *expression();
-    Expression<T> *bitwise();
-    Expression<T> *conditional();
     Statement *ifElseStatement();
     Statement *block();
     Statement *statementOrBlock();
@@ -387,14 +395,20 @@ Statement *Parser<T>::ifElseStatement()
 template <class T>
 Expression<T> *Parser<T>::expression()
 {
-    Expression<T> *result = conditional();
+    return ternary();
+}
+
+template <class T>
+Expression<T> *Parser<T>::ternary()
+{
+    Expression<T> *result = logicalOr();
     while (true)
     {
         if (match(TokenType::Question))
         {
-            Expression<T> *exprIfTrue = expression();
+            Expression<T> *exprIfTrue = ternary();
             consume(TokenType::Colon);
-            result = new TernaryExpression<T>(result, exprIfTrue, expression());
+            result = new TernaryExpression<T>(result, exprIfTrue, ternary());
             continue;
         }
         break;
@@ -403,49 +417,99 @@ Expression<T> *Parser<T>::expression()
 }
 
 template <class T>
-Expression<T> *Parser<T>::conditional()
+Expression<T> *Parser<T>::logicalOr()
 {
-    Expression<T> *result = bitwise();
+    Expression<T> *result = logicalAnd();
+    while (true)
+    {
+        if (match(TokenType::DoublePipe))
+        {
+            result = new ConditionalExpression<T>("||", result, logicalAnd());
+            continue;
+        }
+        break;
+    }
+    return result;
+}
+
+template <class T>
+Expression<T> *Parser<T>::logicalAnd()
+{
+    Expression<T> *result = bitwiseOr();
+    while (true)
+    {
+        if (match(TokenType::DoubleAmpersand))
+        {
+            result = new ConditionalExpression<T>("&&", result, bitwiseOr());
+            continue;
+        }
+        break;
+    }
+    return result;
+}
+
+template <class T>
+Expression<T> *Parser<T>::bitwiseOr()
+{
+    Expression<T> *result = bitwiseXor();
+    while (true)
+    {
+        if (match(TokenType::Pipe))
+        {
+            result = new BinaryExpression<T>("|", result, bitwiseXor());
+            continue;
+        }
+        break;
+    }
+    return result;
+}
+
+template <class T>
+Expression<T> *Parser<T>::bitwiseXor()
+{
+    Expression<T> *result = bitwiseAnd();
+    while (true)
+    {
+        if (match(TokenType::Caret))
+        {
+            result = new BinaryExpression<T>("^", result, bitwiseAnd());
+            continue;
+        }
+        break;
+    }
+    return result;
+}
+
+template <class T>
+Expression<T> *Parser<T>::bitwiseAnd()
+{
+    Expression<T> *result = equality();
+    while (true)
+    {
+        if (match(TokenType::Ampersand))
+        {
+            result = new BinaryExpression<T>("&", result, equality());
+            continue;
+        }
+        break;
+    }
+    return result;
+}
+
+template <class T>
+Expression<T> *Parser<T>::equality()
+{
+    Expression<T> *result = relation();
     while (true)
     {
         if (match(TokenType::DoubleEqual))
         {
-            result = new ConditionalExpression<T>("==", result, bitwise());
-            continue;
-        }
-        if (match(TokenType::Less))
-        {
-            result = new ConditionalExpression<T>("<", result, bitwise());
-            continue;
-        }
-        if (match(TokenType::More))
-        {
-            result = new ConditionalExpression<T>(">", result, bitwise());
-            continue;
-        }
-        if (match(TokenType::LessOrEqual))
-        {
-            result = new ConditionalExpression<T>("<=", result, bitwise());
-            continue;
-        }
-        if (match(TokenType::MoreOrEqual))
-        {
-            result = new ConditionalExpression<T>(">=", result, bitwise());
+            result = new ConditionalExpression<T>("==", result, relation());
             continue;
         }
         if (match(TokenType::ExclamationAndEqual))
         {
-            result = new ConditionalExpression<T>("!=", result, bitwise());
-            continue;
-        }
-        if (match(TokenType::DoubleAmpersand))
-        {
-            result = new ConditionalExpression<T>("&&", result, bitwise());
-            continue;
-        }
-        if (match(TokenType::DoublePipe))
-        {
-            result = new ConditionalExpression<T>("||", result, bitwise());
+            result = new ConditionalExpression<T>("!=", result, relation());
             continue;
         }
         break;
@@ -454,7 +518,38 @@ Expression<T> *Parser<T>::conditional()
 }
 
 template <class T>
-Expression<T> *Parser<T>::bitwise()
+Expression<T> *Parser<T>::relation()
+{
+    Expression<T> *result = shift();
+    while (true)
+    {
+        if (match(TokenType::Less))
+        {
+            result = new ConditionalExpression<T>("<", result, shift());
+            continue;
+        }
+        if (match(TokenType::More))
+        {
+            result = new ConditionalExpression<T>(">", result, shift());
+            continue;
+        }
+        if (match(TokenType::LessOrEqual))
+        {
+            result = new ConditionalExpression<T>("<=", result, shift());
+            continue;
+        }
+        if (match(TokenType::MoreOrEqual))
+        {
+            result = new ConditionalExpression<T>(">=", result, shift());
+            continue;
+        }
+        break;
+    }
+    return result;
+}
+
+template <class T>
+Expression<T> *Parser<T>::shift()
 {
     Expression<T> *result = additive();
     while (true)
@@ -467,21 +562,6 @@ Expression<T> *Parser<T>::bitwise()
         if (match(TokenType::Rshift))
         {
             result = new BinaryExpression<T>(">>", result, additive());
-            continue;
-        }
-        if (match(TokenType::Ampersand))
-        {
-            result = new BinaryExpression<T>("&", result, additive());
-            continue;
-        }
-        if (match(TokenType::Caret))
-        {
-            result = new BinaryExpression<T>("^", result, additive());
-            continue;
-        }
-        if (match(TokenType::Pipe))
-        {
-            result = new BinaryExpression<T>("|", result, additive());
             continue;
         }
         break;
@@ -505,11 +585,6 @@ Expression<T> *Parser<T>::additive()
             result = new BinaryExpression<T>("-", result, multiplicative());
             continue;
         }
-        if (match(TokenType::Percentage))
-        {
-            result = new BinaryExpression<T>("%", result, multiplicative());
-            continue;
-        }
         break;
     }
     return result;
@@ -518,17 +593,22 @@ Expression<T> *Parser<T>::additive()
 template <class T>
 Expression<T> *Parser<T>::multiplicative()
 {
-    Expression<T> *result = unary();
+    Expression<T> *result = prefixUnary();
     while (true)
     {
         if (match(TokenType::Star))
         {
-            result = new BinaryExpression<T>("*", result, unary());
+            result = new BinaryExpression<T>("*", result, prefixUnary());
             continue;
         }
         if (match(TokenType::Slash))
         {
-            result = new BinaryExpression<T>("/", result, unary());
+            result = new BinaryExpression<T>("/", result, prefixUnary());
+            continue;
+        }
+        if (match(TokenType::Percentage))
+        {
+            result = new BinaryExpression<T>("%", result, prefixUnary());
             continue;
         }
         break;
@@ -537,16 +617,22 @@ Expression<T> *Parser<T>::multiplicative()
 }
 
 template <class T>
-Expression<T> *Parser<T>::unary()
+Expression<T> *Parser<T>::prefixUnary()
 {
     if (match(TokenType::Minus))
-        return new UnaryExpression<T>("-", unary());
+        return new UnaryExpression<T>("-", prefixUnary());
     if (match(TokenType::Plus))
         return primary();
     if (match(TokenType::Tilde))
-        return new UnaryExpression<T>("~", unary());
+        return new UnaryExpression<T>("~", prefixUnary());
     if (match(TokenType::Exclamation))
-        return new UnaryExpression<T>("!", unary());
+        return new UnaryExpression<T>("!", prefixUnary());
+    return postfixUnary();
+}
+
+template <class T>
+Expression<T> *Parser<T>::postfixUnary()
+{
     return primary();
 }
 

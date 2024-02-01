@@ -50,6 +50,7 @@ enum TokenType
     RshiftAndEqual, // >>=
     Question, // ?
     Colon, // :
+    Comma, // ,
     // brasckets
     Lparen, // (
     Rparen, // )
