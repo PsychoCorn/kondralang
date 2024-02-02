@@ -142,7 +142,9 @@ template<>
 Type Variables<kondra::string>::type = Type::String;
 
 template<>
-std::unordered_map<std::string, kondra::var> Variables<kondra::var>::variables = {};
+std::unordered_map<std::string, kondra::var> Variables<kondra::var>::variables = {
+    {"_NONE_", kondra::var()}
+};
 
 template<>
 Type Variables<kondra::var>::type = Type::Var;

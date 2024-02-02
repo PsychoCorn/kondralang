@@ -229,6 +229,8 @@ namespace kondra
 
     inline string to_string(const var& arg)
     {
+        if (arg.getType() == VarType::None)
+            return string("None");
         return string(*(var::toString(arg).getData().stringData));
     }
 

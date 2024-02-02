@@ -22,6 +22,7 @@ std::unordered_map<std::string, Type> ListOfVariables::listOfVariables = {
     {"true", Type::Bool},
     {"false", Type::Bool},
     {"_ENDL_", Type::String},
+    {"_NONE_", Type::Var},
 };
 
 Type ListOfVariables::getType(std::string key)

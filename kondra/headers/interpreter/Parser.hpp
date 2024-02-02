@@ -10,6 +10,7 @@
 #define ERR_MSG_STR_IN_NOT_STR_STMNT "Using string in not string statement"
 #define ERR_MSG_WRNG_TOKEN_TYPE "Wrong token type"
 #define ERR_MSG_UNKNWN_STMNT "Unknown statement"
+#define ERR_MSG_UNKNWN_KW_IN_EXP "Unknown keyword in expression"
 
 template <class T>
 class Parser final
@@ -178,20 +179,21 @@ Statement *parsing(std::vector<std::vector<Token>> &tokens,
             return Parser<long double>(tokens[posOfStatement]).parse();
         else if (textOfkeyWord == "boolean")
             return Parser<bool>(tokens[posOfStatement]).parse();
-        else if (textOfkeyWord == "string")
+        else if (textOfkeyWord == "string" || textOfkeyWord == "console_out")
             return Parser<kondra::string>(tokens[posOfStatement]).parse();
-        else if (textOfkeyWord == "var")
+        else if (textOfkeyWord == "var" || textOfkeyWord == "int_var" || 
+            textOfkeyWord == "float_var" || textOfkeyWord == "string_var" || 
+                textOfkeyWord == "bool_var")
             return Parser<kondra::var>(tokens[posOfStatement]).parse();
-        else if (textOfkeyWord == "console_out")
-            return Parser<kondra::string>(tokens[posOfStatement]).parse();
         else if (textOfkeyWord == "console_in")
             return parsing(tokens, posOfStatement, posOfToken + 1);
         else if (textOfkeyWord == "if")
         {
-            while (posOfStatement + 1 < tokens.size() && tokens[posOfStatement + 1][posOfToken].getText() == "else")
+            while (posOfStatement + 1 < tokens.size() && 
+                tokens[posOfStatement + 1][posOfToken].getText() == "else")
             {
                 tokens[posOfStatement].insert(tokens[posOfStatement].end(),
-                                              tokens[posOfStatement + 1].begin(), tokens[posOfStatement + 1].end());
+                    tokens[posOfStatement + 1].begin(), tokens[posOfStatement + 1].end());
                 tokens.erase(tokens.begin() + posOfStatement + 1);
             }
             return parsing(tokens, posOfStatement, posOfToken + 1);
@@ -199,7 +201,7 @@ Statement *parsing(std::vector<std::vector<Token>> &tokens,
 
     case TokenType::Identifier:
         return chosingParser(tokens[posOfStatement],
-                             ListOfVariables::getType(tokens[posOfStatement][posOfToken].getText()));
+            ListOfVariables::getType(tokens[posOfStatement][posOfToken].getText()));
     case TokenType::Lparen:
         return parsing(tokens, posOfStatement, posOfToken + 1);
     case TokenType::Lbrace:
@@ -299,6 +301,21 @@ Statement *Parser<T>::variableDeclarationStatement()
 }
 
 template <>
+Statement *Parser<kondra::var>::variableDeclarationStatement()
+{
+    std::string type = get().getText();
+    std::string identifierOfVariable = get(1).getText();
+    if (match(TokenType::KeyWord) && match(TokenType::Identifier))
+    {
+        if (match(TokenType::Equal))
+            return new VariableDeclarationStatement<kondra::var>(identifierOfVariable, expression());
+        return new VariableDeclarationStatement<kondra::var>(identifierOfVariable, 
+            new ValueExpression<kondra::var>(kondra::var()));
+    }
+    throw std::runtime_error(ERR_MSG_UNKNWN_OP);
+}
+
+template <>
 Statement *Parser<kondra::string>::variableDeclarationStatement()
 {
     std::string type = get().getText();
@@ -306,8 +323,10 @@ Statement *Parser<kondra::string>::variableDeclarationStatement()
     if (match(TokenType::KeyWord) && match(TokenType::Identifier))
     {
         if (match(TokenType::Equal))
-            return new VariableDeclarationStatement<kondra::string>(identifierOfVariable, expression());
-        return new VariableDeclarationStatement<kondra::string>(identifierOfVariable, new ValueExpression<kondra::string>(""));
+            return new VariableDeclarationStatement<kondra::string>(identifierOfVariable, 
+                expression());
+        return new VariableDeclarationStatement<kondra::string>(identifierOfVariable, 
+            new ValueExpression<kondra::string>(""));
     }
     throw std::runtime_error(ERR_MSG_UNKNWN_OP);
 }
@@ -372,10 +391,10 @@ Statement *Parser<T>::ifElseStatement()
     Expression<T> *condition = expression();
     // Statement *ifStatement = statement();
     auto posOfElse = std::find_if(tokens.begin() + pos, tokens.end(),
-                                  [](Token t)
-                                  {
-                                      return t.getType() == KeyWord && t.getText() == "else";
-                                  });
+        [](Token t)
+        {
+            return t.getType() == KeyWord && t.getText() == "else";
+        });
     std::vector<std::vector<Token>> tokensOfifStatement(
         1, std::vector<Token>(tokens.begin() + pos, posOfElse));
     std::vector<std::vector<Token>> tokensOfElseStatement;
@@ -658,6 +677,8 @@ Expression<T> *Parser<T>::primary()
     {
         if (current.getText() == "console_in")
             return new InputExpression<T>();
+        else
+            throw std::runtime_error(ERR_MSG_UNKNWN_KW_IN_EXP);
     }
     if (match(TokenType::Lparen))
     {
@@ -689,6 +710,8 @@ Expression<kondra::string> *Parser<kondra::string>::primary()
     {
         if (current.getText() == "console_in")
             return new InputExpression<kondra::string>();
+        else
+            throw std::runtime_error(ERR_MSG_UNKNWN_KW_IN_EXP);
     }
     if (match(TokenType::Lparen))
     {
@@ -720,6 +743,16 @@ Expression<kondra::var> *Parser<kondra::var>::primary()
     {
         if (current.getText() == "console_in")
             return new InputExpression<kondra::var>();
+        else if (current.getText() == "int_var")
+            return new VariableConvertationExpression(expression(), kondra::VarType::Int);
+        else if (current.getText() == "float_var")
+            return new VariableConvertationExpression(expression(), kondra::VarType::Float);
+        else if (current.getText() == "string_var")
+            return new VariableConvertationExpression(expression(), kondra::VarType::String);
+        else if (current.getText() == "boolean_var")
+            return new VariableConvertationExpression(expression(), kondra::VarType::Bool);
+        else
+            throw std::runtime_error(ERR_MSG_UNKNWN_KW_IN_EXP);
     }
     if (match(TokenType::Lparen))
     {
@@ -751,6 +784,8 @@ Expression<kondra::dynamic_int> *Parser<kondra::dynamic_int>::primary()
     {
         if (current.getText() == "console_in")
             return new InputExpression<kondra::dynamic_int>();
+        else
+            throw std::runtime_error(ERR_MSG_UNKNWN_KW_IN_EXP);
     }
     if (match(TokenType::Lparen))
     {
@@ -777,7 +812,8 @@ Statement *Parser<T>::block()
     // consume(TokenType::Lbrace);
     std::vector<std::vector<Token>> statementsOfBlockStatement = 
         splitToStatements(std::vector<Token>(tokens.begin() + 1, tokens.end() - 1));
-    for (size_t posOfStatement = 0; posOfStatement < statementsOfBlockStatement.size(); posOfStatement++)
+    for (size_t posOfStatement = 0; posOfStatement < statementsOfBlockStatement.size(); 
+            posOfStatement++)
         block->add(parsing(statementsOfBlockStatement, posOfStatement));
     return block;
 }

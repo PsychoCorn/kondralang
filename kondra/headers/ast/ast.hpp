@@ -13,5 +13,6 @@
 #include "IfStatement.hpp"
 #include "BlockStatement.hpp"
 #include "InputExpression.hpp"
+#include "VariableConvertationExpression.hpp"
 
 #endif
