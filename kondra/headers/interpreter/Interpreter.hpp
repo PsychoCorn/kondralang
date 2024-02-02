@@ -49,7 +49,12 @@ void Interpreter::interpretation()
     }
     catch (std::exception &e)
     {
-        std::cerr << e.what() << " at statement " << pos + 1;
+        std::cerr << std::endl << e.what() << " at statement " << pos + 1 << ":\n";
+        for (auto token : tokens[pos])
+        {
+            std::cerr << token.getText() + " ";
+        }
+        std::cerr << std::endl;
         return;
     }
 }

@@ -1,4 +1,6 @@
-console_out "Input a: "; int a = console_in;
+console_out "Input a: "; 
+int a = console_in + 5;
+_ENDL_ = "\n////////\n";
 if a < 0 {
 	a = -a;
 	console_out "a is negative" + _ENDL_;
@@ -6,6 +8,7 @@ if a < 0 {
 	console_out "a is zero" + _ENDL_;
 else {
 	a *= 3;
+	_ENDL_ = '\n';
 	console_out "a is positive" + _ENDL_;
 }
 
