@@ -12,8 +12,10 @@ enum TokenType
     HexNumber,
     OctNumber,
     FloatNumber,
-    StringValue, // string
-    // word
+    // strings
+    StringValue, 
+    FstringValue,
+    // words
     KeyWord,
     Identifier,
     // operators

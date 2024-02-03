@@ -11,4 +11,4 @@ int main(int argc, char** argv)
     else
         std::cout << "kondra has been built" << std::endl;
     return 0;
-}
+} 

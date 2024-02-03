@@ -1,5 +1,3 @@
-console_out "Input number: ";
-var a = 1 + int_var console_in;
-if a > 0 console_out a + " is greater than zero";
-else if a == 0 console_out a + " is equal zero";
-else console_out a + " is less than zero";
+int name = console_in;
+string text = f'Hello, 0x{name:*^15x}';
+console_out text;

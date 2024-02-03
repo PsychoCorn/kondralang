@@ -14,5 +14,6 @@
 #include "BlockStatement.hpp"
 #include "InputExpression.hpp"
 #include "VariableConvertationExpression.hpp"
+#include "FormatStringExpression.hpp"
 
 #endif

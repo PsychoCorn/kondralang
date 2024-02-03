@@ -20,7 +20,7 @@ private:
     size_t size;
     std::vector<Token> tokens;
 
-    Token get(int = 0);
+    Token get(size_t = 0);
     bool match(TokenType);
     Token consume(TokenType);
     Expression<T> *expression();
@@ -208,6 +208,8 @@ Statement *parsing(std::vector<std::vector<Token>> &tokens,
         return parsing(tokens, posOfStatement, posOfToken + 1);
     case TokenType::StringValue:
         return Parser<kondra::string>(tokens[posOfStatement]).parse();
+    case TokenType::FstringValue:
+        return Parser<kondra::string>(tokens[posOfStatement]).parse();
     default:
         return Parser<double>(tokens[posOfStatement]).parse();
     }
@@ -222,9 +224,9 @@ Parser<T>::Parser(std::vector<Token> tokens)
 }
 
 template <class T>
-Token Parser<T>::get(int relativePosition)
+Token Parser<T>::get(size_t relativePosition)
 {
-    int position = pos + relativePosition;
+    size_t position = pos + relativePosition;
     if (position >= size)
         return eof;
     return tokens[position];
@@ -669,7 +671,7 @@ Expression<T> *Parser<T>::primary()
         return new ValueExpression<T>(std::stoull(current.getText(), nullptr, 16));
     if (match(TokenType::OctNumber))
         return new ValueExpression<T>(std::stoull(current.getText(), nullptr, 8));
-    if (match(TokenType::StringValue))
+    if (match(TokenType::StringValue) || match(TokenType::FstringValue))
         throw std::runtime_error(ERR_MSG_STR_IN_NOT_STR_STMNT);
     if (match(TokenType::Identifier))
         return new VariablesExpression<T>(current.getText());
@@ -704,6 +706,8 @@ Expression<kondra::string> *Parser<kondra::string>::primary()
         return new ValueExpression<kondra::string>(current.getText());
     if (match(TokenType::StringValue))
         return new ValueExpression<kondra::string>(current.getText());
+    if (match(TokenType::FstringValue))
+        return new FormatStringExpression<kondra::string>(current.getText());
     if (match(TokenType::Identifier))
         return new VariablesExpression<kondra::string>(current.getText());
     if (match(TokenType::KeyWord))
@@ -737,6 +741,8 @@ Expression<kondra::var> *Parser<kondra::var>::primary()
         return new ValueExpression<kondra::var>(kondra::dynamic_int(current.getText(), 8));
     if (match(TokenType::StringValue))
         return new ValueExpression<kondra::var>(current.getText());
+    if (match(TokenType::FstringValue))
+        return new FormatStringExpression<kondra::var>(current.getText());
     if (match(TokenType::Identifier))
         return new VariablesExpression<kondra::var>(current.getText());
     if (match(TokenType::KeyWord))
@@ -776,7 +782,7 @@ Expression<kondra::dynamic_int> *Parser<kondra::dynamic_int>::primary()
         return new ValueExpression<kondra::dynamic_int>(kondra::dynamic_int(current.getText(), 16));
     if (match(TokenType::OctNumber))
         return new ValueExpression<kondra::dynamic_int>(kondra::dynamic_int(current.getText(), 8));
-    if (match(TokenType::StringValue))
+    if (match(TokenType::StringValue) || match(TokenType::FstringValue))
         throw std::runtime_error(ERR_MSG_STR_IN_NOT_STR_STMNT);
     if (match(TokenType::Identifier))
         return new VariablesExpression<kondra::dynamic_int>(current.getText());

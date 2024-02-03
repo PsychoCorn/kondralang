@@ -18,14 +18,14 @@ private:
 
     void addToken(TokenType);
     void addToken(TokenType, std::string);
-    char peek(int = 0);
+    char peek(size_t = 0);
     char next();
     void tokenizeNumber();
     void tokenizeHexNumber();
     void tokenizeOctNumber();
     void tokenizeWord();
     void tokenizeOperator();
-    void tokenizeStringValue(const char&);
+    void tokenizeStringValue(const char&, const bool& = false);
     bool isHexDigit(char);
     bool isOperatorChar(char);
     bool isOperator(const std::string&);

@@ -41,7 +41,11 @@ std::vector<Token> Lexer::tokenize()
         if (isdigit(current))
             tokenizeNumber();
         else if (isalpha(current) || current == '_')
+        {
+            if (current == 'f' && (peek(1) == '\'' || peek(1) == '\"'))
+                tokenizeStringValue(next(), true);
             tokenizeWord();
+        }
         else if (current == '\"' || current == '\'')
             tokenizeStringValue(current);
         else if (isOperatorChar(current))
@@ -133,7 +137,7 @@ void Lexer::tokenizeWord()
                                   addToken(TokenType::Identifier, buffer);
 }
 
-void Lexer::tokenizeStringValue(const char &quotationMark)
+void Lexer::tokenizeStringValue(const char &quotationMark, const bool &isFstring)
 {
     std::string buffer = "";
     char current = next();
@@ -219,8 +223,8 @@ void Lexer::tokenizeStringValue(const char &quotationMark)
         buffer += current;
         current = next();
     }
-    next(); // skip closing "
-    addToken(TokenType::StringValue, buffer);
+    next(); // skip closing quotation mark
+    isFstring ? addToken(TokenType::FstringValue, buffer) : addToken(TokenType::StringValue, buffer);
 }
 
 bool Lexer::isHexDigit(char c)
@@ -406,9 +410,9 @@ void Lexer::addToken(TokenType type)
     }
 }
 
-char Lexer::peek(int relativePosition)
+char Lexer::peek(size_t relativePosition)
 {
-    int position = pos + relativePosition;
+    size_t position = pos + relativePosition;
     if (position >= length)
         return '\0';
     return input[position];
