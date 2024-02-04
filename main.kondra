@@ -1,3 +1,2 @@
 int name = console_in;
-string text = f'Hello, 0x{name:*^15x}';
-console_out text;
+console_out '{' + f'0x{name:*^15x}' + '}';

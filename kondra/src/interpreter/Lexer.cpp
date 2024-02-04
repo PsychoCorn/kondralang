@@ -44,7 +44,8 @@ std::vector<Token> Lexer::tokenize()
         {
             if (current == 'f' && (peek(1) == '\'' || peek(1) == '\"'))
                 tokenizeStringValue(next(), true);
-            tokenizeWord();
+            else
+                tokenizeWord();
         }
         else if (current == '\"' || current == '\'')
             tokenizeStringValue(current);

@@ -37,16 +37,13 @@ T FormatStringExpression<T>::eval()
 {
     std::stringstream result;
     std::string::iterator lbrace, rbrace;
-    std::string test;
     for (;;)
     {
         lbrace = std::find(fmt.begin(), fmt.end(), '{');
         rbrace = std::find(fmt.begin(), fmt.end(), '}');
         result << std::string(fmt.begin(), lbrace); 
-        test = result.str();
         if (lbrace != fmt.end())
             result << formatVariable(getIdAndFormatSetting(lbrace, rbrace));
-        test = result.str();
         if (rbrace == fmt.end())
             break;
         fmt = std::string(rbrace + 1, fmt.end());
