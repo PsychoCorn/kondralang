@@ -1,0 +1,41 @@
+#ifndef Lexer_HPP
+#define Lexer_HPP
+
+#include "Token.hpp"
+#include "../lib/KeyWords.hpp"
+#include <vector>
+#include <unordered_map>
+
+class Lexer final
+{
+private:
+    static std::string operatorChars;
+    static std::unordered_map<std::string, TokenType> operators;
+    std::string input;
+    std::vector<Token> tokens;
+    size_t pos = 0;
+    size_t length;
+
+    void addToken(TokenType);
+    void addToken(TokenType, std::string);
+    char peek(size_t = 0);
+    char next();
+    void tokenizeNumber();
+    void tokenizeHexNumber();
+    void tokenizeOctNumber();
+    void tokenizeWord();
+    void tokenizeOperator();
+    void tokenizeLineComment();
+    void tokenizeBlockComment();
+    void tokenizeStringValue(const char&, const bool& = false);
+    bool isHexDigit(char);
+    bool isOperatorChar(char);
+    bool isOperator(const std::string&);
+
+public:
+    Lexer(std::string = "");
+    void setInput(std::string);
+    std::vector<Token> tokenize();
+};
+
+#endif

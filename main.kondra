@@ -1,9 +1,12 @@
-var number = int_var console_in;
-var sign = "";
-if number > 0
-	sign = ">";
-else if number == 0
-	sign = "=";
-else 
-	sign = "<";
-console_out f'{number} {sign} 0\n';
+uint8 a = console_in;
+uint8 count = 1;
+if a >= 10 {
+	while count <= a {
+		console_out f"Iter num {count}\n";
+		count += 1;
+	}
+	console_out "End of (za)loop";
+}
+else {
+	console_out "Not if yopta";
+}
