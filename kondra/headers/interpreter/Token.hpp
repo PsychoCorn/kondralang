@@ -73,6 +73,7 @@ public:
     void setType(TokenType);
     std::string getText() const;
     void setText(std::string);
+    friend std::ostream &operator<<(std::ostream &, const Token &);
 };
 
 const Token eof(TokenType::Eof);

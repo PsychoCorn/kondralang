@@ -50,7 +50,28 @@ std::vector<Token> Lexer::tokenize()
         else if (current == '\"' || current == '\'')
             tokenizeStringValue(current);
         else if (isOperatorChar(current))
-            tokenizeOperator();
+            if (current == '/')
+            {
+                char nextChar = next();
+                switch (nextChar)
+                {
+                case '/':
+                    next();
+                    tokenizeLineComment();
+                    break;
+
+                case '*':
+                    next();
+                    tokenizeBlockComment();
+                    break;
+                
+                default:
+                    tokenizeOperator();
+                    break;
+                }
+            }
+            else
+                tokenizeOperator();
         else if (current == ';')
         {
             addToken(TokenType::Semicolon, std::string(1, current));
@@ -436,4 +457,29 @@ void Lexer::setInput(std::string input)
 bool Lexer::isOperator(const std::string& op)
 {
     return operators.find(op) != operators.end();
+}
+
+void Lexer::tokenizeLineComment()
+{
+    char current = next();
+    for (;;)
+    {
+        if (current == '\n')
+            break;
+        current = next();
+    }
+}
+
+void Lexer::tokenizeBlockComment()
+{
+    char current = next();
+    for (;;)
+    {
+        if (current == '*' && next() == '/')
+        {
+            next();
+            break;
+        }
+        current = next();
+    }
 }

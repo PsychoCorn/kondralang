@@ -25,6 +25,8 @@ private:
     void tokenizeOctNumber();
     void tokenizeWord();
     void tokenizeOperator();
+    void tokenizeLineComment();
+    void tokenizeBlockComment();
     void tokenizeStringValue(const char&, const bool& = false);
     bool isHexDigit(char);
     bool isOperatorChar(char);

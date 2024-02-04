@@ -25,3 +25,21 @@ void Token::setText(std::string text)
 {
     this->text = text;
 }
+
+std::ostream &operator<<(std::ostream &os, const Token &token)
+{
+    auto type = token.getType();
+    auto text = token.getText();
+    switch (type)
+    {
+    case StringValue:
+        text = "\"" + text + "\"";
+        break;
+
+    case FstringValue:
+        text = "f\"" + text + "\"";
+        break;
+    }
+    os << text;
+    return os;
+}

@@ -1,2 +1,9 @@
-int name = console_in;
-console_out '{' + f'0x{name:*^15x}' + '}';
+var number = int_var console_in;
+var sign = "";
+if number > 0
+	sign = ">";
+else if number == 0
+	sign = "=";
+else 
+	sign = "<";
+console_out f'{number} {sign} 0\n';

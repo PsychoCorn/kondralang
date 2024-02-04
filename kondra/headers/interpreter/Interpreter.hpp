@@ -52,7 +52,7 @@ void Interpreter::interpretation()
         std::cerr << std::endl << e.what() << " at statement " << pos + 1 << ":\n";
         for (auto token : tokens[pos])
         {
-            std::cerr << token.getText() + " ";
+            std::cerr << token << " ";
         }
         std::cerr << std::endl;
         return;
