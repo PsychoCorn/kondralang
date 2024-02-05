@@ -1,12 +1,7 @@
-uint8 a = console_in;
-uint8 count = 1;
-if a >= 10 {
-	while count <= a {
-		console_out f"Iter num {count}\n";
-		count += 1;
-	}
-	console_out "End of (za)loop";
-}
-else {
-	console_out "Not if yopta";
-}
+uint8 b = console_in;
+string parity;
+if (b & 1) == 0:
+	parity = 'even';
+else:
+	parity = 'odd';
+console_out f"{b} is {parity}\n";

@@ -3,6 +3,7 @@
 
 #include "Statement.hpp"
 #include "Expression.hpp"
+#include "../types/String.hpp"
 
 template <class T>
 class WhileStatement : public Statement
@@ -32,7 +33,16 @@ WhileStatement<T>::~WhileStatement()
 template <class T>
 void WhileStatement<T>::execute()
 {
-    while (condition->eval())
+    while (static_cast<bool>(condition->eval()))
+    {
+        statement->execute();
+    }
+}
+
+template <>
+void WhileStatement<kondra::string>::execute()
+{
+    while (condition->eval() == "1")
     {
         statement->execute();
     }

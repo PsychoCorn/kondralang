@@ -43,6 +43,7 @@ private:
     Statement *variableDeclarationStatement();
     Statement *ifElseStatement();
     Statement *whileStatement();
+    Statement *forStatement();
     Statement *block();
     Statement *statementOrBlock();
 
@@ -197,7 +198,7 @@ Statement *parsing(std::vector<std::vector<Token>> &tokens,
             textOfkeyWord == "float_var" || textOfkeyWord == "string_var" || 
                 textOfkeyWord == "bool_var")
             return Parser<kondra::var>(tokens[posOfStatement]).parse();
-        else if (textOfkeyWord == "console_in" || textOfkeyWord == "while")
+        else if (textOfkeyWord == "console_in" || textOfkeyWord == "while" || textOfkeyWord == "for")
             return parsing(tokens, posOfStatement, posOfToken + 1);
         else if (textOfkeyWord == "if")
         {
@@ -293,6 +294,11 @@ Statement *Parser<T>::statement()
         {
             consume(KeyWord);
             return whileStatement();
+        }
+        else if (current.getText() == "for")
+        {
+            consume(KeyWord);
+            return forStatement();
         }
         else
             return variableDeclarationStatement();
@@ -408,7 +414,7 @@ template <class T>
 Statement *Parser<T>::ifElseStatement()
 {
     Expression<T> *condition = expression();
-    // Statement *ifStatement = statement();
+    consume(TokenType::Colon);
     auto posOfElse = std::find_if(tokens.begin() + pos, tokens.end(),
         [](Token t)
         {
@@ -421,9 +427,10 @@ Statement *Parser<T>::ifElseStatement()
     Statement *elseStatement;
     if (posOfElse != tokens.end())
     {
-        // consume(TokenType::KeyWord);
+        if ((posOfElse + 1)->getType() != Colon)
+            throw std::runtime_error(ERR_MSG_WRNG_TOKEN_TYPE);
         tokensOfElseStatement = std::vector<std::vector<Token>>(
-            1, std::vector<Token>(posOfElse + 1, tokens.end()));
+            1, std::vector<Token>(posOfElse + 2, tokens.end()));
         elseStatement = parsing(tokensOfElseStatement, 0);
     }
     else
@@ -436,10 +443,41 @@ template <class T>
 Statement *Parser<T>::whileStatement()
 {
     Expression<T> *condition = expression();
+    consume(TokenType::Colon);
     std::vector<std::vector<Token>> tokensOfStatement(
         1, std::vector<Token>(tokens.begin() + pos, tokens.end()));
     Statement *statement = parsing(tokensOfStatement, 0);
     return new WhileStatement<T>(condition, statement);
+}
+
+template <class T>
+Statement *Parser<T>::forStatement()
+{
+    // find and parsing initialization statement
+    auto posOfComma = std::find_if(tokens.begin() + pos, tokens.end(),
+        [](Token t)
+        {
+            return t.getType() == Comma;
+        });
+    Statement *initialization = Parser<T>(std::vector<Token>(tokens.begin() + pos, posOfComma)).parse();
+    // parsing termination expression
+    pos = std::distance(tokens.begin(), posOfComma + 1);
+    Expression<T> *termination = expression();
+    // find and parsing increment statement
+    auto posOfColon = std::find_if(tokens.begin() + pos + 1, tokens.end(),
+        [](Token t)
+        {
+            return t.getType() == Colon;
+        });
+    if (posOfColon == tokens.end())
+        throw std::runtime_error(ERR_MSG_WRNG_TOKEN_TYPE);
+    Statement *increment = 
+        Parser<T>(std::vector<Token>(tokens.begin() + pos + 1, posOfColon)).parse();
+    // find and parsing block statement
+    std::vector<std::vector<Token>> tokensOfBlock(
+        1, std::vector<Token>(posOfColon + 1, tokens.end()));
+    Statement *block = parsing(tokensOfBlock, 0);
+    return new ForStatement<T>(initialization, termination, increment, block);
 }
 
 template <class T>

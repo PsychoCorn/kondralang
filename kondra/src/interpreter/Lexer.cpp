@@ -8,7 +8,7 @@
 #define ERR_MSG_UNKNWN_ESC_CHAR "Unknown escape-character"
 #define ERR_MSG_UNKNWN_OP "Unknown operator"
 
-std::string Lexer::operatorChars = "+-*/(){}=%&^|~<>?:!";
+std::string Lexer::operatorChars = "+-*/(){}=%&^|~<>?:!,";
 
 std::unordered_map<std::string, TokenType> Lexer::operators = {
     {"+", TokenType::Plus}, {"-", TokenType::Minus}, {"*", TokenType::Star},
@@ -23,7 +23,7 @@ std::unordered_map<std::string, TokenType> Lexer::operators = {
     {"<", TokenType::Less}, {">", TokenType::More}, {"<=", TokenType::LessOrEqual},
     {">=", TokenType::MoreOrEqual}, {"!=", TokenType::ExclamationAndEqual}, {"!", TokenType::Exclamation},
     {"{", TokenType::Lbrace}, {"}", TokenType::Rbrace}, {"&&", TokenType::DoubleAmpersand},
-    {"||", TokenType::DoublePipe}};
+    {"||", TokenType::DoublePipe}, {",", TokenType::Comma}};
 
 Lexer::Lexer(std::string input)
 {
@@ -424,6 +424,10 @@ void Lexer::addToken(TokenType type)
 
     case TokenType::DoublePipe:
         tokens.push_back(Token(type, "||"));
+        break;
+
+    case TokenType::Comma:
+        tokens.push_back(Token(type, ","));
         break;
 
     default:
