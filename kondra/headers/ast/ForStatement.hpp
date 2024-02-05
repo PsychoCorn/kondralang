@@ -3,6 +3,8 @@
 
 #include "Statement.hpp"
 #include "Expression.hpp"
+#include "BreakStatement.hpp"
+#include "ContinueStatement.hpp"
 #include "../types/String.hpp"
 
 template <class T>
@@ -38,18 +40,40 @@ ForStatement<T>::~ForStatement()
 template <class T>
 void ForStatement<T>::execute()
 {
-    for (initialization->execute(); termination->eval(); increment->execute())
+    for (; termination->eval(); increment->execute())
     {
-        block->execute();
+        try
+        {
+            block->execute();
+        }
+        catch (const BreakStatement& e)
+        {
+            break;
+        }
+        catch (const ContinueStatement& e)
+        {
+            continue;
+        }
     }
 }
 
 template <>
 void ForStatement<kondra::string>::execute()
 {
-    for (initialization->execute(); termination->eval() == "1"; increment->execute())
+    for (; termination->eval() == "1"; increment->execute())
     {
-        block->execute();
+        try
+        {
+            block->execute();
+        }
+        catch(const BreakStatement& e)
+        {
+            break;
+        }
+        catch (const ContinueStatement& e)
+        {
+            continue;
+        }
     }
 }
 

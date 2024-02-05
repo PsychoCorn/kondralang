@@ -1,7 +1,2 @@
-uint8 b = console_in;
-string parity;
-if (b & 1) == 0:
-	parity = 'even';
-else:
-	parity = 'odd';
-console_out f"{b} is {parity}\n";
+int8 a = -_UI8_MAX_;
+console_out a;

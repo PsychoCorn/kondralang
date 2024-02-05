@@ -192,7 +192,8 @@ Statement *parsing(std::vector<std::vector<Token>> &tokens,
             return Parser<long double>(tokens[posOfStatement]).parse();
         else if (textOfkeyWord == "boolean")
             return Parser<bool>(tokens[posOfStatement]).parse();
-        else if (textOfkeyWord == "string" || textOfkeyWord == "console_out")
+        else if (textOfkeyWord == "string" || textOfkeyWord == "console_out" || textOfkeyWord == "break" ||
+            textOfkeyWord == "continue")
             return Parser<kondra::string>(tokens[posOfStatement]).parse();
         else if (textOfkeyWord == "var" || textOfkeyWord == "int_var" || 
             textOfkeyWord == "float_var" || textOfkeyWord == "string_var" || 
@@ -300,6 +301,10 @@ Statement *Parser<T>::statement()
             consume(KeyWord);
             return forStatement();
         }
+        else if (current.getText() == "break")
+            return new BreakStatement();
+        else if (current.getText() == "continue")
+            return new ContinueStatement();
         else
             return variableDeclarationStatement();
 
@@ -460,6 +465,7 @@ Statement *Parser<T>::forStatement()
             return t.getType() == Comma;
         });
     Statement *initialization = Parser<T>(std::vector<Token>(tokens.begin() + pos, posOfComma)).parse();
+    initialization->execute();
     // parsing termination expression
     pos = std::distance(tokens.begin(), posOfComma + 1);
     Expression<T> *termination = expression();

@@ -2,6 +2,8 @@
 #define WhileStatement_HPP
 
 #include "Statement.hpp"
+#include "BreakStatement.hpp"
+#include "ContinueStatement.hpp"
 #include "Expression.hpp"
 #include "../types/String.hpp"
 
@@ -35,7 +37,18 @@ void WhileStatement<T>::execute()
 {
     while (static_cast<bool>(condition->eval()))
     {
-        statement->execute();
+        try
+        {
+            statement->execute();
+        }
+        catch(const BreakStatement& e)
+        {
+            break;
+        }
+        catch (const ContinueStatement& e)
+        {
+            continue;
+        }
     }
 }
 
@@ -44,7 +57,18 @@ void WhileStatement<kondra::string>::execute()
 {
     while (condition->eval() == "1")
     {
-        statement->execute();
+        try
+        {
+            statement->execute();
+        }
+        catch(const BreakStatement& e)
+        {
+            break;
+        }
+        catch (const ContinueStatement& e)
+        {
+            continue;
+        }
     }
 }
 

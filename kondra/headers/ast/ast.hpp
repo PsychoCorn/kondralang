@@ -17,5 +17,7 @@
 #include "InputExpression.hpp"
 #include "VariableConvertationExpression.hpp"
 #include "FormatStringExpression.hpp"
+#include "BreakStatement.hpp"
+#include "ContinueStatement.hpp"
 
 #endif

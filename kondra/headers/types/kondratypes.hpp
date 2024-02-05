@@ -4,6 +4,6 @@
 #include "String.hpp"
 #include "DynamicInteger.hpp"
 #include "Variable.hpp"
-#include <vector>
+#include "Array.hpp"
 
 #endif
