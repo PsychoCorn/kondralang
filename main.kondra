@@ -1,2 +1,3 @@
-int8 a = -_UI8_MAX_;
-console_out a;
+auto a = 5.0
+a += 0.5
+console_out a
