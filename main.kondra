@@ -1,2 +1,2 @@
-auto a = 0x12
-console_out a
+int32 a = toInt(input("input number: "))
+print(f'{a:b}')
