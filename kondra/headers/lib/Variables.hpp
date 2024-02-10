@@ -94,7 +94,7 @@ void Variables::create(const std::string &type, const std::string &key, Value *v
     else if (type == "var")
         variables[key] = new VarValue(value == nullptr ? kondra::var() : value->varGet());
     else if (type == "auto")
-        variables[key] = ValueCreator::createValue(value);
+        variables[key] = ValueCreator::createValue(value == nullptr ? new VarValue(kondra::var()) : value);
     else
         throw std::runtime_error("Unkmown type");
 }

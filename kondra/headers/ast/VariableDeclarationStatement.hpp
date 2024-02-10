@@ -34,7 +34,7 @@ VariableDeclarationStatement::~VariableDeclarationStatement()
 
 void VariableDeclarationStatement::execute()
 {
-    Variables::create(type, variable, expr->eval());
+    Variables::create(type, variable, expr == nullptr ? nullptr : expr->eval());
 }
 
 #endif

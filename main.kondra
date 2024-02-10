@@ -1,3 +1,5 @@
-auto a = 5.0
-a += 0.5
-console_out a
+auto a
+a = 5
+console_out (string_var a) + _ENDL_
+a = f'number {a}'
+console_out a + _ENDL_
