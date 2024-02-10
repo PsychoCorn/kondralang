@@ -1,0 +1,56 @@
+#ifndef ForStatement_HPP
+#define ForStatement_HPP
+
+#include "Statement.hpp"
+#include "Expression.hpp"
+#include "BreakStatement.hpp"
+#include "ContinueStatement.hpp"
+#include "../types/String.hpp"
+
+class ForStatement : public Statement
+{
+private:
+    Statement *initialization;
+    Expression *termination;
+    Statement *increment;
+    Statement *block;
+public:
+    ForStatement(Statement *, Expression *, Statement *, Statement *);
+    ~ForStatement();
+    void execute() override;
+};
+
+ForStatement::ForStatement(Statement *initialization, Expression *termination, 
+    Statement *increment, Statement *block)
+{
+    this->initialization = initialization;
+    this->termination = termination;
+    this->increment = increment;
+    this->block = block;
+}
+
+ForStatement::~ForStatement()
+{
+    delete initialization, termination, increment, block;
+}
+
+void ForStatement::execute()
+{
+    for (initialization->execute(); termination->eval()->bGet(); increment->execute())
+    {
+        try
+        {
+            block->execute();
+        }
+        catch (const BreakStatement& e)
+        {
+            break;
+        }
+        catch (const ContinueStatement& e)
+        {
+            continue;
+        }
+    }
+}
+
+#endif

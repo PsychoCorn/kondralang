@@ -1,2 +1,3 @@
-int32 a = toInt(input("input number: "))
-print(f'{a:b}')
+auto n = input()
+n *= 2
+print(n)
