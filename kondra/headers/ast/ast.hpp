@@ -12,6 +12,7 @@
 #include "ConditionalExpression.hpp"
 #include "IfStatement.hpp"
 #include "WhileStatement.hpp"
+#include "DoWhileStatement.hpp"
 #include "ForStatement.hpp"
 #include "BlockStatement.hpp"
 #include "InputExpression.hpp"

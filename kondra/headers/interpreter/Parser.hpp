@@ -43,6 +43,7 @@ private:
     Statement *variableDeclarationStatement();
     Statement *ifElseStatement();
     Statement *whileStatement();
+    Statement *doWhileStatement();
     Statement *forStatement();
     Statement *block();
     Statement *statementOrBlock();
@@ -179,6 +180,11 @@ Statement *Parser::statement()
             consume(KeyWord);
             return whileStatement();
         }
+        else if (current.getText() == "do")
+        {
+            consume(KeyWord);
+            return doWhileStatement();
+        }
         else if (current.getText() == "for")
         {
             consume(KeyWord);
@@ -290,6 +296,16 @@ Statement *Parser::whileStatement()
     Expression *condition = expression();
     Statement *statement = statementOrBlock();
     return new WhileStatement(condition, statement);
+}
+
+Statement *Parser::doWhileStatement()
+{
+    Statement *statement = statementOrBlock();
+    if (get().getText() != "while")
+        throw std::runtime_error("Missing while key word");
+    consume(TokenType::KeyWord);
+    Expression *condition = expression();
+    return new DoWhileStatement(condition, statement);
 }
 
 Statement *Parser::forStatement()
