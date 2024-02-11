@@ -20,7 +20,7 @@ private:
     std::pair<std::string, std::string> getIdAndFormatContext(std::string::iterator, 
         std::string::iterator);
     std::string formatVariable(const std::pair<std::string, std::string> &);
-    std::string formatVarVariable(const std::pair<std::string, std::string> &);
+    std::string formatVarVariable(const kondra::var &, const std::string &);
 public:
     FormatStringExpression(std::string);
     Value *eval() override;
@@ -54,8 +54,9 @@ std::pair<std::string, std::string> FormatStringExpression::getIdAndFormatContex
     std::string::iterator lb, std::string::iterator rb
 )
 {
-    std::string identifier = std::string(lb + 1, std::find(lb + 1, rb, ':'));
-    std::string formatContext = std::string(std::find(lb + 1, rb, ':'), rb);
+    auto posOfColon = std::find(lb + 1, rb, ':');
+    std::string identifier = std::string(lb + 1, posOfColon);
+    std::string formatContext = std::string(posOfColon, rb);
     return std::pair<std::string, std::string>(identifier, formatContext);
 }
 
@@ -134,7 +135,8 @@ std::string FormatStringExpression::formatVariable(
         ));
 
     case Var:
-        return formatVarVariable(idAndFormatContext);
+        return formatVarVariable(Variables::get(idAndFormatContext.first)->varGet(), 
+            "{" + idAndFormatContext.second + "}");
     
     default:
         throw std::runtime_error("Wrong type for f-string");
@@ -142,31 +144,21 @@ std::string FormatStringExpression::formatVariable(
 }
 
 std::string FormatStringExpression::formatVarVariable(
-    const std::pair<std::string, std::string> &idAndFormatContext
+    const kondra::var &value, const std::string &formatContext
 )
 {
-    kondra::var value = Variables::get(idAndFormatContext.first)->varGet();
     switch (value.getType())
     {
     case kondra::VarType::Int:
-        return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(*(value.getData().intData)));
-
+        return std::vformat(formatContext , std::make_format_args(*(value.getData().intData)));
     case kondra::VarType::Float:
-        return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(*(value.getData().floatData)));
-
+        return std::vformat(formatContext , std::make_format_args(*(value.getData().floatData)));
     case kondra::VarType::String:
-        return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(*(value.getData().stringData)));
-
+        return std::vformat(formatContext , std::make_format_args(*(value.getData().stringData)));
     case kondra::VarType::Bool:
-        return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(*(value.getData().boolData)));
-    
+        return std::vformat(formatContext , std::make_format_args(*(value.getData().boolData)));
     default:
-        return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args("None"));
+        return std::vformat(formatContext , std::make_format_args("None"));
     }
 }
 

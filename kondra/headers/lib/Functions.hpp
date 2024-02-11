@@ -24,6 +24,7 @@ std::unordered_map<std::string, Function *> Functions::functions = {
     {"toBoolean", new ToBoolean()},
     {"print", new Print()},
     {"input", new Input()},
+    {"format", new Format()},
 };
 
 Function *Functions::get(const std::string &key)

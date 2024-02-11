@@ -7,5 +7,6 @@
 #include "ToBoolean.hpp"
 #include "Print.hpp"
 #include "Input.hpp"
+#include "Format.hpp"
 
 #endif

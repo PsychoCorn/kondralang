@@ -24,7 +24,7 @@ private:
     bool match(TokenType);
     Token consume(TokenType);
     Expression *expression();
-    Expression *function(const std::string &);
+    FunctionalExpression *function(const std::string &);
     Expression *primary(); // #1
     Expression *postfixUnary(); // #2
     Expression *prefixUnary(); // #3
@@ -162,7 +162,7 @@ Statement *Parser::statement()
     case Identifier:
         consume(TokenType::Identifier);
         if (match(TokenType::Lparen))
-            return new FunctionalStatement(dynamic_cast<FunctionalExpression *>(function(current.getText())));
+            return new FunctionalStatement(function(current.getText()));
         return assignmentStatement(current.getText());
 
     default:
@@ -284,7 +284,7 @@ Expression *Parser::expression()
     return ternary();
 }
 
-Expression *Parser::function(const std::string &name)
+FunctionalExpression *Parser::function(const std::string &name)
 {
     FunctionalExpression *function = new FunctionalExpression(name);
     while (!match(TokenType::Rparen))

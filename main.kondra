@@ -1,2 +1,3 @@
-for int i = 0; i <= 10; i+= 1
-	print(i, "\t")
+string a = "f32 : {:.3f}"
+var fl = 2.324234324
+print(format('function format: "{}"\nf-string: "{}"', format(a, 2.324234324), f"f32 : {fl:.3f}"))
