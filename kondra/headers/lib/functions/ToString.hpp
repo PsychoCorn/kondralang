@@ -15,10 +15,17 @@ ToString::ToString() {}
 
 Value *ToString::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end)
 {
-    if (end - begin != 1)
+    switch (end - begin)
+    {
+    case 0:
+        return new StrValue(static_cast<kondra::string>(""));
+
+    case 1:
+        return new StrValue(static_cast<kondra::string>((*begin)->varGet()));
+    
+    default:
         throw std::runtime_error(ERR_MSG_WRNG_ARGS);
-    auto arg = *begin;
-    return new StrValue(static_cast<kondra::string>(arg->varGet()));
+    }
 }
 
 

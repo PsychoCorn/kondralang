@@ -318,11 +318,11 @@ namespace kondra
             break;
 
         case VarType::Bool:
-            return Variable(*(obj.getData().boolData) ? "true" : "false");
+            return Variable(std::to_string(*(obj.getData().boolData)).c_str());
             break;
 
         case VarType::None:
-            return Variable("");
+            return Variable("None");
             break;
 
         default:
