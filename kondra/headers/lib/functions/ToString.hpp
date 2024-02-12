@@ -4,29 +4,32 @@
 #include "Function.hpp"
 #include "../types/VarValue.hpp"
 
-class ToString : public Function
+class ToString0 : public Function
 {
 public:
-    ToString();
+    ToString0();
     Value *execute(std::vector<Value *>::iterator, std::vector<Value *>::iterator) override;
 };
 
-ToString::ToString() {}
+ToString0::ToString0() {}
 
-Value *ToString::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end)
+Value *ToString0::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end)
 {
-    switch (end - begin)
-    {
-    case 0:
-        return new StrValue(static_cast<kondra::string>(""));
-
-    case 1:
-        return new StrValue(static_cast<kondra::string>((*begin)->varGet()));
-    
-    default:
-        throw std::runtime_error(ERR_MSG_WRNG_ARGS);
-    }
+    return new StrValue(static_cast<kondra::string>(""));
 }
 
+class ToString1 : public Function
+{
+public:
+    ToString1();
+    Value *execute(std::vector<Value *>::iterator, std::vector<Value *>::iterator) override;
+};
+
+ToString1::ToString1() {}
+
+Value *ToString1::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end)
+{
+    return new StrValue(static_cast<kondra::string>((*begin)->varGet()));
+}
 
 #endif

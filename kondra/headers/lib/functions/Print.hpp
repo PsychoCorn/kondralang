@@ -15,23 +15,48 @@ Print::Print() {}
 
 Value *Print::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end)
 {
-    switch (end - begin)
+    if (end - begin == 0)
     {
-    case 0:
-        std::cout << std::endl;
-        break;
-
-    case 1:
-        std::cout << *begin << std::endl;
-        break;
-
-    case 2:
-        std::cout << *begin << *(begin + 1);
-        break;
-    
-    default:
         throw std::runtime_error(ERR_MSG_WRNG_ARGS);
     }
+    for (; begin != end; begin++)
+    {
+        std::cout << *begin;
+    }
+    return new VarValue(kondra::var());
+}
+
+class Println0 : public Function
+{
+public:
+    Println0();
+    Value *execute(std::vector<Value *>::iterator, std::vector<Value *>::iterator) override;
+};
+
+Println0::Println0() {}
+
+Value *Println0::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end)
+{
+    std::cout << std::endl;
+    return new VarValue(kondra::var());
+}
+
+class Println : public Function
+{
+public:
+    Println();
+    Value *execute(std::vector<Value *>::iterator, std::vector<Value *>::iterator) override;
+};
+
+Println::Println() {}
+
+Value *Println::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end)
+{
+    for (; begin != end; begin++)
+    {
+        std::cout << *begin;
+    }
+    std::cout << std::endl;
     return new VarValue(kondra::var());
 }
 

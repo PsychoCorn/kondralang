@@ -40,13 +40,14 @@ void FunctionalExpression::addArgument(Expression *arg)
 
 Value *FunctionalExpression::eval()
 {
+    size_t numOfArgs = args.size();
     std::vector<Value *> values;
-    values.reserve(args.size());
+    values.reserve(numOfArgs);
     for (auto arg : args)
     {
         values.push_back(arg->eval());
     }
-    return Functions::get(name)->execute(values.begin(), values.end());
+    return Functions::get(name, numOfArgs)->execute(values.begin(), values.end());
 }
 
 #endif

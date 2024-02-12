@@ -4,30 +4,35 @@
 #include "Function.hpp"
 #include "../types/VarValue.hpp"
 
-class Input : public Function
+class Input0 : public Function
 {
 public:
-    Input();
+    Input0();
     Value *execute(std::vector<Value *>::iterator, std::vector<Value *>::iterator) override;
 };
 
-Input::Input() {}
+Input0::Input0() {}
 
-Value *Input::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end)
+Value *Input0::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end)
 {
-    switch (end - begin)
-    {
-    case 0:
-        break;
-
-    case 1:
-        std::cout << *begin;
-        break;
-        
-    default:
-        throw std::runtime_error(ERR_MSG_WRNG_ARGS);
-    }
     kondra::string input;
+    std::cin >> input;
+    return new StrValue(input);
+}
+
+class Input1 : public Function
+{
+public:
+    Input1();
+    Value *execute(std::vector<Value *>::iterator, std::vector<Value *>::iterator) override;
+};
+
+Input1::Input1() {}
+
+Value *Input1::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end)
+{
+    kondra::string input;
+    std::cout << *begin;
     std::cin >> input;
     return new StrValue(input);
 }

@@ -4,29 +4,32 @@
 #include "Function.hpp"
 #include "../types/VarValue.hpp"
 
-class ToBoolean : public Function
+class ToBoolean0 : public Function
 {
 public:
-    ToBoolean();
+    ToBoolean0();
     Value *execute(std::vector<Value *>::iterator, std::vector<Value *>::iterator) override;
 };
 
-ToBoolean::ToBoolean() {}
+ToBoolean0::ToBoolean0() {}
 
-Value *ToBoolean::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end)
+Value *ToBoolean0::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end)
 {
-    switch (end - begin)
-    {
-    case 0:
-        return new BValue(static_cast<bool>(false));
-
-    case 1:
-        return new BValue(static_cast<bool>((*begin)->varGet()));
-    
-    default:
-        throw std::runtime_error(ERR_MSG_WRNG_ARGS);
-    }
+    return new BValue(static_cast<bool>(false));
 }
 
+class ToBoolean1 : public Function
+{
+public:
+    ToBoolean1();
+    Value *execute(std::vector<Value *>::iterator, std::vector<Value *>::iterator) override;
+};
+
+ToBoolean1::ToBoolean1() {}
+
+Value *ToBoolean1::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end)
+{
+    return new BValue(static_cast<bool>((*begin)->varGet()));
+}
 
 #endif

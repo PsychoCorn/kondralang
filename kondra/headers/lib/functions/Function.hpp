@@ -7,7 +7,7 @@
 
 #define ERR_MSG_WRNG_ARGS "Wrong arguments"
 
-class Function // interface
+class Function // interface. Naming of functions = name with capital first sign + number of arguments
 {
 public:
     virtual Value *execute(std::vector<Value *>::iterator, std::vector<Value *>::iterator) = 0;
