@@ -13,7 +13,7 @@ class ConditionalExpression : public Expression
 private:
     Expression* expr1;
     Expression* expr2;
-    std::string operation;
+    TokenType operation;
 
     Value *eq();
     Value *lt();
@@ -24,12 +24,12 @@ private:
     Value *logicalAnd();
     Value *logicalOr();
 public:
-    ConditionalExpression(std::string, Expression*, Expression*);
+    ConditionalExpression(TokenType, Expression*, Expression*);
     ~ConditionalExpression();
     Value *eval() override;
 };
 
-ConditionalExpression::ConditionalExpression(std::string operation, Expression* expr1, Expression* expr2)
+ConditionalExpression::ConditionalExpression(TokenType operation, Expression* expr1, Expression* expr2)
 {
     this->operation = operation;
     this->expr1 = expr1;
@@ -43,23 +43,19 @@ ConditionalExpression::~ConditionalExpression()
 
 Value *ConditionalExpression::eval()
 {
-    if (operation == "==")
-        return eq();
-    else if (operation == "<")
-        return lt();
-    else if (operation == ">")
-        return gt();
-    else if (operation == "<=")
-        return leq();
-    else if (operation == ">=")
-        return geq();
-    else if (operation == "!=")
-        return neq();
-    else if (operation == "&&")
-        return logicalAnd();
-    else if (operation == "||")
-        return logicalOr();
-    throw std::runtime_error(ERR_MSG_WRNG_COND_OP);
+    switch (operation)
+    {
+    case TokenType::DoubleEqual: return eq();
+    case TokenType::Less: return lt();
+    case TokenType::More: return gt();
+    case TokenType::LessOrEqual: return leq();
+    case TokenType::MoreOrEqual: return geq();
+    case TokenType::ExclamationAndEqual: return neq();
+    case TokenType::DoubleAmpersand: return logicalAnd();
+    case TokenType::DoublePipe: return logicalOr();
+    default:
+        throw std::runtime_error(ERR_MSG_WRNG_COND_OP);
+    }
 }
 
 Value *ConditionalExpression::logicalAnd()

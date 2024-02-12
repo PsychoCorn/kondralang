@@ -13,7 +13,7 @@ class BinaryExpression : public Expression
 private:
     Expression* expr1;
     Expression* expr2;
-    std::string operation;
+    TokenType operation;
     
     Value *add();
     Value *sub();
@@ -27,12 +27,12 @@ private:
     Value *shr();
 
 public:
-    BinaryExpression(std::string, Expression*, Expression*);
+    BinaryExpression(TokenType, Expression*, Expression*);
     ~BinaryExpression();
     Value *eval() override;
 };
 
-BinaryExpression::BinaryExpression(std::string operation, Expression* expr1, Expression* expr2)
+BinaryExpression::BinaryExpression(TokenType operation, Expression* expr1, Expression* expr2)
 {
     this->operation = operation;
     this->expr1 = expr1;
@@ -46,27 +46,21 @@ BinaryExpression::~BinaryExpression()
 
 Value *BinaryExpression::eval()
 {
-    if (operation == "+")
-        return add();
-    else if (operation == "-")
-        return sub();
-    else if (operation == "*")
-        return mul();
-    else if (operation == "/")
-        return div();
-    else if (operation == "%")
-        return mod();
-    else if (operation == "&")
-        return bitwiseAnd();
-    else if (operation == "|")
-        return bitwiseOr();
-    else if (operation == "^")
-        return bitwiseXor();
-    else if (operation == ">>")
-        return shl();
-    else if (operation == "<<")
-        return shr();
-    throw std::runtime_error(ERR_MSG_WRNG_BIN_OP);
+    switch (operation)
+    {
+    case TokenType::Plus: return add();
+    case TokenType::Minus: return sub();
+    case TokenType::Star: return mul();
+    case TokenType::Slash: return div();
+    case TokenType::Percentage: return mod();
+    case TokenType::Ampersand: return bitwiseAnd();
+    case TokenType::Pipe: return bitwiseOr();
+    case TokenType::Caret: return bitwiseXor();
+    case TokenType::Lshift: return shl();
+    case TokenType::Rshift: return shr();
+    default:
+        throw std::runtime_error(ERR_MSG_WRNG_BIN_OP);
+    }
 }
 
 Value *BinaryExpression::add()

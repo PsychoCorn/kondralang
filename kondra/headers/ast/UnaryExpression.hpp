@@ -12,18 +12,18 @@ class UnaryExpression : public Expression
 {
 private:
     Expression* expr;
-    std::string operation;
+    TokenType operation;
 
     Value *minus();
     Value *bitwiseNot();
     Value *logicalNot();
 public:
-    UnaryExpression(std::string, Expression*);
+    UnaryExpression(TokenType, Expression*);
     ~UnaryExpression();
     Value *eval() override;
 };
 
-UnaryExpression::UnaryExpression(std::string operation, Expression* expr)
+UnaryExpression::UnaryExpression(TokenType operation, Expression* expr)
 {
     this->operation = operation;
     this->expr = expr;
@@ -36,15 +36,15 @@ UnaryExpression::~UnaryExpression()
 
 Value *UnaryExpression::eval()
 {
-    if (operation == "+")
-        return expr->eval();
-    else if(operation == "-")
-        return minus();
-    else if(operation == "~")
-        return bitwiseNot();
-    else if(operation == "!")
-        return logicalNot();
-    throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
+    switch (operation)
+    {
+    case TokenType::Plus: return expr->eval();
+    case TokenType::Minus: return minus();
+    case TokenType::Tilde: return bitwiseNot();
+    case TokenType::Exclamation: return logicalNot();
+    default:
+        throw std::runtime_error(ERR_MSG_WRNG_UN_OP);
+    }
 }
 
 Value *UnaryExpression::minus()

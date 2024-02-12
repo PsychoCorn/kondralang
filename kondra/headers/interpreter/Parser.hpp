@@ -190,43 +190,43 @@ Statement *Parser::assignmentStatement(const std::string &identifierOfVariable)
         return new AssignmentStatement(identifierOfVariable, expression());
     else if (match(TokenType::PlusAndEqual))
         return new AssignmentStatement(identifierOfVariable,
-            new BinaryExpression("+", new VariablesExpression(identifierOfVariable),
+            new BinaryExpression(TokenType::Plus, new VariablesExpression(identifierOfVariable),
                 expression()));
     else if (match(TokenType::MinusAndEqual))
         return new AssignmentStatement(identifierOfVariable,
-            new BinaryExpression("-", new VariablesExpression(identifierOfVariable),
+            new BinaryExpression(TokenType::Minus, new VariablesExpression(identifierOfVariable),
                 expression()));
     else if (match(TokenType::StarAndEqual))
         return new AssignmentStatement(identifierOfVariable,
-            new BinaryExpression("*", new VariablesExpression(identifierOfVariable),
+            new BinaryExpression(TokenType::Star, new VariablesExpression(identifierOfVariable),
                 expression()));
     else if (match(TokenType::SlashAndEqual))
         return new AssignmentStatement(identifierOfVariable,
-            new BinaryExpression("/", new VariablesExpression(identifierOfVariable),
+            new BinaryExpression(TokenType::Slash, new VariablesExpression(identifierOfVariable),
                 expression()));
     else if (match(TokenType::PercentageAndEqual))
         return new AssignmentStatement(identifierOfVariable,
-            new BinaryExpression("%", new VariablesExpression(identifierOfVariable),
+            new BinaryExpression(TokenType::Percentage, new VariablesExpression(identifierOfVariable),
                 expression()));
     else if (match(TokenType::AmpersandAndEqual))
         return new AssignmentStatement(identifierOfVariable,
-            new BinaryExpression("&", new VariablesExpression(identifierOfVariable),
+            new BinaryExpression(TokenType::Ampersand, new VariablesExpression(identifierOfVariable),
                 expression()));
     else if (match(TokenType::CaretAndEqual))
         return new AssignmentStatement(identifierOfVariable,
-            new BinaryExpression("^", new VariablesExpression(identifierOfVariable),
+            new BinaryExpression(TokenType::Caret, new VariablesExpression(identifierOfVariable),
                 expression()));
     else if (match(TokenType::PipeAndEqual))
         return new AssignmentStatement(identifierOfVariable,
-            new BinaryExpression("|", new VariablesExpression(identifierOfVariable),
+            new BinaryExpression(TokenType::Pipe, new VariablesExpression(identifierOfVariable),
                 expression()));
     else if (match(TokenType::LshiftAndEqual))
         return new AssignmentStatement(identifierOfVariable,
-            new BinaryExpression("<<", new VariablesExpression(identifierOfVariable),
+            new BinaryExpression(TokenType::Lshift, new VariablesExpression(identifierOfVariable),
                 expression()));
     else if (match(TokenType::RshiftAndEqual))
         return new AssignmentStatement(identifierOfVariable,
-            new BinaryExpression(">>", new VariablesExpression(identifierOfVariable),
+            new BinaryExpression(TokenType::Rshift, new VariablesExpression(identifierOfVariable),
                 expression()));
     throw std::runtime_error(ERR_MSG_UNKNWN_OP);
 }
@@ -319,7 +319,7 @@ Expression *Parser::logicalOr()
     {
         if (match(TokenType::DoublePipe))
         {
-            result = new ConditionalExpression("||", result, logicalAnd());
+            result = new ConditionalExpression(TokenType::DoublePipe, result, logicalAnd());
             continue;
         }
         break;
@@ -334,7 +334,7 @@ Expression *Parser::logicalAnd()
     {
         if (match(TokenType::DoubleAmpersand))
         {
-            result = new ConditionalExpression("&&", result, bitwiseOr());
+            result = new ConditionalExpression(TokenType::DoubleAmpersand, result, bitwiseOr());
             continue;
         }
         break;
@@ -349,7 +349,7 @@ Expression *Parser::bitwiseOr()
     {
         if (match(TokenType::Pipe))
         {
-            result = new BinaryExpression("|", result, bitwiseXor());
+            result = new BinaryExpression(TokenType::Pipe, result, bitwiseXor());
             continue;
         }
         break;
@@ -364,7 +364,7 @@ Expression *Parser::bitwiseXor()
     {
         if (match(TokenType::Caret))
         {
-            result = new BinaryExpression("^", result, bitwiseAnd());
+            result = new BinaryExpression(TokenType::Caret, result, bitwiseAnd());
             continue;
         }
         break;
@@ -379,7 +379,7 @@ Expression *Parser::bitwiseAnd()
     {
         if (match(TokenType::Ampersand))
         {
-            result = new BinaryExpression("&", result, equality());
+            result = new BinaryExpression(TokenType::Ampersand, result, equality());
             continue;
         }
         break;
@@ -394,12 +394,12 @@ Expression *Parser::equality()
     {
         if (match(TokenType::DoubleEqual))
         {
-            result = new ConditionalExpression("==", result, relation());
+            result = new ConditionalExpression(TokenType::DoubleEqual, result, relation());
             continue;
         }
         if (match(TokenType::ExclamationAndEqual))
         {
-            result = new ConditionalExpression("!=", result, relation());
+            result = new ConditionalExpression(TokenType::ExclamationAndEqual, result, relation());
             continue;
         }
         break;
@@ -414,22 +414,22 @@ Expression *Parser::relation()
     {
         if (match(TokenType::Less))
         {
-            result = new ConditionalExpression("<", result, shift());
+            result = new ConditionalExpression(TokenType::Less, result, shift());
             continue;
         }
         if (match(TokenType::More))
         {
-            result = new ConditionalExpression(">", result, shift());
+            result = new ConditionalExpression(TokenType::More, result, shift());
             continue;
         }
         if (match(TokenType::LessOrEqual))
         {
-            result = new ConditionalExpression("<=", result, shift());
+            result = new ConditionalExpression(TokenType::LessOrEqual, result, shift());
             continue;
         }
         if (match(TokenType::MoreOrEqual))
         {
-            result = new ConditionalExpression(">=", result, shift());
+            result = new ConditionalExpression(TokenType::MoreOrEqual, result, shift());
             continue;
         }
         break;
@@ -444,12 +444,12 @@ Expression *Parser::shift()
     {
         if (match(TokenType::Lshift))
         {
-            result = new BinaryExpression("<<", result, additive());
+            result = new BinaryExpression(TokenType::Lshift, result, additive());
             continue;
         }
         if (match(TokenType::Rshift))
         {
-            result = new BinaryExpression(">>", result, additive());
+            result = new BinaryExpression(TokenType::Rshift, result, additive());
             continue;
         }
         break;
@@ -464,12 +464,12 @@ Expression *Parser::additive()
     {
         if (match(TokenType::Plus))
         {
-            result = new BinaryExpression("+", result, multiplicative());
+            result = new BinaryExpression(TokenType::Plus, result, multiplicative());
             continue;
         }
         if (match(TokenType::Minus))
         {
-            result = new BinaryExpression("-", result, multiplicative());
+            result = new BinaryExpression(TokenType::Minus, result, multiplicative());
             continue;
         }
         break;
@@ -484,17 +484,17 @@ Expression *Parser::multiplicative()
     {
         if (match(TokenType::Star))
         {
-            result = new BinaryExpression("*", result, prefixUnary());
+            result = new BinaryExpression(TokenType::Star, result, prefixUnary());
             continue;
         }
         if (match(TokenType::Slash))
         {
-            result = new BinaryExpression("/", result, prefixUnary());
+            result = new BinaryExpression(TokenType::Slash, result, prefixUnary());
             continue;
         }
         if (match(TokenType::Percentage))
         {
-            result = new BinaryExpression("%", result, prefixUnary());
+            result = new BinaryExpression(TokenType::Percentage, result, prefixUnary());
             continue;
         }
         break;
@@ -505,13 +505,13 @@ Expression *Parser::multiplicative()
 Expression *Parser::prefixUnary()
 {
     if (match(TokenType::Minus))
-        return new UnaryExpression("-", prefixUnary());
+        return new UnaryExpression(TokenType::Minus, prefixUnary());
     if (match(TokenType::Plus))
         return primary();
     if (match(TokenType::Tilde))
-        return new UnaryExpression("~", prefixUnary());
+        return new UnaryExpression(TokenType::Tilde, prefixUnary());
     if (match(TokenType::Exclamation))
-        return new UnaryExpression("!", prefixUnary());
+        return new UnaryExpression(TokenType::Exclamation, prefixUnary());
     return postfixUnary();
 }
 
