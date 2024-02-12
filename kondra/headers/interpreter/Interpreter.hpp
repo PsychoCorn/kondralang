@@ -31,8 +31,10 @@ void Interpreter::interpretation()
     std::ifstream sourceFile(pathToSourceFile);
     if (!sourceFile.is_open())
         throw std::runtime_error("File doesn't exist!");
+    Scopes::initGlobalScope();
     std::string sourceCode((std::istreambuf_iterator<char>(sourceFile)), 
         (std::istreambuf_iterator<char>()));
+    sourceCode.append("\n");
     sourceFile.close();
     Parser(Lexer(sourceCode).tokenize()).parse()->execute();
 }

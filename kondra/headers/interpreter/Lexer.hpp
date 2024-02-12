@@ -39,7 +39,7 @@ private:
     bool isOperator(const std::string&);
 
 public:
-    Lexer(std::string = "");
+    Lexer(const std::string & = "");
     std::vector<Token> tokenize();
 };
 
@@ -60,7 +60,7 @@ std::unordered_map<std::string, TokenType> Lexer::operators = {
     {"{", TokenType::Lbrace}, {"}", TokenType::Rbrace}, {"&&", TokenType::DoubleAmpersand},
     {"||", TokenType::DoublePipe}, {",", TokenType::Comma}, {";", TokenType::Semicolon}};
 
-Lexer::Lexer(std::string input)
+Lexer::Lexer(const std::string &input)
 {
     this->input = input;
     length = input.length();

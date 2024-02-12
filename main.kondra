@@ -1,3 +1,5 @@
-auto a = -5
-a += 1
-println(a)
+for int i = 0; i < 5; i += 1 {
+	auto b = i
+	println(b)
+}
+// println(b) error : unknown identifier

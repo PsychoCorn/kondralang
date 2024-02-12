@@ -2,7 +2,7 @@
 #define VariablesExpression_HPP
 
 #include "Expression.hpp"
-#include "../lib/Variables.hpp"
+#include "../lib/Scopes.hpp"
 #include <string>
 #include <stdexcept>
 
@@ -22,7 +22,7 @@ VariablesExpression::VariablesExpression(std::string name)
 
 Value *VariablesExpression::eval()
 {
-    return Variables::get(name);
+    return Scopes::get(name);
 }
 
 #endif

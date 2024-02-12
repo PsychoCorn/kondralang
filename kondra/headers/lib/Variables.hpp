@@ -12,50 +12,43 @@
 #define ERR_MSG_UNKN_ID "Unknown identifier"
 #define ERR_MSG_ID_CANT_BE_REDEF "Identifier can't be redefined"
 
+#define variablesHashMap std::unordered_map<std::string, Value *>
+
 class Variables
 {
 private:
-    static std::unordered_map<std::string, Value *> variables;
+    variablesHashMap variables;
     
 public:
-    static Value * get(const std::string &);
-    static void set(const std::string &, Value *);
-    static void create(const std::string &, const std::string &, Value *);
-    static void deleteVar(const std::string &);
-    static bool isVariableExist(const std::string &);
+    Variables(const variablesHashMap &);
+    ~Variables();
+    Value * get(const std::string &);
+    void set(const std::string &, Value *);
+    void create(const std::string &, const std::string &, Value *);
+    bool isVariableExist(const std::string &);
 };
 
-std::unordered_map<std::string, Value *> Variables::variables = {
-    {"_I8_MAX_", new I8Value(std::numeric_limits<signed char>::max())},
-    {"_I8_MIN_", new I8Value(std::numeric_limits<signed char>::min())},
-    {"_I16_MAX_", new I16Value(std::numeric_limits<short>::max())},
-    {"_I16_MIN_", new I16Value(std::numeric_limits<short>::min())},
-    {"_I32_MAX_", new I32Value(std::numeric_limits<int>::max())},
-    {"_I32_MIN_", new I32Value(std::numeric_limits<int>::min())},
-    {"_I64_MAX_", new I64Value(std::numeric_limits<long long>::max())},
-    {"_I64_MIN_", new I64Value(std::numeric_limits<long long>::min())},
-    {"_UI8_MAX_", new UI8Value(std::numeric_limits<unsigned char>::max())},
-    {"_UI16_MAX_", new UI16Value(std::numeric_limits<unsigned short>::max())},
-    {"_UI32_MAX_", new UI32Value(std::numeric_limits<unsigned int>::max())},
-    {"_UI64_MAX_", new UI64Value(std::numeric_limits<unsigned long long>::max())},
-    {"_INF_", new F64Value(std::numeric_limits<double>::infinity())},
-    {"_NAN_", new F64Value(std::numeric_limits<double>::quiet_NaN())},
-    {"_NULL_", new I64Value(0ull)},
-    {"_ENDL_", new StrValue("\n")},
-    {"_NONE_", new VarValue(kondra::var())},
-};
+Variables::Variables(const variablesHashMap &variables = variablesHashMap())
+{
+    this->variables = variables;
+}
+
+Variables::~Variables()
+{
+    for (auto v : variables)
+    {
+        delete v.second;
+    }
+    variables.clear();
+}
 
 Value *Variables::get(const std::string &key)
 {
-    if (isVariableExist(key))
-        return variables[key];
-    throw std::runtime_error(ERR_MSG_UNKN_ID);
+    return variables[key];
 }
 
 void Variables::set(const std::string &key, Value *value)
 {
-    if (!isVariableExist(key))
-        throw std::runtime_error(ERR_MSG_UNKN_ID);
     variables[key]->setValue(value);
 }
 
@@ -97,14 +90,6 @@ void Variables::create(const std::string &type, const std::string &key, Value *v
         variables[key] = ValueCreator::createValue(value == nullptr ? new VarValue(kondra::var()) : value);
     else
         throw std::runtime_error("Unkmown type");
-}
-
-void Variables::deleteVar(const std::string &key)
-{
-    if (!isVariableExist(key))
-        throw std::runtime_error(ERR_MSG_UNKN_ID);
-    delete variables[key];
-    variables.erase(key);
 }
 
 bool Variables::isVariableExist(const std::string& key)

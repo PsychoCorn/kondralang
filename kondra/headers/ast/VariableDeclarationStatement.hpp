@@ -3,7 +3,7 @@
 
 #include "Statement.hpp"
 #include "Expression.hpp"
-#include "../lib/Variables.hpp"
+#include "../lib/Scopes.hpp"
 #include <string>
 
 class VariableDeclarationStatement final : public Statement
@@ -34,7 +34,7 @@ VariableDeclarationStatement::~VariableDeclarationStatement()
 
 void VariableDeclarationStatement::execute()
 {
-    Variables::create(type, variable, expr == nullptr ? nullptr : expr->eval());
+    Scopes::create(type, variable, expr == nullptr ? nullptr : expr->eval());
 }
 
 #endif

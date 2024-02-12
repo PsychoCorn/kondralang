@@ -4,7 +4,7 @@
 
 #include "Expression.hpp"
 #include "../types/kondratypes.hpp"
-#include "../lib/Variables.hpp"
+#include "../lib/Scopes.hpp"
 #include "../io/kondraio.hpp"
 #include <algorithm>
 #include <string>
@@ -64,78 +64,78 @@ std::string FormatStringExpression::formatVariable(
     const std::pair<std::string, std::string> &idAndFormatContext
 )
 {
-    switch (Variables::get(idAndFormatContext.first)->getType())
+    switch (Scopes::get(idAndFormatContext.first)->getType())
     {
     case Int8:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->i8Get()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->i8Get()
         ));
     case Int16:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->i16Get()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->i16Get()
         ));
 
     case Int32:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->i32Get()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->i32Get()
         ));
     
     case Int64:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->i64Get()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->i64Get()
         ));
 
     case UInt8:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->ui8Get()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->ui8Get()
         ));
     case UInt16:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->ui16Get()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->ui16Get()
         ));
 
     case UInt32:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->ui32Get()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->ui32Get()
         ));
     
     case UInt64:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->ui64Get()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->ui64Get()
         ));
 
     case Int:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->iGet()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->iGet()
         ));
 
     case Float32:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->f32Get()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->f32Get()
         ));
 
     case Float64:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->f64Get()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->f64Get()
         ));
 
     case Float80:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->f80Get()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->f80Get()
         ));
 
     case Bool:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->bGet()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->bGet()
         ));
 
     case String:
         return std::vformat("{" + idAndFormatContext.second + "}", 
-            std::make_format_args(Variables::get(idAndFormatContext.first)->strGet()
+            std::make_format_args(Scopes::get(idAndFormatContext.first)->strGet()
         ));
 
     case Var:
-        return formatVarVariable(Variables::get(idAndFormatContext.first)->varGet(), 
+        return formatVarVariable(Scopes::get(idAndFormatContext.first)->varGet(), 
             "{" + idAndFormatContext.second + "}");
     
     default:

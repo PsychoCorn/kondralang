@@ -33,10 +33,12 @@ void BlockStatement::add(Statement * statement)
 
 void BlockStatement::execute()
 {
+    Scopes::addScope();
     for (auto statement : statements)
     {
         statement->execute();
     }
+    Scopes::deleteScope();
 }
 
 

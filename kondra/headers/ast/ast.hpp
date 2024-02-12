@@ -18,7 +18,6 @@
 #include "FormatStringExpression.hpp"
 #include "BreakStatement.hpp"
 #include "ContinueStatement.hpp"
-#include "DeleteStatement.hpp"
 #include "FunctionalStatement.hpp"
 
 #endif

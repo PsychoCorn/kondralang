@@ -18,8 +18,8 @@ std::vector<std::string> KeyWords::keyWords = {
     "uint8", "uint16", "uint32", "uint64",
     "float32", "float64", "float80", "boolean",
     "string", "var", "int", "auto", "if", 
-    "else", "delete", "while", "do", "for", 
-    "break", "continue"
+    "else", "while", "do", "for", "break", 
+    "continue"
 };
 
 bool KeyWords::isKeyWord(std::string word)

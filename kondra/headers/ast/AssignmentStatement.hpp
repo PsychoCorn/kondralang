@@ -3,7 +3,7 @@
 
 #include "Statement.hpp"
 #include "Expression.hpp"
-#include "../lib/Variables.hpp"
+#include "../lib/Scopes.hpp"
 #include <string>
 
 class AssignmentStatement final : public Statement
@@ -31,8 +31,7 @@ AssignmentStatement::~AssignmentStatement()
 
 void AssignmentStatement::execute()
 {
-    // double result = expr->eval();
-    Variables::set(variable, expr->eval());
+    Scopes::set(variable, expr->eval());
 }
 
 #endif

@@ -46,7 +46,6 @@ private:
     Statement *whileStatement();
     Statement *doWhileStatement();
     Statement *forStatement();
-    Statement *deleteStatement();
     Statement *block();
     Statement *statementOrBlock();
 
@@ -151,11 +150,6 @@ Statement *Parser::statement()
             consume(KeyWord);
             return new ContinueStatement();
         }
-        else if (current.getText() == "delete")
-        {
-            consume(KeyWord);
-            return deleteStatement();
-        }
         else
             return variableDeclarationStatement();
 
@@ -229,13 +223,6 @@ Statement *Parser::assignmentStatement(const std::string &identifierOfVariable)
             new BinaryExpression(TokenType::Rshift, new VariablesExpression(identifierOfVariable),
                 expression()));
     throw std::runtime_error(ERR_MSG_UNKNWN_OP);
-}
-
-Statement *Parser::deleteStatement()
-{
-    Token current = get();
-    consume(TokenType::Identifier);
-    return new DeleteStatement(current.getText());
 }
 
 Statement *Parser::ifElseStatement()
