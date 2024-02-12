@@ -8,5 +8,6 @@
 #include "Print.hpp"
 #include "Input.hpp"
 #include "Format.hpp"
+#include "ToBase.hpp"
 
 #endif

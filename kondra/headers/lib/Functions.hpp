@@ -62,6 +62,10 @@ functionHashMap Functions::functions = {
             {dynamicNumOfArgs, new Format()}
         }
     },
+    {"toBase", {
+            {2, new ToBase2()}
+        }
+    },
 };
 
 Function *Functions::get(const std::string &key, const size_t &numOfArgs)

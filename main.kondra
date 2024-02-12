@@ -1,4 +1,3 @@
-int a = toInt("10000", 2)
-for int i = 1; i <= a; i += 1 {
-	println(f'iter number {i:x}/{a:x}')
-}
+auto a = toString()
+a = 5
+println(a)
