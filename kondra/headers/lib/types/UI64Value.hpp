@@ -114,7 +114,7 @@ bool UI64Value::bGet() const
 
 kondra::string UI64Value::strGet() const
 {
-    return kondra::to_string(data);
+    throw std::runtime_error("Unable convert uint64 to string");
 }
 
 kondra::var UI64Value::varGet() const

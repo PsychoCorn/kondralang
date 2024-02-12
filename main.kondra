@@ -1,2 +1,4 @@
-int a = toInt(input("Input number in hex: "), 16)
-print(f"Your number in dec is {a}")
+int a = toInt("10000", 2)
+for int i = 1; i <= a; i += 1 {
+	println(f'iter number {i:x}/{a:x}')
+}

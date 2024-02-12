@@ -114,7 +114,7 @@ bool F64Value::bGet() const
 
 kondra::string F64Value::strGet() const
 {
-    return kondra::to_string(data);
+    throw std::runtime_error("Unable convert float64 to string");
 }
 
 kondra::var F64Value::varGet() const

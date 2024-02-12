@@ -114,7 +114,7 @@ bool I64Value::bGet() const
 
 kondra::string I64Value::strGet() const
 {
-    return kondra::to_string(data);
+    throw std::runtime_error("Unable convert int64 to string");
 }
 
 kondra::var I64Value::varGet() const

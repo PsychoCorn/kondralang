@@ -114,7 +114,7 @@ bool IValue::bGet() const
 
 kondra::string IValue::strGet() const
 {
-    return kondra::to_string(data);
+    throw std::runtime_error("Unable convert int to string");
 }
 
 kondra::var IValue::varGet() const

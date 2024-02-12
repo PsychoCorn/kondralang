@@ -114,7 +114,7 @@ bool I8Value::bGet() const
 
 kondra::string I8Value::strGet() const
 {
-    return kondra::to_string(data);
+    throw std::runtime_error("Unable convert int8 to string");
 }
 
 kondra::var I8Value::varGet() const

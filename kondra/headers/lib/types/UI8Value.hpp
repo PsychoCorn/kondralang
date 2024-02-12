@@ -114,7 +114,7 @@ bool UI8Value::bGet() const
 
 kondra::string UI8Value::strGet() const
 {
-    return kondra::to_string(data);
+    throw std::runtime_error("Unable convert uint8 to string");
 }
 
 kondra::var UI8Value::varGet() const

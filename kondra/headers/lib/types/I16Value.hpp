@@ -114,7 +114,7 @@ bool I16Value::bGet() const
 
 kondra::string I16Value::strGet() const
 {
-    return kondra::to_string(data);
+    throw std::runtime_error("Unable convert int16 to string");
 }
 
 kondra::var I16Value::varGet() const

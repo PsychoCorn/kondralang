@@ -114,7 +114,7 @@ bool BValue::bGet() const
 
 kondra::string BValue::strGet() const
 {
-    return kondra::to_string(data);
+    throw std::runtime_error("Unable convert boolean to string");
 }
 
 kondra::var BValue::varGet() const

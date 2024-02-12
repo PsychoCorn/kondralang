@@ -114,7 +114,7 @@ bool UI16Value::bGet() const
 
 kondra::string UI16Value::strGet() const
 {
-    return kondra::to_string(data);
+    throw std::runtime_error("Unable convert uint16 to string");
 }
 
 kondra::var UI16Value::varGet() const

@@ -114,7 +114,7 @@ bool I32Value::bGet() const
 
 kondra::string I32Value::strGet() const
 {
-    return kondra::to_string(data);
+    throw std::runtime_error("Unable convert int32 to string");
 }
 
 kondra::var I32Value::varGet() const

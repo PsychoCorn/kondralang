@@ -114,7 +114,7 @@ bool UI32Value::bGet() const
 
 kondra::string UI32Value::strGet() const
 {
-    return kondra::to_string(data);
+    throw std::runtime_error("Unable convert uint32 to string");
 }
 
 kondra::var UI32Value::varGet() const

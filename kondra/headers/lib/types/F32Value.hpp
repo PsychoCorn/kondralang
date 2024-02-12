@@ -114,7 +114,7 @@ bool F32Value::bGet() const
 
 kondra::string F32Value::strGet() const
 {
-    return kondra::to_string(data);
+    throw std::runtime_error("Unable convert float32 to string");
 }
 
 kondra::var F32Value::varGet() const

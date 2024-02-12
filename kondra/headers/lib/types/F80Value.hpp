@@ -114,7 +114,7 @@ bool F80Value::bGet() const
 
 kondra::string F80Value::strGet() const
 {
-    return kondra::to_string(data);
+    throw std::runtime_error("Unable convert float80 to string");
 }
 
 kondra::var F80Value::varGet() const
