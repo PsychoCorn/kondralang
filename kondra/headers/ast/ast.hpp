@@ -19,5 +19,7 @@
 #include "BreakStatement.hpp"
 #include "ContinueStatement.hpp"
 #include "FunctionalStatement.hpp"
+#include "IncrementExpression.hpp"
+#include "IncrementStatement.hpp"
 
 #endif

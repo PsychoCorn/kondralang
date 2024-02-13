@@ -157,7 +157,19 @@ Statement *Parser::statement()
         consume(TokenType::Identifier);
         if (match(TokenType::Lparen))
             return new FunctionalStatement(function(current.getText()));
+        else if (match(TokenType::DoublePlus))
+            return new IncrementStatement(current.getText(), DoublePlus, false);
+        else if (match(TokenType::DoubleMinus))
+            return new IncrementStatement(current.getText(), DoubleMinus, false);
         return assignmentStatement(current.getText());
+
+    case DoublePlus:
+        consume(TokenType::DoublePlus);
+        return new IncrementStatement(consume(Identifier).getText(), DoublePlus, true);
+
+    case DoubleMinus:
+        consume(TokenType::DoubleMinus);
+        return new IncrementStatement(consume(Identifier).getText(), DoubleMinus, true);
 
     default:
         throw std::runtime_error(ERR_MSG_UNKNWN_STMNT);
@@ -499,11 +511,37 @@ Expression *Parser::prefixUnary()
         return new UnaryExpression(TokenType::Tilde, prefixUnary());
     if (match(TokenType::Exclamation))
         return new UnaryExpression(TokenType::Exclamation, prefixUnary());
+    if (match(TokenType::DoublePlus))
+    {
+        std::string variable = get().getText();
+        consume(TokenType::Identifier);
+        return new IncrementExpression(variable, TokenType::DoublePlus, true);
+    }
+    if (match(TokenType::DoubleMinus))
+    {
+        std::string variable = get().getText();
+        consume(TokenType::Identifier);
+        return new IncrementExpression(variable, TokenType::DoubleMinus, true);
+    }
     return postfixUnary();
 }
 
 Expression *Parser::postfixUnary()
 {
+    if (get().getType() == Identifier && get(1).getType() == DoublePlus)
+    {
+        std::string variable = get().getText();
+        consume(TokenType::Identifier);
+        consume(TokenType::DoublePlus);
+        return new IncrementExpression(variable, TokenType::DoublePlus, false);
+    }
+    if (get().getType() == Identifier && get(1).getType() == DoubleMinus)
+    {
+        std::string variable = get().getText();
+        consume(TokenType::Identifier);
+        consume(TokenType::DoubleMinus);
+        return new IncrementExpression(variable, TokenType::DoubleMinus, false);
+    }
     return primary();
 }
 
@@ -530,10 +568,6 @@ Expression *Parser::primary()
             return function(current.getText());
         return new VariablesExpression(current.getText());
     }
-    /* if (match(TokenType::KeyWord))
-    {
-        throw std::runtime_error(ERR_MSG_UNKNWN_KW_IN_EXP);
-    } */
     if (match(TokenType::Lparen))
     {
         Expression *result = expression();

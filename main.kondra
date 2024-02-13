@@ -1,5 +1,4 @@
-for int i = 0; i < 5; i += 1 {
-	auto b = i
-	println(b)
+auto limit = toInt(input("Input limit: "))
+for auto i = 0; i < limit; i++ {
+	print(f'Iter number {i}\n')
 }
-// println(b) error : unknown identifier

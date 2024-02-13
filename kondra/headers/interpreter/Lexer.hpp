@@ -58,7 +58,8 @@ std::unordered_map<std::string, TokenType> Lexer::operators = {
     {"<", TokenType::Less}, {">", TokenType::More}, {"<=", TokenType::LessOrEqual},
     {">=", TokenType::MoreOrEqual}, {"!=", TokenType::ExclamationAndEqual}, {"!", TokenType::Exclamation},
     {"{", TokenType::Lbrace}, {"}", TokenType::Rbrace}, {"&&", TokenType::DoubleAmpersand},
-    {"||", TokenType::DoublePipe}, {",", TokenType::Comma}, {";", TokenType::Semicolon}};
+    {"||", TokenType::DoublePipe}, {",", TokenType::Comma}, {";", TokenType::Semicolon},
+    {"++", TokenType::DoublePlus}, {"--", TokenType::DoubleMinus}};
 
 Lexer::Lexer(const std::string &input)
 {
