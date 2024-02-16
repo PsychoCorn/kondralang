@@ -31,11 +31,14 @@ WhileStatement::~WhileStatement()
 
 void WhileStatement::execute()
 {
+    Scopes::addScope();
     while (condition->eval()->bGet())
     {
         try
         {
+            Scopes::addScope();
             statement->execute();
+            Scopes::deleteScope();
         }
         catch(const BreakStatement& e)
         {
@@ -48,6 +51,7 @@ void WhileStatement::execute()
             continue;
         }
     }
+    Scopes::deleteScope();
 }
 
 #endif

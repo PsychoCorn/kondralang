@@ -36,11 +36,14 @@ ForStatement::~ForStatement()
 
 void ForStatement::execute()
 {
+    Scopes::addScope();
     for (initialization->execute(); termination->eval()->bGet(); increment->execute())
     {
         try
         {
+            Scopes::addScope();
             block->execute();
+            Scopes::deleteScope();
         }
         catch (const BreakStatement& e)
         {
@@ -53,6 +56,7 @@ void ForStatement::execute()
             continue;
         }
     }
+    Scopes::deleteScope();
 }
 
 #endif

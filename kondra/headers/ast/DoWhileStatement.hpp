@@ -31,11 +31,14 @@ DoWhileStatement::~DoWhileStatement()
 
 void DoWhileStatement::execute()
 {
+    Scopes::addScope();
     do
     {
         try
         {
+            Scopes::addScope();
             statement->execute();
+            Scopes::deleteScope();
         }
         catch(const BreakStatement& e)
         {
@@ -48,6 +51,7 @@ void DoWhileStatement::execute()
             continue;
         }
     } while (condition->eval()->bGet());
+    Scopes::deleteScope();
 }
 
 #endif

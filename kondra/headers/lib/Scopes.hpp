@@ -2,7 +2,6 @@
 #define Scopes_HPP
 
 #include "Variables.hpp"
-#include "Functions.hpp"
 #include <list>
 
 class Scopes

@@ -21,5 +21,7 @@
 #include "FunctionalStatement.hpp"
 #include "IncrementExpression.hpp"
 #include "IncrementStatement.hpp"
+#include "FunctionDefineStatement.hpp"
+#include "ReturnStatement.hpp"
 
 #endif

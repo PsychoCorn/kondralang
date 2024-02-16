@@ -45,6 +45,7 @@ private:
     Statement *ifElseStatement();
     Statement *whileStatement();
     Statement *doWhileStatement();
+    FunctionDefineStatement *functionDefine();
     Statement *forStatement();
     Statement *block();
     Statement *statementOrBlock();
@@ -149,6 +150,16 @@ Statement *Parser::statement()
         {
             consume(KeyWord);
             return new ContinueStatement();
+        }
+        else if (current.getText() == "func")
+        {
+            consume(KeyWord);
+            return functionDefine();
+        }
+        else if (current.getText() == "return")
+        {
+            consume(KeyWord);
+            return new ReturnStatement(expression());
         }
         else
             return variableDeclarationStatement();
@@ -308,6 +319,22 @@ FunctionalExpression *Parser::function(const std::string &name)
         match(TokenType::Comma);
     }
     return function;
+}
+
+FunctionDefineStatement *Parser::functionDefine()
+{
+    std::string name = consume(TokenType::Identifier).getText();
+    consume(TokenType::Lparen);
+    std::list<std::pair<std::string, std::string>> args;
+    while (!match(TokenType::Rparen))
+    {
+        std::string type = consume(TokenType::KeyWord).getText();
+        std::string identifier = consume(TokenType::Identifier).getText();
+        args.push_back(std::pair<std::string, std::string>(type, identifier));
+        match(TokenType::Comma);
+    }
+    Statement *body = statementOrBlock();
+    return new FunctionDefineStatement(name, args, body);
 }
 
 Expression *Parser::ternary()
