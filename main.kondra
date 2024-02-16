@@ -1,4 +1,6 @@
-auto limit = toInt(input("Input limit: "))
-for auto i = 0; i < limit; i++ {
-	print(f'Iter number {i}\n')
+for int i = 5; i < 6; i++ {
+	global const auto b = i
+	println(b)
+	continue
 }
+println(b)
