@@ -1,6 +1,4 @@
-for int i = 5; i < 6; i++ {
-	global const auto b = i
-	println(b)
-	continue
+for int32 a = 0; a < 10; a++ {
+	println(format("Iter number {}/{:x}", a + 1, 10))
 }
-println(b)
+print("End of loop")
