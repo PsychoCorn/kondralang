@@ -1,11 +1,8 @@
-func sum(int a, int b)
+func inc(ptr num)
 {
-	return a + b
+	num++
 }
 
-func sum(int a, int b, int c)
-{
-	println(f'{a} + {b} = {c}')
-}
-
-sum(2, 3, sum(2, 3))
+int a = toInt(input("Input number: "))
+inc(a)
+print(a)

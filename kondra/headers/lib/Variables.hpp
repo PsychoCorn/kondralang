@@ -82,6 +82,8 @@ void Variables::create(const std::string &type, const std::string &key, const bo
         variables[key] = new StrValue(value == nullptr ? "" : value->strGet(), isConst);
     else if (type == "var")
         variables[key] = new VarValue(value == nullptr ? kondra::var() : value->varGet(), isConst);
+    else if (type == "ptr")
+        variables[key] = new PtrValue(value, isConst);
     else if (type == "auto")
         variables[key] = ValueCreator::createValue(value == nullptr ? new VarValue(kondra::var(), isConst) : 
             value, isConst);

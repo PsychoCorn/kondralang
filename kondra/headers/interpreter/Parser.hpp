@@ -325,12 +325,18 @@ FunctionDefineStatement *Parser::functionDefine()
 {
     std::string name = consume(TokenType::Identifier).getText();
     consume(TokenType::Lparen);
-    std::list<std::pair<std::string, std::string>> args;
+    std::list<FunctionArg> args;
     while (!match(TokenType::Rparen))
     {
+        bool isConst = false;
         std::string type = consume(TokenType::KeyWord).getText();
+        if (type == "const")
+        {
+            isConst = true;
+            type = consume(TokenType::KeyWord).getText();
+        }
         std::string identifier = consume(TokenType::Identifier).getText();
-        args.push_back(std::pair<std::string, std::string>(type, identifier));
+        args.push_back(FunctionArg(type, identifier, isConst));
         match(TokenType::Comma);
     }
     Statement *body = statementOrBlock();

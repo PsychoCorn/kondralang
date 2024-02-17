@@ -25,7 +25,6 @@ public:
     kondra::dynamic_int iGet() const override;
     float f32Get() const override;
     double f64Get() const override;
-    Value **refGet() const override;
     bool bGet() const override;
     kondra::string strGet() const override;
     kondra::var varGet() const override;
@@ -115,11 +114,6 @@ float F32Value::f32Get() const
 double F32Value::f64Get() const
 {
     return static_cast<double>(data);
-}
-
-Value **F32Value::refGet() const
-{
-    throw std::runtime_error("Unable convert float64 to reference");
 }
 
 bool F32Value::bGet() const

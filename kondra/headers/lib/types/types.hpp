@@ -16,5 +16,6 @@
 #include "StrValue.hpp"
 #include "VarValue.hpp"
 #include "ArrValue.hpp"
+#include "PtrValue.hpp"
 
 #endif

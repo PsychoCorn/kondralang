@@ -20,7 +20,7 @@ std::vector<std::string> KeyWords::keyWords = {
     "string", "var", "int", "auto", "if", 
     "else", "while", "do", "for", "break", 
     "continue", "free", "new", "array", "const",
-    "global", "func", "return"
+    "global", "func", "return", "ptr"
 };
 
 bool KeyWords::isKeyWord(std::string word)

@@ -25,7 +25,6 @@ public:
     kondra::dynamic_int iGet() const override;
     float f32Get() const override;
     double f64Get() const override;
-    Value **refGet() const override;
     bool bGet() const override;
     kondra::string strGet() const override;
     kondra::var varGet() const override;
@@ -115,11 +114,6 @@ float I8Value::f32Get() const
 double I8Value::f64Get() const
 {
     return static_cast<double>(data);
-}
-
-Value **I8Value::refGet() const
-{
-    throw std::runtime_error("Unable convert int8 to reference");
 }
 
 bool I8Value::bGet() const

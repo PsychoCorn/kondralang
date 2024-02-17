@@ -49,7 +49,6 @@ public:
     virtual kondra::string strGet() const = 0;
     virtual kondra::var varGet() const = 0;
     virtual kondra::array<Value *> arrGet() const = 0;
-    virtual Value **refGet() const = 0;
     virtual Value *getByIndex(long long) const = 0;
     virtual void print(std::ostream &) const = 0;
     friend std::ostream& operator<<(std::ostream &, const Value *);

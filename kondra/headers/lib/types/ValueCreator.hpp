@@ -7,6 +7,7 @@ class ValueCreator
 {
 public:
     static Value* createValue(Value *, const bool &);
+    static Value** getRefOfValue(Value *);
 };
 
 Value *ValueCreator::createValue(Value *value, const bool &isConst)
@@ -46,6 +47,12 @@ Value *ValueCreator::createValue(Value *value, const bool &isConst)
     default:
         throw std::runtime_error("Unknown type");
     }
+}
+
+Value **ValueCreator::getRefOfValue(Value *value)
+{
+    auto ptr = &value;
+    return ptr;
 }
 
 #endif

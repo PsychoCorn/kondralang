@@ -6,22 +6,40 @@
 #include "../../ast/Statement.hpp"
 #include "../../ast/ReturnStatement.hpp"
 
+struct FunctionArg
+{
+    std::string type;
+    std::string name;
+    bool isConst;
+
+    FunctionArg(const std::string &, const std::string &, const bool &);
+};
+
+FunctionArg::FunctionArg(const std::string &type, const std::string &name, const bool &isConst)
+{
+    this->type = type;
+    this->name = name;
+    this->isConst = isConst;
+}
+
+
+
 #define functionArgsHashMap std::unordered_map<std::string, std::string>
 
 class UserDefinedFunction : public Function
 {
 private:
-    std::list<std::pair<std::string, std::string>> args;
+    std::list<FunctionArg> args;
     Statement *body;
 public:
-    UserDefinedFunction(const std::list<std::pair<std::string, std::string>> &, Statement *);
+    UserDefinedFunction(const std::list<FunctionArg> &, Statement *);
     size_t getNumberOfArgs();
     std::pair<std::string, std::string> getArg();
     ~UserDefinedFunction();
     Value *execute(std::vector<Value *>::iterator, std::vector<Value *>::iterator) override;
 };
 
-UserDefinedFunction::UserDefinedFunction(const std::list<std::pair<std::string, std::string>> &args, 
+UserDefinedFunction::UserDefinedFunction(const std::list<FunctionArg> &args, 
     Statement *body)
 {
     this->args = args;
@@ -43,7 +61,7 @@ Value *UserDefinedFunction::execute(std::vector<Value *>::iterator begin, std::v
     Scopes::addScope();
     for (auto arg : args)
     {
-        Scopes::create(arg.first, arg.second, false, false, (*begin));
+        Scopes::create(arg.type, arg.name, false, arg.isConst, (*begin));
         begin++;
     }
     if (begin != end)
