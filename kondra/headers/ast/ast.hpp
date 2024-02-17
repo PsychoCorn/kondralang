@@ -23,5 +23,6 @@
 #include "IncrementStatement.hpp"
 #include "FunctionDefineStatement.hpp"
 #include "ReturnStatement.hpp"
+#include "FreeStatement.hpp"
 
 #endif

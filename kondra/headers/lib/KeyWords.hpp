@@ -19,7 +19,7 @@ std::vector<std::string> KeyWords::keyWords = {
     "float32", "float64", "ref", "boolean",
     "string", "var", "int", "auto", "if", 
     "else", "while", "do", "for", "break", 
-    "continue", "free", "new", "array", "const",
+    "continue", "free", "array", "const",
     "global", "func", "return", "ptr"
 };
 

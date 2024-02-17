@@ -1,12 +1,7 @@
-func inc(ptr a)
-{
-	a += 1
-}
-
-float32 num = 6.8
-inc(num)
-println(num)
-
-ptr copyOfNum = num
-copyOfNum *= 3
-println(num)
+ptr a
+int b = 5
+a = b
+a += 1
+free a
+a = "string"
+print(a)

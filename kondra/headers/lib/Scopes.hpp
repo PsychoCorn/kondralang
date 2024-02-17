@@ -40,6 +40,7 @@ void Scopes::initGlobalScope()
             {"_NULL_", new I64Value(0ull, true)},
             {"_ENDL_", new StrValue("\n", true)},
             {"_NONE_", new VarValue(kondra::var(), true)},
+            {"_NULL_PTR_", new PtrValue(nullptr, true)},
         })
     );
 }

@@ -161,6 +161,12 @@ Statement *Parser::statement()
             consume(KeyWord);
             return new ReturnStatement(expression());
         }
+        else if (current.getText() == "free")
+        {
+            consume(KeyWord);
+            std::string identifier = consume(TokenType::Identifier).getText();
+            return new FreeStatement(identifier);
+        }
         else
             return variableDeclarationStatement();
 

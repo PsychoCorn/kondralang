@@ -3,11 +3,14 @@
 
 #include "Value.hpp"
 
+#define ERR_MSG_NULL_PTR "Null pointer"
+
 class PtrValue final : public Value
 {
 private:
     Value *data;
     bool isConst;
+    bool isHaveData;
 public:
     PtrValue(Value *, const bool &);
     void setValue(Value *) override;
@@ -31,119 +34,175 @@ public:
     kondra::array<Value *> arrGet() const override;
     Value *getByIndex(int64_t) const override;
     void print(std::ostream &) const override;
+    void free();
 };
 
 PtrValue::PtrValue(Value *data, const bool &isConst)
 {
     this->data = data;
     this->isConst = isConst;
+    this->isHaveData = data == nullptr ? false : true;
 }
 
 void PtrValue::setValue(Value *value)
 {
     if (isConst)
         throw std::runtime_error(ERR_MSG_CANT_CHNG_CONST);
-    data->setValue(value);
+    if (isHaveData)
+        data->setValue(value);
+    else
+    {
+        data = value;
+        isHaveData = value == nullptr ? false : true;
+    }
 }
 
 void PtrValue::setByIndex(Value *value, const int64_t &index)
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     data->setByIndex(value, index);
 }
 
 Type PtrValue::getType() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->getType();
 }
 
 bool PtrValue::getIsConst() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->getIsConst();
 }
 
 int8_t PtrValue::i8Get() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->i8Get();
 }
 
 uint8_t PtrValue::ui8Get() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->ui8Get();
 }
 
 int16_t PtrValue::i16Get() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->i16Get();
 }
 
 uint16_t PtrValue::ui16Get() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->ui16Get();
 }
 
 int32_t PtrValue::i32Get() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->i32Get();
 }
 
 uint32_t PtrValue::ui32Get() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->ui32Get();
 }
 
 int64_t PtrValue::i64Get() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->i64Get();
 }
 
 uint64_t PtrValue::ui64Get() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->ui64Get();
 }
 
 kondra::dynamic_int PtrValue::iGet() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->iGet();
 }
 
 float PtrValue::f32Get() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->f32Get();
 }
 
 double PtrValue::f64Get() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->f64Get();
 }
 
 bool PtrValue::bGet() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->bGet();
 }
 
 kondra::string PtrValue::strGet() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->strGet();
 }
 
 kondra::var PtrValue::varGet() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->varGet();
 }
 
 kondra::array<Value *> PtrValue::arrGet() const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->arrGet();
 }
 
 Value *PtrValue::getByIndex(int64_t index) const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->getByIndex(index);
 }
 
 void PtrValue::print(std::ostream &os) const
 {
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
     return data->print(os);
+}
+
+void PtrValue::free()
+{
+    if (!isHaveData)
+        throw std::runtime_error(ERR_MSG_NULL_PTR);
+    delete data;
+    isHaveData = false;
 }
 
 #endif
