@@ -1,7 +1,4 @@
-ptr a
-int b = 5
-a = b
-a += 1
-free a
-a = "string"
-print(a)
+ptr number = new(32)
+number = ++number * 3
+println(number)
+delete(number)

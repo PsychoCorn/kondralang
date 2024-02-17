@@ -35,6 +35,8 @@ public:
     Value *getByIndex(int64_t) const override;
     void print(std::ostream &) const override;
     void free();
+    void del();
+    bool isNullPtr();
 };
 
 PtrValue::PtrValue(Value *data, const bool &isConst)
@@ -197,12 +199,23 @@ void PtrValue::print(std::ostream &os) const
     return data->print(os);
 }
 
-void PtrValue::free()
+void PtrValue::del()
 {
     if (!isHaveData)
         throw std::runtime_error(ERR_MSG_NULL_PTR);
     delete data;
     isHaveData = false;
+}
+
+void PtrValue::free()
+{
+    data = nullptr;
+    isHaveData = false;
+}
+
+bool PtrValue::isNullPtr()
+{
+    return !isHaveData;
 }
 
 #endif

@@ -9,6 +9,7 @@
 #include "Input.hpp"
 #include "Format.hpp"
 #include "ToBase.hpp"
+#include "PtrFunctions.hpp"
 #include "UserDefinedFunction.hpp"
 
 #endif

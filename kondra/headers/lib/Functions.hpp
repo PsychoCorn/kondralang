@@ -66,6 +66,22 @@ functionHashMap Functions::functions = {
             {2, new ToBase2()}
         }
     },
+    {"new", {
+            {1, new New1()}
+        }
+    },
+    {"isNullPtr", {
+            {1, new IsNullPtr1()}
+        }
+    },
+    {"free", {
+            {dynamicNumOfArgs, new Free()}
+        }
+    },
+    {"delete", {
+            {dynamicNumOfArgs, new Delete()}
+        }
+    },
 };
 
 Function *Functions::get(const std::string &key, const size_t &numOfArgs)
