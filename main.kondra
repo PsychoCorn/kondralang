@@ -1,8 +1,8 @@
-func inc(ptr num)
+func inc(ptr a)
 {
-	num++
+	a += 1
 }
 
-int a = toInt(input("Input number: "))
-inc(a)
-print(a)
+float32 num = 6.8
+inc(num)
+print(num)

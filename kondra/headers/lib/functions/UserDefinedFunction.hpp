@@ -33,8 +33,6 @@ private:
     Statement *body;
 public:
     UserDefinedFunction(const std::list<FunctionArg> &, Statement *);
-    size_t getNumberOfArgs();
-    std::pair<std::string, std::string> getArg();
     ~UserDefinedFunction();
     Value *execute(std::vector<Value *>::iterator, std::vector<Value *>::iterator) override;
 };
@@ -49,11 +47,6 @@ UserDefinedFunction::UserDefinedFunction(const std::list<FunctionArg> &args,
 UserDefinedFunction::~UserDefinedFunction()
 {
     delete body;
-}
-
-size_t UserDefinedFunction::getNumberOfArgs()
-{
-    return args.size();
 }
 
 Value *UserDefinedFunction::execute(std::vector<Value *>::iterator begin, std::vector<Value *>::iterator end) 
