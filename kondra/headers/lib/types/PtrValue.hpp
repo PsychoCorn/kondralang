@@ -41,6 +41,8 @@ PtrValue::PtrValue(Value *data, const bool &isConst)
 
 void PtrValue::setValue(Value *value)
 {
+    if (isConst)
+        throw std::runtime_error(ERR_MSG_CANT_CHNG_CONST);
     data->setValue(value);
 }
 

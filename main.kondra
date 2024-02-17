@@ -5,4 +5,8 @@ func inc(ptr a)
 
 float32 num = 6.8
 inc(num)
-print(num)
+println(num)
+
+ptr copyOfNum = num
+copyOfNum *= 3
+println(num)
