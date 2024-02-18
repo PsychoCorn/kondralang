@@ -1,4 +1,7 @@
-ptr number = new(32)
-number = ++number * 3
+int n = 43
+ptr number = n
+ptr p = number
+p++
 println(number)
-delete(number)
+delete(p)
+println(n)
