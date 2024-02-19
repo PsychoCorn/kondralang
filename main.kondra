@@ -1,7 +1,8 @@
-int n = 43
-ptr number = n
-ptr p = number
-p++
-println(number)
-delete(p)
-println(n)
+func allignTen(ref number) {
+	number = 10
+}
+
+float32 a = 3
+println(a)
+allignTen(a)
+println(a)
