@@ -23,6 +23,10 @@ enum Type
     String,
     Var,
     Array,
+    Iter,
+    Pair,
+    HashMap,
+    HashMultiMap,
     Struct,
     None //doesn't exist
 };
@@ -31,7 +35,6 @@ class Value // interface
 {
 public:
     virtual void setValue(Value *) = 0;
-    virtual void setByIndex(Value *, const int64_t &) = 0;
     virtual Type getType() const = 0;
     virtual bool getIsConst() const = 0;
     virtual int8_t i8Get() const = 0;
@@ -49,7 +52,6 @@ public:
     virtual kondra::string strGet() const = 0;
     virtual kondra::var varGet() const = 0;
     virtual kondra::array<Value *> arrGet() const = 0;
-    virtual Value *getByIndex(long long) const = 0;
     virtual void print(std::ostream &) const = 0;
     friend std::ostream& operator<<(std::ostream &, const Value *);
 };

@@ -1,9 +1,10 @@
 #ifndef ArrValue_HPP
 #define ArrValue_HPP
 
-#include "Value.hpp"
+#include "CollectionValue.hpp"
+#include "iterators/ArrayIterator.hpp"
 
-class ArrValue final : public Value
+class ArrValue final : public CollectionValue
 {
 private:
     kondra::array<Value *> data;
@@ -11,7 +12,6 @@ private:
 public:
     ArrValue(const kondra::array<Value *> &, const bool &);
     void setValue(Value *) override;
-    void setByIndex(Value *, const int64_t &) override;
     Type getType() const override;
     bool getIsConst() const override;
     int8_t i8Get() const override;
@@ -29,8 +29,14 @@ public:
     kondra::string strGet() const override;
     kondra::var varGet() const override;
     kondra::array<Value *> arrGet() const override;
-    Value *getByIndex(int64_t) const override;
     void print(std::ostream &) const override;
+    void setByIndex(Value *, const int64_t &) override;
+    Value *getByIndex(int64_t) const override;
+    size_t size() const override;
+    IterValue *begin() override;
+    IterValue *end() override;
+    IterValue *rbegin() override;
+    IterValue *rend() override;
 };
 
 ArrValue::ArrValue(const kondra::array<Value *> &data, const bool &isConst)
@@ -146,6 +152,31 @@ Value *ArrValue::getByIndex(int64_t index) const
 void ArrValue::print(std::ostream &os) const
 {
     os << data;
+}
+
+size_t ArrValue::size() const
+{
+    return data.size();
+}
+
+IterValue *ArrValue::begin()
+{
+    return new IterValue(new ArrayIterator(data.begin()), isConst);
+}
+
+IterValue *ArrValue::end()
+{
+    return new IterValue(new ArrayIterator(data.end()), isConst);
+}
+
+IterValue *ArrValue::rbegin()
+{
+    return new IterValue(new ReverseArrayIterator(data.rbegin()), isConst);
+}
+
+IterValue *ArrValue::rend()
+{
+    return new IterValue(new ReverseArrayIterator(data.rend()), isConst);
 }
 
 #endif

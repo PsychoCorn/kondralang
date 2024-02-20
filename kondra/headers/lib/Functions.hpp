@@ -82,6 +82,34 @@ functionHashMap Functions::functions = {
             {dynamicNumOfArgs, new Delete()}
         }
     },
+    {"size", {
+            {1, new Size1()}
+        }
+    },
+    {"iterSet", {
+            {2, new IterSet2()}
+        }
+    },
+    {"iterGet", {
+            {1, new IterGet1()}
+        }
+    },
+    {"begin", {
+            {1, new Begin1()}
+        }
+    },
+    {"rbegin", {
+            {1, new RBegin1()}
+        }
+    },
+    {"end", {
+            {1, new End1()}
+        }
+    },
+    {"rend", {
+            {1, new REnd1()}
+        }
+    },
 };
 
 Function *Functions::get(const std::string &key, const size_t &numOfArgs)

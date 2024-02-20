@@ -17,5 +17,6 @@
 #include "VarValue.hpp"
 #include "ArrValue.hpp"
 #include "RefValue.hpp"
+#include "IterValue.hpp"
 
 #endif

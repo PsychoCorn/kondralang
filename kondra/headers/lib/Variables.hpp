@@ -84,6 +84,15 @@ void Variables::create(const std::string &type, const std::string &key, const bo
         variables[key] = new VarValue(value == nullptr ? kondra::var() : value->varGet(), isConst);
     else if (type == "ref")
         variables[key] = new RefValue(value, isConst);
+    else if (type == "iter")
+    {
+        if (value == nullptr)
+            throw std::runtime_error("Iterator doesn't have default value");
+        auto iter = dynamic_cast<IterValue *>(value);
+        if (iter == nullptr)
+            throw std::runtime_error("Iterator can't be initialized with not iterator value");
+        variables[key] = new IterValue(iter->getIter(), isConst);
+    }
     else if (type == "auto")
         variables[key] = ValueCreator::createValue(value == nullptr ? new VarValue(kondra::var(), isConst) : 
             value, isConst);

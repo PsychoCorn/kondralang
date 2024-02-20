@@ -1,10 +1,10 @@
 #ifndef VarValue_HPP
 #define VarValue_HPP
 
-#include "Value.hpp"
+#include "CollectionValue.hpp"
 #include "StrValue.hpp"
 
-class VarValue final : public Value
+class VarValue final : public CollectionValue
 {
 private:
     kondra::var data;
@@ -32,6 +32,11 @@ public:
     kondra::array<Value *> arrGet() const override;
     Value *getByIndex(int64_t) const override;
     void print(std::ostream &) const override;
+    size_t size() const override;
+    IterValue *begin() override;
+    IterValue *end() override;
+    IterValue *rbegin() override;
+    IterValue *rend() override;
 };
 
 VarValue::VarValue(const kondra::var &data, const bool &isConst)
@@ -153,6 +158,66 @@ Value *VarValue::getByIndex(int64_t index) const
     {
     case kondra::VarType::String:
         return new StrValue(kondra::string(1, (*data.getData().stringData)[index]), isConst);
+    
+    default:
+        throw std::runtime_error("var isn't iterable type");
+    }
+}
+
+size_t VarValue::size() const
+{
+    switch (data.getType())
+    {
+    case kondra::VarType::String:
+        return data.getData().stringData->length();
+    
+    default:
+        throw std::runtime_error("var isn't iterable type");
+    }
+}
+
+IterValue *VarValue::begin()
+{
+    switch (data.getType())
+    {
+    case kondra::VarType::String:
+        return new IterValue(new StringIterator(data.getData().stringData->begin()), isConst);
+    
+    default:
+        throw std::runtime_error("var isn't iterable type");
+    }
+}
+
+IterValue *VarValue::end()
+{
+    switch (data.getType())
+    {
+    case kondra::VarType::String:
+        return new IterValue(new StringIterator(data.getData().stringData->end()), isConst);
+    
+    default:
+        throw std::runtime_error("var isn't iterable type");
+    }
+}
+
+IterValue *VarValue::rbegin()
+{
+    switch (data.getType())
+    {
+    case kondra::VarType::String:
+        return new IterValue(new ReverseStringIterator(data.getData().stringData->rbegin()), isConst);
+    
+    default:
+        throw std::runtime_error("var isn't iterable type");
+    }
+}
+
+IterValue *VarValue::rend()
+{
+    switch (data.getType())
+    {
+    case kondra::VarType::String:
+        return new IterValue(new ReverseStringIterator(data.getData().stringData->rend()), isConst);
     
     default:
         throw std::runtime_error("var isn't iterable type");

@@ -11,7 +11,6 @@ private:
 public:
     F64Value(const double &, const bool &);
     void setValue(Value *) override;
-    void setByIndex(Value *, const int64_t &) override;
     Type getType() const override;
     bool getIsConst() const override;
     int8_t i8Get() const override;
@@ -29,7 +28,6 @@ public:
     kondra::string strGet() const override;
     kondra::var varGet() const override;
     kondra::array<Value *> arrGet() const override;
-    Value *getByIndex(int64_t) const override;
     void print(std::ostream &) const override;
 };
 
@@ -44,11 +42,6 @@ void F64Value::setValue(Value *value)
     if (isConst)
         throw std::runtime_error(ERR_MSG_CANT_CHNG_CONST);
     this->data = value->f64Get();
-}
-
-void F64Value::setByIndex(Value *, const int64_t &)
-{
-    throw std::runtime_error("float64 isn't iterable type");
 }
 
 Type F64Value::getType() const
@@ -135,11 +128,6 @@ kondra::var F64Value::varGet() const
 kondra::array<Value *> F64Value::arrGet() const
 {
     throw std::runtime_error("Undefine conversation from float64 to array");
-}
-
-Value *F64Value::getByIndex(int64_t) const
-{
-    throw std::runtime_error("float64 isn't iterable type");
 }
 
 void F64Value::print(std::ostream &os) const

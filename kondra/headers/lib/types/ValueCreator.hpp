@@ -44,6 +44,8 @@ Value *ValueCreator::createValue(Value *value, const bool &isConst)
         return new VarValue(value->varGet(), isConst);
     case Array:
         return new ArrValue(value->arrGet(), isConst);
+    case Iter:
+        return new IterValue(static_cast<IterValue *>(value)->getIter(), isConst);
     default:
         throw std::runtime_error("Unknown type");
     }

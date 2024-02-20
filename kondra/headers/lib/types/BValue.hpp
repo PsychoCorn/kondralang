@@ -12,7 +12,6 @@ public:
     BValue(const bool &, const bool &);
     void setValue(Value *) override;
     Type getType() const override;
-    void setByIndex(Value *, const int64_t &) override;
     bool getIsConst() const override;
     int8_t i8Get() const override;
     uint8_t ui8Get() const override;
@@ -29,7 +28,6 @@ public:
     kondra::string strGet() const override;
     kondra::var varGet() const override;
     kondra::array<Value *> arrGet() const override;
-    Value *getByIndex(int64_t) const override;
     void print(std::ostream &) const override;
 };
 
@@ -44,11 +42,6 @@ void BValue::setValue(Value *value)
     if (isConst)
         throw std::runtime_error(ERR_MSG_CANT_CHNG_CONST);
     this->data = value->bGet();
-}
-
-void BValue::setByIndex(Value *, const int64_t &)
-{
-    throw std::runtime_error("boolean isn't iterable type");
 }
 
 Type BValue::getType() const
@@ -134,11 +127,6 @@ kondra::var BValue::varGet() const
 kondra::array<Value *> BValue::arrGet() const
 {
     throw std::runtime_error("Undefine conversation from boolean to array");
-}
-
-Value *BValue::getByIndex(int64_t) const
-{
-    throw std::runtime_error("boolean isn't iterable type");
 }
 
 void BValue::print(std::ostream &os) const

@@ -8,6 +8,7 @@
 #include "IOFunctions.hpp"
 #include "ToBase.hpp"
 #include "RefFunctions.hpp"
+#include "CollectionFunctions.hpp"
 #include "UserDefinedFunction.hpp"
 
 #endif

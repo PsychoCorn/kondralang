@@ -1,9 +1,10 @@
 #ifndef StrValue_HPP
 #define StrValue_HPP
 
-#include "Value.hpp"
+#include "CollectionValue.hpp"
+#include "iterators/StringIterator.hpp"
 
-class StrValue final : public Value
+class StrValue final : public CollectionValue
 {
 private:
     kondra::string data;
@@ -31,6 +32,11 @@ public:
     kondra::array<Value *> arrGet() const override;
     Value *getByIndex(int64_t) const override;
     void print(std::ostream &) const override;
+    size_t size() const override;
+    IterValue *begin() override;
+    IterValue *end() override;
+    IterValue *rbegin() override;
+    IterValue *rend() override;
 };
 
 StrValue::StrValue(const kondra::string &data, const bool &isConst)
@@ -146,6 +152,31 @@ Value *StrValue::getByIndex(int64_t index) const
 void StrValue::print(std::ostream &os) const
 {
     os << data;
+}
+
+size_t StrValue::size() const
+{
+    return data.length();
+}
+
+IterValue *StrValue::begin()
+{
+    return new IterValue(new StringIterator(data.begin()), isConst);
+}
+
+IterValue *StrValue::end()
+{
+    return new IterValue(new StringIterator(data.end()), isConst);
+}
+
+IterValue *StrValue::rbegin()
+{
+    return new IterValue(new ReverseStringIterator(data.rbegin()), isConst);
+}
+
+IterValue *StrValue::rend()
+{
+    return new IterValue(new ReverseStringIterator(data.rend()), isConst);
 }
 
 #endif

@@ -11,7 +11,6 @@ private:
 public:
     I8Value(const int8_t &, const bool &);
     void setValue(Value *) override;
-    void setByIndex(Value *, const int64_t &) override;
     Type getType() const override;
     bool getIsConst() const override;
     int8_t i8Get() const override;
@@ -29,7 +28,6 @@ public:
     kondra::string strGet() const override;
     kondra::var varGet() const override;
     kondra::array<Value *> arrGet() const override;
-    Value *getByIndex(int64_t) const override;
     void print(std::ostream &) const override;
 };
 
@@ -44,11 +42,6 @@ void I8Value::setValue(Value *value)
     if (isConst)
         throw std::runtime_error(ERR_MSG_CANT_CHNG_CONST);
     this->data = value->i8Get();
-}
-
-void I8Value::setByIndex(Value *, const int64_t &)
-{
-    throw std::runtime_error("int8 isn't iterable type");
 }
 
 Type I8Value::getType() const
@@ -134,11 +127,6 @@ kondra::var I8Value::varGet() const
 kondra::array<Value *> I8Value::arrGet() const
 {
     throw std::runtime_error("Undefine conversation from int8 to array");
-}
-
-Value *I8Value::getByIndex(int64_t) const
-{
-    throw std::runtime_error("int8 isn't iterable type");
 }
 
 void I8Value::print(std::ostream &os) const
