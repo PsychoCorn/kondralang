@@ -66,7 +66,7 @@ functionHashMap Functions::functions = {
             {2, new ToBase2()}
         }
     },
-    {"new", {
+    {"newMut", {
             {1, new New1()}
         }
     },

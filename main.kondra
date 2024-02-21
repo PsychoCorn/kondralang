@@ -1,3 +1,5 @@
 var a = "Hello World"
-iterSet(rbegin(a), "?")
-print(a)
+ref it = rbegin(a)
+iterSet(it, "?")
+println(iterGet(it))
+println(a)

@@ -42,6 +42,7 @@ public:
     void free();
     void del();
     bool isNullRef();
+    Value *&getValue();
 };
 
 RefValue::RefValue(Value *data, const bool &isConst)
@@ -281,6 +282,11 @@ void RefValue::free()
 bool RefValue::isNullRef()
 {
     return !isHaveData;
+}
+
+Value *&RefValue::getValue()
+{
+    return data;
 }
 
 #endif

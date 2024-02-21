@@ -42,7 +42,11 @@ Value *IterSet2::execute(std::vector<Value *>::iterator begin, std::vector<Value
     }
     auto arg1 = dynamic_cast<IterValue *>(*begin);
     if (arg1 == nullptr)
-        throw std::runtime_error("Not iterator in iterSet function");
+    {
+        arg1 = dynamic_cast<IterValue *>(dynamic_cast<RefValue *>(*begin)->getValue());
+        if (arg1 == nullptr)
+            throw std::runtime_error("Not iterator in iterSet function");
+    }
     if (arg1->getIsConst())
         throw std::runtime_error(ERR_MSG_CANT_CHNG_CONST);
     arg1->getIter()->setValue(*(begin + 1));
@@ -66,7 +70,11 @@ Value *IterGet1::execute(std::vector<Value *>::iterator begin, std::vector<Value
     }
     auto arg = dynamic_cast<IterValue *>(*begin);
     if (arg == nullptr)
-        throw std::runtime_error("Not iterator in iterGet function");
+    {
+        arg = dynamic_cast<IterValue *>(dynamic_cast<RefValue *>(*begin)->getValue());
+        if (arg == nullptr)
+            throw std::runtime_error("Not iterator in iterGet function");
+    }
     auto iter = arg->getIter();
     switch (iter->getType())
     {
